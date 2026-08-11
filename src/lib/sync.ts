@@ -1,5 +1,5 @@
 import { supabase, isCloudEnabled } from './supabase'
-import { STORAGE_KEYS, type StorageKey } from '../types'
+import { STORAGE_KEYS } from '../types'
 import { exportAll, importAll } from '../utils/storage'
 
 export type SyncDirection = 'push' | 'pull'
