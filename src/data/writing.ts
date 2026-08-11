@@ -1,0 +1,62 @@
+import type { Question } from '../types'
+
+/** 内置图画作文模拟题（3 篇，各配参考范文 + 句型标注） */
+export const writingQuestions: Question[] = [
+  {
+    id: 'writing-1',
+    type: 'writing',
+    source: 'builtin',
+    sourceLabel: '模拟题',
+    title: '写作 · 网络时代的人际陪伴',
+    suggestedMinutes: 35,
+    figureDescription: '画面左侧：一家四口围坐在餐桌旁，每人低头盯着自己的手机，桌面上的饭菜无人问津。画面右侧：一位白发老人独自坐在沙发上，翻看一本相册。漫画下方文字："陪伴，是最长情的告白。"',
+    writingPrompt: 'Write an essay of 160-200 words based on the following picture. In your essay, you should 1) describe the drawing briefly, 2) interpret its intended meaning, and 3) give your comments.',
+    items: [],
+    referenceEssay: 'As is vividly shown in the picture, a family of four sit around a dinner table, each absorbed in their own smartphone while the food grows cold, whereas an elderly man on the other side of the drawing sits alone, turning the pages of a photo album. Beneath the figures runs a caption reading "Company is the most enduring declaration of love."\n\nThe message the cartoonist intends to convey is that digital connectivity, for all its conveniences, is quietly eroding the warmth of face-to-face companionship. Several factors may account for this phenomenon. Chief among them is the way the algorithm rewards instant gratification: a stream of notifications is engineered to be more compelling than the unhurried rhythm of ordinary conversation. Beneath these immediate triggers, moreover, there operates a deeper logic — the gradual atrophying of the very habit of being present with others.\n\nWhat is called for, first of all, is a change of attitude: we must relearn to treat undivided attention as a form of generosity. Individuals can start with small but concrete steps — a device-free hour at the dinner table; institutions, for their part, should cultivate a workplace culture that does not equate availability with devotion. As the cartoon reminds us, the choice is ultimately ours: we may let the screen mediate every relationship, or we may recover the quiet art of sitting together. The outcome will be measured not in words but in lives.',
+    essayPatternIds: ['p-desc-1', 'p-desc-3', 'p-thesis-1', 'p-cause-1', 'p-cause-2', 'p-suggestion-1', 'p-suggestion-4', 'p-conclusion-3'],
+    tips: [
+      '首段：描述图画（对比式描写：家人低头看手机 vs 老人独坐），点出配文',
+      '中段：点明寓意（数字连接侵蚀面对面陪伴）→ 因果分析（算法奖励即时满足 → 更深层的是陪伴习惯的退化）',
+      '末段：建议（态度转变 + 个人小步骤 + 机构责任）→ 总结升华',
+      '避免模板开头 "With the rapid development of..."；用具体画面切入更易得高分',
+    ],
+  },
+  {
+    id: 'writing-2',
+    type: 'writing',
+    source: 'builtin',
+    sourceLabel: '模拟题',
+    title: '写作 · 快与慢的生活节奏',
+    suggestedMinutes: 35,
+    figureDescription: '画面主体是一条公路：左边车道上的汽车正在飙车，车窗外的景象模糊成一片；右边车道上，一位老人骑着自行车缓缓前行，路旁是盛开的花树。路牌上写着两个词："Fast" 与 "Slow"。',
+    writingPrompt: 'Write an essay of 160-200 words based on the following picture. In your essay, you should 1) describe the drawing briefly, 2) interpret its intended meaning, and 3) give your comments.',
+    items: [],
+    referenceEssay: 'The cartoonist arranges the two scenes in sharp contrast: on the one hand, a car races down the left lane with the scenery blurring past, while on the other, an elderly cyclist ambles along a lane lined with blossoming trees. A signpost bearing the words "Fast" and "Slow" points directly to the cartoonist\'s intended message.\n\nBeneath the surface humour lies a serious concern: what the drawing satirises is not speed itself but the idolisation of speed. It would be misleading, of course, to attribute modern restlessness to any single cause; the truth is that the logic of efficiency and the culture of comparison reinforce each other, until slowness comes to be mistaken for failure. Consider, for instance, the way a "slow" worker is implicitly penalised in nearly every profession, however carefully his or her output is judged.\n\nAdmittedly, speed has its defenders, and the value of efficiency deserves a hearing; yet the balance of evidence points the other way. What is called for is not a romantic return to the past but a deliberate re-negotiation of pace: individuals can begin by reclaiming unhurried hours, and institutions, for their part, should stop equating long hours with commitment. In the final analysis, what the picture teaches us is less about transport than about living: the point of the journey is not merely to arrive, but to notice what lies along the way.',
+    essayPatternIds: ['p-desc-2', 'p-desc-3', 'p-thesis-2', 'p-cause-3', 'p-example-2', 'p-concession-1', 'p-suggestion-4', 'p-conclusion-1'],
+    tips: [
+      '对比型漫画：首段用对称句式（on the one hand... on the other...）',
+      '立意升级：讽刺的不是速度，而是"对速度的崇拜"——比简单批判"太快"更有深度',
+      '让步论证：承认效率的价值再反驳，体现思辨能力',
+      '结尾回到生活哲学（the point of the journey），避免空洞口号',
+    ],
+  },
+  {
+    id: 'writing-3',
+    type: 'writing',
+    source: 'builtin',
+    sourceLabel: '模拟题',
+    title: '写作 · 选择与坚持',
+    suggestedMinutes: 35,
+    figureDescription: '画面下方是一位攀登者站在岔路口，面前有两条路：一条平缓宽阔但通向低处的山丘，另一条陡峭狭窄但指向高耸的山峰。攀登者犹豫不决，身旁的登山杖上挂着一行小字："路，总是越走越宽的；前提是你选定了它。"',
+    writingPrompt: 'Write an essay of 160-200 words based on the following picture. In your essay, you should 1) describe the drawing briefly, 2) interpret its intended meaning, and 3) give your comments.',
+    items: [],
+    referenceEssay: 'As is vividly shown in the picture, a climber stands hesitantly at a fork in the road: one path is broad and gentle but leads only to a low hill, while the other is narrow and steep yet climbs towards a towering peak. A caption beside him reads, "A road always widens as you walk it — provided you have chosen it."\n\nThe message the cartoonist intends to convey is that commitment, not merely choice, is what turns an option into an opportunity. A case in point is the experience of countless researchers and entrepreneurs, who discovered that the value of their chosen path became apparent only after years of seemingly unrewarded effort. The root cause of modern indecisiveness, however, lies deeper: beneath the fear of picking wrongly there operates a culture that demands both certainty and rapid returns, a combination that real life rarely offers.\n\nIt is not too much to say that the issue raised by the picture has become a touchstone of our times. To be fair, the hesitation itself is understandable, and those who weigh their options carefully are not merely being timid. Yet in the final analysis, what the cartoon teaches us is less about the right choice than about the courage to inhabit a choice: every serious undertaking rewards the committed walker — and punishes no one more severely than the one who keeps one foot on each path.',
+    essayPatternIds: ['p-desc-1', 'p-desc-3', 'p-thesis-1', 'p-example-1', 'p-cause-2', 'p-thesis-3', 'p-concession-3', 'p-conclusion-1'],
+    tips: [
+      '立意：选择 vs 坚持——把讨论重心从"选哪条路"移到"选定之后的坚持"',
+      '例证段：用"研究者/创业者的普遍经验"而非具体人名，避免事实性错误',
+      '让步：承认犹豫的合理性（思辨加分项）',
+      '结尾句用比喻（one foot on each path）收束，与画面呼应',
+    ],
+  },
+]
