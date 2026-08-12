@@ -58,23 +58,27 @@ function renderSegments(
   let key = 0
 
   while (pos < text.length) {
-    // 找下一个 mark 起点与下一个占位符
+    // 下一个 mark
     let nextMark = markIdx < marks.length && marks[markIdx].start >= pos ? marks[markIdx] : undefined
+
+    // 下一个 {{n}} 占位符（在整个文本中搜索，不限于开头）
     let gapPos = -1
     let gapNum = 0
     if (renderGap) {
       const m = /\{\{(\d+)\}\}/.exec(text.slice(pos))
-      if (m && m.index === 0) {
-        gapPos = pos
+      if (m) {
+        gapPos = pos + m.index
         gapNum = parseInt(m[1], 10)
       }
     }
 
+    // 没有更多 mark 也没有更多 gap → 输出剩余文本结束
     if (!nextMark && gapPos === -1) {
       out.push(text.slice(pos))
       break
     }
 
+    // mark 在 gap 之前 → 先处理 mark
     if (nextMark && (gapPos === -1 || nextMark.start < gapPos)) {
       if (nextMark.start > pos) out.push(text.slice(pos, nextMark.start))
       out.push(
@@ -85,6 +89,7 @@ function renderSegments(
       pos = nextMark.end
       markIdx++
     } else {
+      // 处理 gap（{{n}} 占位符）
       if (gapPos > pos) out.push(text.slice(pos, gapPos))
       out.push(<span key={key++} className="gap-slot">{renderGap!(gapNum)}</span>)
       pos = gapPos + `{{${gapNum}}}`.length
