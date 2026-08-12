@@ -122,8 +122,13 @@ export default function WrongBook() {
                         重做
                       </Button>
                     )}
-                    {!r.myThought && (
+                    {/* 有任何已填内容 → 编辑三问；完全没填 → 补填三问 */}
+                    {(r.myThought || r.distractorTrap || r.correctMapping) ? (
                       <Button variant="ghost" style={{ padding: '5px 12px' }} onClick={() => setEditing(r)}>
+                        编辑三问
+                      </Button>
+                    ) : (
+                      <Button variant="ghost" style={{ padding: '5px 12px', color: 'var(--c-warning)' }} onClick={() => setEditing(r)}>
                         补填三问
                       </Button>
                     )}
@@ -148,6 +153,9 @@ export default function WrongBook() {
         <ThinkingForm
           item={getQuestion(editing.questionId)?.items.find((it) => it.id === editing.itemId) ?? { id: editing.itemId, kind: 'choice', correctIds: [] }}
           wrongAnswer={editing.wrongAnswer}
+          initialThought={editing.myThought}
+          initialTrap={editing.distractorTrap}
+          initialMapping={editing.correctMapping}
           onSave={(t, tr, m) => {
             setRecords(records.map((x) => (x.id === editing.id ? { ...x, myThought: t, distractorTrap: tr, correctMapping: m } : x)))
             setEditing(null)

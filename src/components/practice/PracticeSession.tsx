@@ -271,14 +271,20 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           }}
           onBack={onExit}
         />
-        {thinkingItem && (
-          <ThinkingForm
-            item={thinkingItem}
-            wrongAnswer={wrongRecords.find((r) => r.questionId === question.id && r.itemId === thinkingItem.id)?.wrongAnswer ?? []}
-            onSave={saveThinking}
-            onSkip={() => setThinkingItemId(null)}
-          />
-        )}
+        {thinkingItem && (() => {
+          const existingRec = wrongRecords.find((r) => r.questionId === question.id && r.itemId === thinkingItem.id)
+          return (
+            <ThinkingForm
+              item={thinkingItem}
+              wrongAnswer={existingRec?.wrongAnswer ?? []}
+              initialThought={existingRec?.myThought}
+              initialTrap={existingRec?.distractorTrap}
+              initialMapping={existingRec?.correctMapping}
+              onSave={saveThinking}
+              onSkip={() => setThinkingItemId(null)}
+            />
+          )
+        })()}
       </div>
     )
   }

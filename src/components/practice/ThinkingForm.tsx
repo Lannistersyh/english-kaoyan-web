@@ -7,6 +7,10 @@ import { Tag } from '../ui/Tag'
 interface Props {
   item: SubQuestion
   wrongAnswer: string[]
+  /** 已有的思考记录（编辑模式） */
+  initialThought?: string
+  initialTrap?: string
+  initialMapping?: string
   onSave: (myThought: string, distractorTrap: string, correctMapping: string) => void
   onSkip: () => void
 }
@@ -17,10 +21,10 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
  * 错题三问表单：①我当时怎么想的 ②干扰项如何诱导我 ③正确选项如何同义替换
  * 这是错题档案的核心——把"错误思路"本身记录下来，下次才不会再踩同一个坑
  */
-export function ThinkingForm({ item, wrongAnswer, onSave, onSkip }: Props) {
-  const [thought, setThought] = useState('')
-  const [trap, setTrap] = useState('')
-  const [mapping, setMapping] = useState('')
+export function ThinkingForm({ item, wrongAnswer, initialThought, initialTrap, initialMapping, onSave, onSkip }: Props) {
+  const [thought, setThought] = useState(initialThought ?? '')
+  const [trap, setTrap] = useState(initialTrap ?? '')
+  const [mapping, setMapping] = useState(initialMapping ?? '')
 
   const options = item.options ?? []
   const wrongLetters = wrongAnswer
