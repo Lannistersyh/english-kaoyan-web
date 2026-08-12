@@ -4,10 +4,11 @@ import { STORAGE_KEYS } from '../types'
 import { getQuestionsByType } from '../utils/questions'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { PracticeSession } from '../components/practice/PracticeSession'
+import { Button } from '../components/ui/Button'
 import { Tag } from '../components/ui/Tag'
 import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
-import { Button } from '../components/ui/Button'
+import { Modal } from '../components/ui/Modal'
 
 type Tab = 'practice' | 'history'
 
@@ -16,10 +17,72 @@ function formatDate(ts: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
+/** 调用 DeepSeek API 对翻译进行 AI 评分 */
+async function aiScoreTranslation(
+  englishText: string,
+  chineseTranslation: string,
+  referenceTranslation?: string,
+): Promise<{ score: number; comment: string } | null> {
+  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
+  if (!apiKey) return null
+
+  const refPart = referenceTranslation
+    ? `\n参考译文：${referenceTranslation}`
+    : ''
+
+  const prompt = `你是一位考研英语翻译评分老师（满分 10 分）。请对以下学生的翻译进行打分并给出简短点评（50 字以内）。
+
+英文原文：${englishText}
+
+学生译文：${chineseTranslation}${refPart}
+
+请从"信（准确）、达（通顺）、雅（地道）"三个维度评判。按 JSON 格式回复：
+{"score": <整数0-10>, "comment": "<点评>"}`
+
+  try {
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+        temperature: 0.3,
+      }),
+    })
+
+    if (!res.ok) return null
+    const data = await res.json()
+    const raw = data.choices?.[0]?.message?.content ?? ''
+    // 尝试从回复中提取 JSON
+    const jsonMatch = raw.match(/\{[\s\S]*\}/)
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0])
+      return {
+        score: Math.max(0, Math.min(10, Math.round(parsed.score ?? 5))),
+        comment: String(parsed.comment ?? '无法点评').slice(0, 100),
+      }
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('practice')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  // 文章级折叠：展开的 questionId 集合
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
+  // 确认删除
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  // AI 评分状态
+  const [aiScoringId, setAiScoringId] = useState<string | null>(null)
+  const [aiError, setAiError] = useState('')
 
   const questions = getQuestionsByType('translation')
   const allQuestions = useMemo(() => {
@@ -30,11 +93,73 @@ export default function Translation() {
 
   const [sessions, setSessions] = useLocalStorage<Session[]>(STORAGE_KEYS.sessions, [])
 
-  const translationSessions = useMemo(() => {
-    return [...sessions]
-      .filter((s) => allQuestions.has(s.questionId))
-      .sort((a, b) => b.startedAt - a.startedAt)
+  // 按 questionId 分组
+  const groupedSessions = useMemo(() => {
+    const groups = new Map<string, Session[]>()
+    for (const s of sessions) {
+      if (!allQuestions.has(s.questionId)) continue
+      const arr = groups.get(s.questionId) || []
+      arr.push(s)
+      groups.set(s.questionId, arr)
+    }
+    // 每组内部按时间倒序
+    for (const arr of groups.values()) {
+      arr.sort((a, b) => b.startedAt - a.startedAt)
+    }
+    // 组间按最新一次练习时间倒序
+    return [...groups.entries()].sort((a, b) => {
+      return b[1][0].startedAt - a[1][0].startedAt
+    })
   }, [sessions, allQuestions])
+
+  const toggleGroup = (qid: string) => {
+    setExpandedGroups((prev) => {
+      const next = new Set(prev)
+      if (next.has(qid)) next.delete(qid)
+      else next.add(qid)
+      return next
+    })
+  }
+
+  const doDelete = (sessionId: string) => {
+    setSessions(sessions.filter((s) => s.id !== sessionId))
+    setDeleteTarget(null)
+    setExpandedId(null)
+  }
+
+  const handleAiScore = async (session: Session) => {
+    const q = allQuestions.get(session.questionId)
+    const userText = session.answers[0]?.answer?.[0] ?? ''
+    if (!q?.passage || !userText.trim()) return
+
+    setAiScoringId(session.id)
+    setAiError('')
+
+    const result = await aiScoreTranslation(
+      q.passage,
+      userText,
+      q.referenceTranslation,
+    )
+
+    if (result) {
+      setSessions(
+        sessions.map((s) => {
+          if (s.id !== session.id) return s
+          return {
+            ...s,
+            answers: s.answers.map((a) =>
+              a.itemId === s.questionId
+                ? { ...a, selfScore: result.score, aiComment: result.comment }
+                : a,
+            ),
+          }
+        }),
+      )
+    } else {
+      setAiError('AI 评分失败，请确认已配置 VITE_DEEPSEEK_API_KEY')
+    }
+    setAiScoringId(null)
+  }
 
   const active = questions.find((q) => q.id === activeId)
 
@@ -52,7 +177,7 @@ export default function Translation() {
           🈯 练习
         </button>
         <button className={`btn${tab === 'history' ? ' btn--primary' : ''}`} onClick={() => setTab('history')}>
-          📜 历史记录（{translationSessions.length}）
+          📜 历史记录（{sessions.filter((s) => allQuestions.has(s.questionId)).length}）
         </button>
       </div>
 
@@ -99,125 +224,200 @@ export default function Translation() {
       {tab === 'history' && (
         <>
           <p className="page-sub">
-            记录每次翻译练习，对比参考译文，追踪进步轨迹。
+            按文章分组折叠 · AI 评分 · 自评对比 · 追踪进步轨迹
           </p>
 
-          {translationSessions.length === 0 ? (
+          {aiError && (
+            <div className="card card--flat" style={{ borderColor: 'var(--c-danger)', marginBottom: 14, color: 'var(--c-danger)' }}>
+              {aiError}
+            </div>
+          )}
+
+          {groupedSessions.length === 0 ? (
             <Card>
               <EmptyState icon="📜" title="暂无翻译记录">去「练习」页完成一次翻译后自动出现在这里</EmptyState>
             </Card>
           ) : (
-            <div className="item-list">
-              {translationSessions.map((s) => {
-                const q = allQuestions.get(s.questionId)
-                const userText = s.answers[0]?.answer?.[0] ?? ''
-                const selfScore = s.answers[0]?.selfScore
-                const durSec = s.finishedAt ? Math.round((s.finishedAt - s.startedAt) / 1000) : 0
-                const isExpanded = expandedId === s.id
+            <div>
+              {groupedSessions.map(([qid, groupSessions]) => {
+                const q = allQuestions.get(qid)
+                const isGroupOpen = expandedGroups.has(qid)
+                const totalInGroup = groupSessions.length
 
                 return (
-                  <div key={s.id} className="card" style={{ marginBottom: 12 }}>
-                    {/* 摘要行 */}
+                  <div key={qid} className="card" style={{ marginBottom: 12 }}>
+                    {/* 组标题：可折叠 */}
                     <div
                       className="flex-row"
                       style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                      onClick={() => setExpandedId(isExpanded ? null : s.id)}
+                      onClick={() => toggleGroup(qid)}
                     >
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, marginBottom: 2 }}>
-                          {q?.title ?? '（题目已删除）'}
-                          {s.isReview && <Tag variant="warning">回顾</Tag>}
+                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 2 }}>
+                          {q?.title ?? '(题目已删除)'}
                         </div>
                         <div className="muted small">
-                          {formatDate(s.startedAt)} · 用时 {Math.floor(durSec / 60)} 分 {durSec % 60} 秒
-                          {selfScore !== undefined && ` · 自评 ${selfScore}/10`}
+                          {totalInGroup} 次练习记录
+                          {' · '}最近 {formatDate(groupSessions[0].startedAt)}
                         </div>
                       </div>
                       <span className="muted" style={{ fontSize: 13, marginRight: 8 }}>
-                        {isExpanded ? '收起 ↑' : '展开对照 ↓'}
+                        {isGroupOpen ? '收起 ↑' : `展开 ${totalInGroup} 条 ↓`}
                       </span>
                     </div>
 
-                    {/* 展开区：原文 / 我的译文 / 参考译文 */}
-                    {isExpanded && (
-                      <div style={{ marginTop: 14, borderTop: '1px solid var(--c-border)', paddingTop: 12 }}>
-                        {/* 原文 */}
-                        <div className="card card--flat" style={{ background: '#f8fafc', marginBottom: 10 }}>
-                          <div className="form-label">📖 原文</div>
-                          <p style={{ fontSize: 14.5, lineHeight: 1.9, margin: 0, fontStyle: 'italic' }}>
-                            {q?.passage ?? '（原文已删除）'}
-                          </p>
-                        </div>
+                    {/* 展开的每条记录 */}
+                    {isGroupOpen && (
+                      <div style={{ marginTop: 10, borderTop: '1px solid var(--c-border)' }}>
+                        {groupSessions.map((s, idx) => {
+                          const userText = s.answers[0]?.answer?.[0] ?? ''
+                          const selfScore = s.answers[0]?.selfScore
+                          const aiComment = s.answers[0]?.aiComment ?? ''
+                          const durSec = s.finishedAt ? Math.round((s.finishedAt - s.startedAt) / 1000) : 0
+                          const isExpanded = expandedId === s.id
 
-                        {/* 我的译文 */}
-                        <div className="card card--flat" style={{ marginBottom: 10, borderLeft: '3px solid var(--c-primary)' }}>
-                          <div className="form-label">✏️ 我的译文（{formatDate(s.startedAt)}）</div>
-                          <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0, whiteSpace: 'pre-wrap' }}>
-                            {userText.trim() || <span className="muted">（未填写）</span>}
-                          </p>
-                        </div>
+                          return (
+                            <div key={s.id} style={{
+                              borderBottom: idx < groupSessions.length - 1 ? '1px solid var(--c-border)' : 'none',
+                              padding: '10px 0',
+                            }}>
+                              {/* 摘要行 */}
+                              <div
+                                className="flex-row"
+                                style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                                onClick={() => setExpandedId(isExpanded ? null : s.id)}
+                              >
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontSize: 13, color: 'var(--c-text-secondary)' }}>
+                                    {s.isReview && <Tag variant="warning">回顾</Tag>}
+                                    {' '}{formatDate(s.startedAt)} · 用时 {Math.floor(durSec / 60)} 分 {durSec % 60} 秒
+                                  </div>
+                                  <div className="flex-row" style={{ gap: 8, marginTop: 2 }}>
+                                    {selfScore !== undefined && (
+                                      <Tag variant={selfScore >= 7 ? 'success' : selfScore >= 5 ? 'warning' : 'danger'}>
+                                        {aiComment ? '🤖 AI' : '⭐ 自评'} {selfScore}/10
+                                      </Tag>
+                                    )}
+                                    {aiComment && (
+                                      <span className="muted small" style={{ flex: 1 }}>
+                                        {aiComment}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex-row" style={{ gap: 4 }}>
+                                  {/* AI 评分按钮 */}
+                                  <Button
+                                    variant="ghost"
+                                    style={{ padding: '3px 8px', fontSize: 11 }}
+                                    disabled={aiScoringId === s.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleAiScore(s)
+                                    }}
+                                  >
+                                    {aiScoringId === s.id ? '🤖 评分中…' : '🤖 AI 评分'}
+                                  </Button>
+                                  {/* 删除按钮 */}
+                                  <Button
+                                    variant="ghost"
+                                    style={{ padding: '3px 8px', fontSize: 11, color: 'var(--c-danger)' }}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setDeleteTarget(s.id)
+                                    }}
+                                  >
+                                    🗑
+                                  </Button>
+                                  <span className="muted" style={{ fontSize: 12 }}>
+                                    {isExpanded ? '收起 ↑' : '展开 ↓'}
+                                  </span>
+                                </div>
+                              </div>
 
-                        {/* 参考译文 */}
-                        {q?.referenceTranslation && (
-                          <div className="card card--flat" style={{ borderLeft: '3px solid var(--c-success)' }}>
-                            <div className="form-label">🎯 参考译文</div>
-                            <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0 }}>
-                              {q.referenceTranslation}
-                            </p>
-                          </div>
-                        )}
+                              {/* 展开区 */}
+                              {isExpanded && (
+                                <div style={{ marginTop: 10, paddingLeft: 4 }}>
+                                  {/* 原文 */}
+                                  <div className="card card--flat" style={{ background: '#f8fafc', marginBottom: 8 }}>
+                                    <div className="form-label">📖 原文</div>
+                                    <p style={{ fontSize: 14.5, lineHeight: 1.9, margin: 0, fontStyle: 'italic' }}>
+                                      {q?.passage ?? '（原文已删除）'}
+                                    </p>
+                                  </div>
 
-                        {/* 参考步骤拆解（如有） */}
-                        {q?.translationSteps && q.translationSteps.length > 0 && (
-                          <div className="card card--flat" style={{ marginTop: 10, background: '#fffcf0' }}>
-                            <div className="form-label">🔍 三步拆解对照</div>
-                            <ol style={{ margin: '6px 0 0', paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>
-                              {q.translationSteps.map((step) => (
-                                <li key={step.step}>
-                                  <b>Step {step.step}：</b>{step.zh}
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
-                        )}
+                                  {/* 我的译文 */}
+                                  <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-primary)' }}>
+                                    <div className="form-label">✏️ 我的译文</div>
+                                    <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0, whiteSpace: 'pre-wrap' }}>
+                                      {userText.trim() || <span className="muted">（未填写）</span>}
+                                    </p>
+                                  </div>
 
-                        {/* 自评调整 */}
-                        <div className="flex-row" style={{ marginTop: 12, gap: 10 }}>
-                          <span className="muted small">自评打分（0-10）：</span>
-                          {[2, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                            <Button
-                              key={v}
-                              variant={selfScore === v ? 'primary' : 'ghost'}
-                              style={{ padding: '3px 10px', fontSize: 12 }}
-                              onClick={() => {
-                                setSessions(sessions.map((s2) => {
-                                  if (s2.id !== s.id) return s2
-                                  return {
-                                    ...s2,
-                                    answers: s2.answers.map((a) =>
-                                      a.itemId === s2.questionId ? { ...a, selfScore: v } : a,
-                                    ),
-                                  }
-                                }))
-                              }}
-                            >
-                              {v}
-                            </Button>
-                          ))}
-                        </div>
+                                  {/* 参考译文 */}
+                                  {q?.referenceTranslation && (
+                                    <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-success)' }}>
+                                      <div className="form-label">🎯 参考译文</div>
+                                      <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0 }}>
+                                        {q.referenceTranslation}
+                                      </p>
+                                    </div>
+                                  )}
 
-                        {/* 再练一次 */}
-                        <div style={{ marginTop: 12 }}>
-                          {q && (
-                            <Button
-                              variant="primary"
-                              style={{ padding: '5px 14px' }}
-                              onClick={() => setActiveId(q.id)}
-                            >
-                              再练一次
-                            </Button>
-                          )}
-                        </div>
+                                  {/* 三步拆解 */}
+                                  {q?.translationSteps && q.translationSteps.length > 0 && (
+                                    <div className="card card--flat" style={{ marginBottom: 8, background: '#fffcf0' }}>
+                                      <div className="form-label">🔍 三步拆解对照</div>
+                                      <ol style={{ margin: '6px 0 0', paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>
+                                        {q.translationSteps.map((step) => (
+                                          <li key={step.step}>
+                                            <b>Step {step.step}：</b>{step.zh}
+                                          </li>
+                                        ))}
+                                      </ol>
+                                    </div>
+                                  )}
+
+                                  {/* 自评 */}
+                                  <div className="flex-row" style={{ gap: 10, marginBottom: 8 }}>
+                                    <span className="muted small">⭐ 自评（0-10）：</span>
+                                    {[2, 4, 5, 6, 7, 8, 9, 10].map((v) => (
+                                      <Button
+                                        key={v}
+                                        variant={selfScore === v && !aiComment ? 'primary' : 'ghost'}
+                                        style={{ padding: '3px 10px', fontSize: 12 }}
+                                        onClick={() => {
+                                          setSessions(sessions.map((s2) => {
+                                            if (s2.id !== s.id) return s2
+                                            return {
+                                              ...s2,
+                                              answers: s2.answers.map((a) =>
+                                                a.itemId === s2.questionId ? { ...a, selfScore: v, aiComment: '' } : a,
+                                              ),
+                                            }
+                                          }))
+                                        }}
+                                      >
+                                        {v}
+                                      </Button>
+                                    ))}
+                                  </div>
+
+                                  {/* 再练一次 */}
+                                  {q && (
+                                    <Button
+                                      variant="primary"
+                                      style={{ padding: '5px 14px' }}
+                                      onClick={() => setActiveId(q.id)}
+                                    >
+                                      再练一次
+                                    </Button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
                       </div>
                     )}
                   </div>
@@ -226,6 +426,22 @@ export default function Translation() {
             </div>
           )}
         </>
+      )}
+
+      {/* 删除确认 Modal */}
+      {deleteTarget && (
+        <Modal
+          title="确认删除"
+          onClose={() => setDeleteTarget(null)}
+          footer={
+            <>
+              <Button onClick={() => setDeleteTarget(null)}>取消</Button>
+              <Button variant="danger" onClick={() => doDelete(deleteTarget)}>确认删除</Button>
+            </>
+          }
+        >
+          <p>删除后不可恢复，确定要删除这条翻译记录吗？</p>
+        </Modal>
       )}
     </div>
   )

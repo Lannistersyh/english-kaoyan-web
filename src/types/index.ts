@@ -98,6 +98,7 @@ export interface AnswerRecord {
   uncertain: boolean // "不确定"标记（答对但蒙对 → 可入错题档）
   correct: boolean
   selfScore?: number // 翻译/写作自评 0-10
+  aiComment?: string // AI 评分点评
   timeSpent: number // 秒
 }
 
