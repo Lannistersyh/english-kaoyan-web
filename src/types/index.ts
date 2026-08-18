@@ -30,6 +30,12 @@ export type DistractorType =
   | '过度推断'
   | '无中生有'
   | '张冠李戴'
+  | '相反判断'
+  | '望文生义'
+  | '过度具体化'
+  | '程度错误'
+  | '无关选项'
+  | '字面理解'
 
 export interface DistractorAnalysis {
   optionId: string

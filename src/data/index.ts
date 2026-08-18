@@ -5,10 +5,12 @@ import { matchingQuestions } from './matching'
 import { translationQuestions } from './translation'
 import { writingQuestions } from './writing'
 import { newsArticles } from './news'
+import { sciencePhilosophyArticles } from './science-philosophy'
 
 export { builtinVocabulary } from './vocabulary'
 export { builtinPatterns } from './patterns'
 export { newsArticles } from './news'
+export { sciencePhilosophyArticles } from './science-philosophy'
 
 /** 全部内置题目（代码内置，不入 localStorage） */
 export const builtinQuestions: Question[] = [
@@ -18,6 +20,7 @@ export const builtinQuestions: Question[] = [
   ...translationQuestions,
   ...writingQuestions,
   ...newsArticles,
+  ...sciencePhilosophyArticles,
 ]
 
 export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {

@@ -5,6 +5,7 @@ import { LoginPage } from './components/auth/LoginPage'
 import Home from './pages/Home'
 import Practice from './pages/Practice'
 import News from './pages/News'
+import SciencePhilosophy from './pages/SciencePhilosophy'
 import Translation from './pages/Translation'
 import Writing from './pages/Writing'
 import Vocabulary from './pages/Vocabulary'
@@ -16,6 +17,7 @@ export type ViewName =
   | 'home'
   | 'practice'
   | 'news'
+  | 'philosophy'
   | 'translation'
   | 'writing'
   | 'vocabulary'
@@ -26,6 +28,7 @@ export type ViewName =
 const NAV: { view: ViewName; label: string }[] = [
   { view: 'home', label: '🏠 首页' },
   { view: 'news', label: '📰 外刊' },
+  { view: 'philosophy', label: '🔬 科哲' },
   { view: 'practice', label: '✏️ 练习' },
   { view: 'translation', label: '🈯 翻译' },
   { view: 'writing', label: '📝 写作' },
@@ -39,6 +42,7 @@ const VIEWS: Record<ViewName, () => JSX.Element> = {
   home: Home,
   practice: Practice,
   news: News,
+  philosophy: SciencePhilosophy,
   translation: Translation,
   writing: Writing,
   vocabulary: Vocabulary,
