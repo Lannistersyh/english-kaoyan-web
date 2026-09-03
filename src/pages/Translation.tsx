@@ -23,26 +23,58 @@ async function aiScoreTranslation(
   chineseTranslation: string,
   referenceTranslation?: string,
 ): Promise<{ score: number; comment: string } | null> {
+  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY as string
+  if (!apiKey) {
+    console.warn('[AI] DeepSeek API key not configured')
+    return null
+  }
+
+  const prompt = `你是英语翻译评分专家。请从"信（忠实原文）"、"达（通顺流畅）"、"雅（文采表达）"三个维度对以下英译汉翻译进行评分（0-10分，取整），并用50字以内点评不足之处。
+
+原文：${englishText}
+参考译文：${referenceTranslation || '无'}
+用户译文：${chineseTranslation}
+
+请严格按以下JSON格式返回（不要返回其他内容）：
+{"score": 分数, "comment": "点评"}`
+
   try {
-    const res = await fetch('/api/deepseek-score', {
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        englishText,
-        chineseTranslation,
-        referenceTranslation,
+        model: 'deepseek-chat',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+        temperature: 0.3,
       }),
     })
 
-    if (!res.ok) return null
-    const data = await res.json()
-    return {
-      score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
-      comment: String(data.comment ?? '无法点评').slice(0, 100),
+    if (!res.ok) {
+      console.error('[AI] DeepSeek API error:', res.status)
+      return null
     }
-  } catch {
+
+    const data = await res.json()
+    const content = data.choices?.[0]?.message?.content || ''
+    
+    // Parse JSON from response (handle markdown code blocks)
+    const jsonMatch = content.match(/\{[^}]+\}/)
+    if (!jsonMatch) {
+      console.error('[AI] Failed to parse response:', content)
+      return null
+    }
+
+    const result = JSON.parse(jsonMatch[0])
+    return {
+      score: Math.max(0, Math.min(10, Math.round(result.score ?? 5))),
+      comment: String(result.comment ?? '无法点评').slice(0, 100),
+    }
+  } catch (err) {
+    console.error('[AI] Score error:', err)
     return null
   }
 }

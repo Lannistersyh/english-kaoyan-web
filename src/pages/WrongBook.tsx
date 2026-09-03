@@ -9,6 +9,16 @@ import { ThinkingForm } from '../components/practice/ThinkingForm'
 import { Button } from '../components/ui/Button'
 import { Tag } from '../components/ui/Tag'
 import { EmptyState } from '../components/ui/EmptyState'
+/** HTML 转义，防止 XSS */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
@@ -102,7 +112,7 @@ function WrongItemCard({
                   📝 第 {blankNum} 空 · 上下文
                 </div>
                 <span dangerouslySetInnerHTML={{
-                  __html: contextSentence.replace(
+                  __html: escapeHtml(contextSentence).replace(
                     new RegExp('______'),
                     '<b style="color:#e74c3c;text-decoration:underline;">______</b>'
                   )
