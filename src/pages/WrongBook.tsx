@@ -65,11 +65,74 @@ function WrongItemCard({
       borderRadius: '0 8px 8px 0',
       marginBottom: 8,
     }}>
-      {item.stem && (
-        <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 8, color: '#1d1d1f' }}>
-          {item.stem}
-        </div>
-      )}
+      {/* 题目展示：完形提取上下文句，阅读显示完整题干 */}
+      {(() => {
+        // 完形填空：stem 只是数字，从 passage 提取包含 {{n}} 的句子
+        if (item.kind === 'choice' && item.stem && /^\d+$/.test(item.stem) && q?.passage) {
+          const blankNum = item.stem
+          const paragraphs = q.passage.split(/\n\s*\n/)
+          let contextSentence = ''
+          for (const para of paragraphs) {
+            if (para.includes('{{' + blankNum + '}}')) {
+              // 提取包含 {{n}} 的那一句
+              const sentences = para.split(/(?<=[.!?])\s+/)
+              for (const sent of sentences) {
+                if (sent.includes('{{' + blankNum + '}}')) {
+                  contextSentence = sent.replace('\{\{' + blankNum + '\}\}', '______').trim()
+                  break
+                }
+              }
+              if (!contextSentence) contextSentence = para.replace('\{\{' + blankNum + '\}\}', '______').trim()
+              break
+            }
+          }
+          if (contextSentence) {
+            return (
+              <div style={{
+                marginBottom: 10,
+                padding: '10px 12px',
+                background: 'linear-gradient(135deg, #fef9e7 0%, #fdf2e9 100%)',
+                borderRadius: 8,
+                borderLeft: '3px solid #f39c12',
+                fontSize: 14,
+                lineHeight: 1.8,
+                color: '#2c3e50',
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#e67e22', marginBottom: 4 }}>
+                  📝 第 {blankNum} 空 · 上下文
+                </div>
+                <span dangerouslySetInnerHTML={{
+                  __html: contextSentence.replace(
+                    new RegExp('______'),
+                    '<b style="color:#e74c3c;text-decoration:underline;">______</b>'
+                  )
+                }} />
+              </div>
+            )
+          }
+        }
+        // 阅读理解：显示完整题干
+        if (item.stem && !/^\d+$/.test(item.stem)) {
+          return (
+            <div style={{
+              marginBottom: 10,
+              padding: '10px 12px',
+              background: 'linear-gradient(135deg, #eaf2f8 0%, #ebf5fb 100%)',
+              borderRadius: 8,
+              borderLeft: '3px solid #3498db',
+              fontSize: 14,
+              lineHeight: 1.7,
+              color: '#2c3e50',
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: '#2980b9', marginBottom: 4 }}>
+                📋 题目
+              </div>
+              {item.stem}
+            </div>
+          )
+        }
+        return null
+      })()}
 
       {item.options && item.options.length > 0 && (
         <div style={{ marginBottom: 8 }}>
@@ -110,17 +173,18 @@ function WrongItemCard({
       {context && (
         <div style={{
           margin: '8px 0',
-          padding: '8px 10px',
-          background: 'rgba(0, 113, 227, 0.04)',
-          borderRadius: 6,
+          padding: '10px 12px',
+          background: 'linear-gradient(135deg, #e8f8f5 0%, #eafaf1 100%)',
+          borderRadius: 8,
+          borderLeft: '3px solid #27ae60',
           fontSize: 13,
-          lineHeight: 1.7,
-          color: '#3d3d3d',
-          fontStyle: 'italic',
-          borderLeft: '2px solid rgba(0, 113, 227, 0.2)',
+          lineHeight: 1.8,
+          color: '#2c3e50',
         }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: '#0071e3', fontStyle: 'normal' }}>📖 核心句：</span>
-          {context}
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#27ae60', marginBottom: 4, fontStyle: 'normal' }}>
+            📖 原文核心句
+          </div>
+          <span style={{ fontStyle: 'italic' }}>{context}</span>
         </div>
       )}
 
