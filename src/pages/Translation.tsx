@@ -17,33 +17,42 @@ function formatDate(ts: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-/** 调用后端代理进行 AI 评分（API key 存在服务端，不暴露在前端） */
+/** Vercel 部署地址（AI 评分后端） */
+const VERCEL_API = 'https://english-kaoyan-mac.vercel.app/api/deepseek-score'
+
+/** 调用后端代理进行 AI 评分 */
 async function aiScoreTranslation(
   englishText: string,
   chineseTranslation: string,
   referenceTranslation?: string,
 ): Promise<{ score: number; comment: string } | null> {
-  try {
-    const res = await fetch('/api/deepseek-score', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ englishText, chineseTranslation, referenceTranslation }),
-    })
+  // 先尝试本地 API（Vercel 部署时）
+  const urls = [ '/api/deepseek-score', VERCEL_API ]
+  
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ englishText, chineseTranslation, referenceTranslation }),
+        signal: AbortSignal.timeout(10000),
+      })
 
-    if (!res.ok) {
-      console.error('[AI] Score API error:', res.status)
-      return null
-    }
+      if (!res.ok) continue
 
-    const data = await res.json()
-    return {
-      score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
-      comment: String(data.comment ?? '无法点评').slice(0, 100),
+      const data = await res.json()
+      return {
+        score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
+        comment: String(data.comment ?? '无法点评').slice(0, 100),
+      }
+    } catch {
+      continue
     }
-  } catch (err) {
-    console.error('[AI] Score error:', err)
-    return null
   }
+  
+  // 全部失败
+  console.warn('[AI] All scoring endpoints failed')
+  return null
 }
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -129,7 +138,7 @@ export default function Translation() {
         }),
       )
     } else {
-      setAiError('AI 评分失败，请稍后重试')
+      setAiError('AI 评分需要访问 Vercel 版本：english-kaoyan-mac.vercel.app')
     }
     setAiScoringId(null)
   }
