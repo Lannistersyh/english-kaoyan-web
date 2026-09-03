@@ -4,6 +4,7 @@ import { STORAGE_KEYS } from '../types'
 import { getQuestionsByType } from '../utils/questions'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { PracticeSession } from '../components/practice/PracticeSession'
+import { getApiKey } from '../lib/ai-key'
 import { Button } from '../components/ui/Button'
 import { Tag } from '../components/ui/Tag'
 import { Card } from '../components/ui/Card'
@@ -23,7 +24,7 @@ async function aiScoreTranslation(
   chineseTranslation: string,
   referenceTranslation?: string,
 ): Promise<{ score: number; comment: string } | null> {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY as string
+  const apiKey = getApiKey()
   if (!apiKey) {
     console.warn('[AI] DeepSeek API key not configured')
     return null
