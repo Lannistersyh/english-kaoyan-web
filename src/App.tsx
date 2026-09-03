@@ -12,6 +12,7 @@ import Vocabulary from './pages/Vocabulary'
 import WrongBook from './pages/WrongBook'
 import Import from './pages/Import'
 import Settings from './pages/Settings'
+import Dictionary from './components/dictionary/Dictionary'
 
 export type ViewName =
   | 'home'
@@ -128,6 +129,7 @@ export default function App() {
           ))}
         </nav>
       </aside>
+      <Dictionary />
       <main className="layout__content">
         <Page key={view} />
       </main>
