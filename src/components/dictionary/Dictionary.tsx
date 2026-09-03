@@ -56,7 +56,6 @@ async function fetchDefinition(word: string): Promise<DictEntry | null> {
     let pos = ''
     for (const m of matches) {
       const trans = m.translation || ''
-      const q = Number(m.quality) || 0
       // Filter out low quality or identical matches
       if (trans && trans !== word && trans.length > 1) {
         if (trans.includes('.') && !detailedTrans.some(d => d === trans)) {

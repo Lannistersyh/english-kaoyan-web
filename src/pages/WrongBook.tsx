@@ -20,12 +20,11 @@ function timeAgo(ts: number): string {
   return new Date(ts).toLocaleDateString('zh-CN')
 }
 
-/** 从 passage 中提取包含关键词的上下文片段 */
 function extractContext(passage: string, keywords: string[], radius = 80): string {
   if (!passage || keywords.length === 0) return ''
-  const lowerPassage = passage.toLowerCase()
+  const lower = passage.toLowerCase()
   for (const kw of keywords) {
-    const idx = lowerPassage.indexOf(kw.toLowerCase())
+    const idx = lower.indexOf(kw.toLowerCase())
     if (idx !== -1) {
       const start = Math.max(0, idx - radius)
       const end = Math.min(passage.length, idx + kw.length + radius)
@@ -38,7 +37,6 @@ function extractContext(passage: string, keywords: string[], radius = 80): strin
   return ''
 }
 
-/** 获取选项文本 by id */
 function getOptionText(item: SubQuestion, optionId: string): string {
   if (item.options) {
     const opt = item.options.find(o => o.id === optionId)
@@ -50,7 +48,6 @@ function getOptionText(item: SubQuestion, optionId: string): string {
   return optionId
 }
 
-/** 单条错题卡片：展示正误对比 + 分析 */
 function WrongItemCard({
   r, q, item, onEdit, onReview,
 }: {
@@ -63,9 +60,7 @@ function WrongItemCard({
   if (!item) return null
 
   const passage = q?.passage || ''
-  // 提取核心句：从正确选项和题干中找关键词
   const correctText = item.options?.find(o => item.correctIds.includes(o.id))?.text || ''
-  const wrongText = r.wrongAnswer.map(id => getOptionText(item, id)).join(', ')
   const keywords = [
     ...(item.stem || '').split(/\s+/).filter(w => w.length > 4),
     ...correctText.split(/\s+/).filter(w => w.length > 4),
@@ -80,14 +75,12 @@ function WrongItemCard({
       borderRadius: '0 8px 8px 0',
       marginBottom: 8,
     }}>
-      {/* 题干 */}
       {item.stem && (
         <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 8, color: '#1d1d1f' }}>
           {item.stem}
         </div>
       )}
 
-      {/* 选项对比 */}
       {item.options && item.options.length > 0 && (
         <div style={{ marginBottom: 8 }}>
           {item.options.map((opt, idx) => {
@@ -124,7 +117,6 @@ function WrongItemCard({
         </div>
       )}
 
-      {/* 核心句/上下文 */}
       {context && (
         <div style={{
           margin: '8px 0',
@@ -142,7 +134,6 @@ function WrongItemCard({
         </div>
       )}
 
-      {/* 解析 */}
       {item.analysis && (
         <div style={{
           margin: '8px 0',
@@ -156,15 +147,14 @@ function WrongItemCard({
         </div>
       )}
 
-      {/* 干扰项分析 */}
       {item.distractors && item.distractors.length > 0 && (
         <div style={{ margin: '8px 0' }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: '#86868b', marginBottom: 4 }}>
             🎯 干扰项分析
           </div>
           {item.distractors.map((d, i) => {
-            const optText = item.options?.find(o => o.id === d.optionId)
-            const optIdx = item.options?.indexOf(item.options.find(o => o.id === d.optionId)!)
+            const optObj = item.options?.find(o => o.id === d.optionId)
+            const optIdx = optObj && item.options ? item.options.indexOf(optObj) : -1
             return (
               <div key={i} style={{
                 fontSize: 12,
@@ -173,9 +163,9 @@ function WrongItemCard({
                 borderBottom: i < item.distractors!.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
               }}>
                 <span style={{ color: '#ff3b30', fontWeight: 600 }}>
-                  {optIdx !== undefined ? LETTERS[optIdx] + '. ' : ''}{optText?.text}
+                  {optIdx >= 0 ? LETTERS[optIdx] + '. ' : ''}{optObj?.text}
                 </span>
-                <Tag variant="danger" style={{ marginLeft: 6, fontSize: 10 }}>{d.type}</Tag>
+                <Tag variant="danger">{d.type}</Tag>
                 <span style={{ marginLeft: 4 }}>{d.why}</span>
               </div>
             )
@@ -183,7 +173,6 @@ function WrongItemCard({
         </div>
       )}
 
-      {/* 三问思考记录 */}
       {(r.myThought || r.distractorTrap || r.correctMapping) && (
         <div style={{
           marginTop: 10,
@@ -199,7 +188,6 @@ function WrongItemCard({
         </div>
       )}
 
-      {/* 操作按钮 */}
       <div className="flex-row" style={{ marginTop: 10, gap: 8 }}>
         <Button variant="primary" style={{ padding: '4px 12px', fontSize: 12 }} onClick={onReview}>
           重做此题
@@ -213,18 +201,11 @@ function WrongItemCard({
             补填三问
           </Button>
         )}
-        {r.status === 'active' ? (
-          <Button variant="ghost" style={{ padding: '4px 12px', fontSize: 12 }} onClick={() => {
-            // This will be handled by parent
-          }}>
-          </Button>
-        ) : null}
       </div>
     </div>
   )
 }
 
-/** 题目分组卡片：折叠/展开 */
 function QuestionGroup({
   questionId,
   records,
@@ -244,7 +225,6 @@ function QuestionGroup({
 
   return (
     <div className="card" style={{ marginBottom: 12, overflow: 'hidden' }}>
-      {/* 折叠头 */}
       <div
         onClick={() => setExpanded(!expanded)}
         style={{
@@ -284,7 +264,6 @@ function QuestionGroup({
         </div>
       </div>
 
-      {/* 折叠内容 */}
       {expanded && (
         <div style={{ padding: '8px 0' }}>
           {records.map(r => {
@@ -298,12 +277,7 @@ function QuestionGroup({
                   onEdit={() => onEdit(r)}
                   onReview={() => { if (q) onReview(q, r) }}
                 />
-                {/* 掌握/恢复按钮 */}
-                <div style={{
-                  position: 'absolute',
-                  top: 12,
-                  right: 16,
-                }}>
+                <div style={{ position: 'absolute', top: 12, right: 16 }}>
                   {r.status === 'active' ? (
                     <button
                       onClick={() => onToggleMastered(r)}
@@ -359,7 +333,6 @@ export default function WrongBook() {
       .sort((a, b) => b.lastWrongAt - a.lastWrongAt)
   }, [records, statusFilter])
 
-  // 按 questionId 分组
   const grouped = useMemo(() => {
     const map = new Map<string, WrongRecord[]>()
     for (const r of shown) {
@@ -367,7 +340,6 @@ export default function WrongBook() {
       arr.push(r)
       map.set(r.questionId, arr)
     }
-    // 按最后错误时间排序
     return [...map.entries()].sort(([, a], [, b]) => {
       const latestA = Math.max(...a.map(r => r.lastWrongAt))
       const latestB = Math.max(...b.map(r => r.lastWrongAt))
