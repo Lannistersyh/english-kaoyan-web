@@ -15,6 +15,7 @@ interface DictEntry {
   phonetic: string
   definitions: string[]
   chineseDef: string
+  pos: string // part of speech
 }
 
 const HISTORY_KEY = 'ekw:dictHistory'
@@ -32,40 +33,60 @@ function saveHistory(h: DictHistory) {
 }
 
 async function fetchDefinition(word: string): Promise<DictEntry | null> {
+  // Use MyMemory API - works from China
   try {
-    // 1. Get English definition from Free Dictionary API
-    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`)
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-CN`,
+      { signal: controller.signal }
+    )
+    clearTimeout(timeout)
+
     if (!res.ok) return null
     const data = await res.json()
-    if (!Array.isArray(data) || data.length === 0) return null
+    if (data.responseStatus !== 200) return null
 
-    const entry = data[0]
-    const phonetic = entry.phonetic || entry.phonetics?.[0]?.text || ''
-    const meanings = entry.meanings || []
-    const definitions: string[] = []
-    meanings.forEach((m: any) => {
-      (m.definitions || []).slice(0, 2).forEach((d: any) => {
-        if (d.definition) definitions.push(d.definition)
-      })
-    })
+    const mainTranslation = data.responseData?.translatedText || ''
+    const matches = data.matches || []
 
-    // 2. Translate to Chinese using MyMemory API
-    let chineseDef = ''
-    const textToTranslate = definitions.slice(0, 3).join('; ')
-    if (textToTranslate) {
-      try {
-        const tRes = await fetch(
-          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textToTranslate)}&langpair=en|zh-CN`
-        )
-        const tData = await tRes.json()
-        if (tData.responseStatus === 200 && tData.responseData?.translatedText) {
-          chineseDef = tData.responseData.translatedText
+    // Extract detailed translations
+    const detailedTrans: string[] = []
+    let pos = ''
+    for (const m of matches) {
+      const trans = m.translation || ''
+      const q = Number(m.quality) || 0
+      // Filter out low quality or identical matches
+      if (trans && trans !== word && trans.length > 1) {
+        if (trans.includes('.') && !detailedTrans.some(d => d === trans)) {
+          // This has part of speech标记
+          const posMatch = trans.match(/^([a-z]+\.)\s*/)
+          if (posMatch && !pos) pos = posMatch[1]
+          detailedTrans.push(trans)
+        } else if (!detailedTrans.includes(trans) && detailedTrans.length < 5) {
+          detailedTrans.push(trans)
         }
-      } catch { /* translation failed, show English only */ }
+      }
     }
 
-    return { word: entry.word, phonetic, definitions: definitions.slice(0, 3), chineseDef }
-  } catch { return null }
+    // If we got no detailed translations, use the main one
+    const allTranslations = detailedTrans.length > 0 ? detailedTrans :
+      (mainTranslation && mainTranslation !== word ? [mainTranslation] : [])
+
+    if (allTranslations.length === 0) return null
+
+    return {
+      word,
+      phonetic: '',
+      definitions: allTranslations,
+      chineseDef: allTranslations[0] || mainTranslation,
+      pos,
+    }
+  } catch (e) {
+    console.error('Dictionary fetch error:', e)
+    return null
+  }
 }
 
 export default function Dictionary() {
@@ -76,6 +97,7 @@ export default function Dictionary() {
   const [loading, setLoading] = useState(false)
   const [currentWord, setCurrentWord] = useState('')
   const [showResult, setShowResult] = useState(false)
+  const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => { setHistory(loadHistory()) }, [])
@@ -84,6 +106,7 @@ export default function Dictionary() {
     setInput(val)
     setShowResult(false)
     setEntry(null)
+    setError('')
   }, [])
 
   const handleSubmit = useCallback(async () => {
@@ -99,12 +122,17 @@ export default function Dictionary() {
     saveHistory(updated)
     setCurrentWord(word)
     setInput('')
+    setError('')
 
     if (unlocked) {
       setLoading(true)
       setShowResult(true)
       const result = await fetchDefinition(word)
-      setEntry(result)
+      if (result) {
+        setEntry(result)
+      } else {
+        setError('未找到释义，请检查拼写')
+      }
       setLoading(false)
     } else {
       setShowResult(true)
@@ -114,7 +142,7 @@ export default function Dictionary() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSubmit()
-    if (e.key === 'Escape') { setInput(''); setShowResult(false); setEntry(null) }
+    if (e.key === 'Escape') { setInput(''); setShowResult(false); setEntry(null); setError('') }
   }
 
   // Recent words list
@@ -122,9 +150,7 @@ export default function Dictionary() {
     .sort(([, a], [, b]) => b.timestamp - a.timestamp)
     .slice(0, 8)
 
-  const remaining = currentWord && !showResult ? 0 :
-    currentWord && showResult ? 0 :
-    input ? Math.max(0, 3 - (history[input.trim().toLowerCase()]?.count || 0)) : 3
+  const getCount = (w: string) => history[w]?.count || 0
 
   return (
     <>
@@ -164,21 +190,21 @@ export default function Dictionary() {
         width: 328,
         height: '100vh',
         zIndex: 1000,
-        background: 'rgba(255, 255, 255, 0.92)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderLeft: '1px solid rgba(0, 0, 0, 0.08)',
-        boxShadow: isOpen ? '-8px 0 32px rgba(0, 0, 0, 0.08)' : 'none',
+        boxShadow: isOpen ? '-8px 0 32px rgba(0, 0, 0, 0.1)' : 'none',
         transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
       }}>
-        {/* Header - Mac style */}
+        {/* Header */}
         <div style={{
           padding: '16px 20px 12px',
           borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-          background: 'rgba(255, 255, 255, 0.8)',
+          background: 'rgba(255, 255, 255, 0.9)',
         }}>
           <div style={{
             fontSize: 13,
@@ -202,10 +228,11 @@ export default function Dictionary() {
               onChange={(e) => handleInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="输入单词，敲三遍解锁释义..."
+              autoFocus
               style={{
                 width: '100%',
-                padding: '9px 12px',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
+                padding: '9px 52px 9px 12px',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 borderRadius: 8,
                 fontSize: 14,
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
@@ -215,15 +242,15 @@ export default function Dictionary() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = 'var(--c-primary)'
-                e.target.style.boxShadow = '0 0 0 3px rgba(31, 78, 156, 0.1)'
+                e.target.style.borderColor = '#0071e3'
+                e.target.style.boxShadow = '0 0 0 3px rgba(0, 113, 227, 0.12)'
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(0, 0, 0, 0.1)'
+                e.target.style.borderColor = 'rgba(0, 0, 0, 0.12)'
                 e.target.style.boxShadow = 'none'
               }}
             />
-            {input && (
+            {input.trim() && (
               <button
                 onClick={handleSubmit}
                 style={{
@@ -231,10 +258,10 @@ export default function Dictionary() {
                   right: 6,
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  padding: '4px 10px',
+                  padding: '5px 12px',
                   border: 'none',
                   borderRadius: 6,
-                  background: 'var(--c-primary)',
+                  background: '#0071e3',
                   color: '#fff',
                   fontSize: 12,
                   fontWeight: 600,
@@ -248,35 +275,33 @@ export default function Dictionary() {
           </div>
 
           {/* Progress indicator */}
-          {input && !showResult && (
+          {input.trim() && !showResult && (
             <div style={{
               marginTop: 8,
               display: 'flex',
               alignItems: 'center',
-              gap: 6,
+              gap: 8,
               fontSize: 12,
               color: '#86868b',
             }}>
-              <div style={{
-                display: 'flex',
-                gap: 4,
-              }}>
-                {[1, 2, 3].map(i => (
-                  <div key={i} style={{
-                    width: 16,
-                    height: 4,
-                    borderRadius: 2,
-                    background: i <= (history[input.trim().toLowerCase()]?.count || 0)
-                      ? 'var(--c-primary)'
-                      : 'rgba(0, 0, 0, 0.08)',
-                    transition: 'background 0.2s',
-                  }} />
-                ))}
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[1, 2, 3].map(i => {
+                  const cnt = getCount(input.trim().toLowerCase())
+                  return (
+                    <div key={i} style={{
+                      width: 18,
+                      height: 5,
+                      borderRadius: 3,
+                      background: i <= cnt ? '#0071e3' : 'rgba(0, 0, 0, 0.08)',
+                      transition: 'background 0.2s',
+                    }} />
+                  )
+                })}
               </div>
               <span>
-                {remaining === 0 ? '可以查了！按 Enter' :
-                 remaining === 3 ? '输入 3 遍解锁释义' :
-                 `还需输入 ${remaining} 遍`}
+                {getCount(input.trim().toLowerCase()) >= 3 ? '✨ 可以查了！按 Enter' :
+                 getCount(input.trim().toLowerCase()) === 0 ? '输入 3 遍解锁释义' :
+                 `已输入 ${getCount(input.trim().toLowerCase())}/3 遍`}
               </span>
             </div>
           )}
@@ -289,9 +314,7 @@ export default function Dictionary() {
           padding: '12px 20px',
         }}>
           {showResult && (
-            <div style={{
-              animation: 'fadeIn 0.25s ease',
-            }}>
+            <div style={{ animation: 'fadeIn 0.25s ease' }}>
               {/* Current word display */}
               <div style={{
                 marginBottom: 14,
@@ -311,13 +334,13 @@ export default function Dictionary() {
                   }}>
                     {currentWord}
                   </span>
-                  {entry?.phonetic && (
+                  {entry?.pos && (
                     <span style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       color: '#86868b',
-                      fontFamily: 'Georgia, serif',
+                      fontStyle: 'italic',
                     }}>
-                      {entry.phonetic}
+                      {entry.pos}
                     </span>
                   )}
                 </div>
@@ -335,7 +358,7 @@ export default function Dictionary() {
                       width: 14,
                       height: 14,
                       border: '2px solid rgba(0,0,0,0.1)',
-                      borderTopColor: 'var(--c-primary)',
+                      borderTopColor: '#0071e3',
                       borderRadius: '50%',
                       animation: 'spin 0.8s linear infinite',
                     }} />
@@ -345,23 +368,24 @@ export default function Dictionary() {
 
                 {entry && (
                   <div style={{ marginTop: 10 }}>
-                    {entry.chineseDef && (
-                      <div style={{
-                        fontSize: 15,
-                        color: '#1d1d1f',
-                        lineHeight: 1.6,
-                        marginBottom: 8,
-                        padding: '8px 10px',
-                        background: 'rgba(31, 78, 156, 0.06)',
-                        borderRadius: 6,
-                        borderLeft: '3px solid var(--c-primary)',
-                      }}>
-                        {entry.chineseDef}
-                      </div>
-                    )}
+                    {/* Main translation - highlighted */}
+                    <div style={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: '#1d1d1f',
+                      lineHeight: 1.6,
+                      marginBottom: 10,
+                      padding: '10px 12px',
+                      background: 'rgba(0, 113, 227, 0.06)',
+                      borderRadius: 8,
+                      borderLeft: '3px solid #0071e3',
+                    }}>
+                      {entry.definitions[0]}
+                    </div>
 
-                    {entry.definitions.length > 0 && (
-                      <div style={{ marginTop: 8 }}>
+                    {/* Other translations */}
+                    {entry.definitions.length > 1 && (
+                      <div style={{ marginBottom: 10 }}>
                         <div style={{
                           fontSize: 11,
                           fontWeight: 600,
@@ -370,58 +394,55 @@ export default function Dictionary() {
                           letterSpacing: 0.5,
                           marginBottom: 6,
                         }}>
-                          English Definitions
+                          其他释义
                         </div>
-                        {entry.definitions.map((def, i) => (
-                          <div key={i} style={{
-                            fontSize: 13,
-                            color: '#3d3d3d',
-                            lineHeight: 1.6,
-                            padding: '4px 0',
-                            borderBottom: i < entry.definitions.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
-                          }}>
-                            <span style={{
-                              color: '#86868b',
-                              fontSize: 11,
-                              marginRight: 6,
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          {entry.definitions.slice(1).map((def, i) => (
+                            <div key={i} style={{
+                              fontSize: 14,
+                              color: '#3d3d3d',
+                              lineHeight: 1.6,
+                              padding: '6px 10px',
+                              background: 'rgba(0, 0, 0, 0.02)',
+                              borderRadius: 6,
                             }}>
-                              {i + 1}.
-                            </span>
-                            {def}
-                          </div>
-                        ))}
+                              {def}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
+
+                    {/* Success badge */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      marginTop: 8,
+                      padding: '6px 10px',
+                      background: 'rgba(52, 199, 89, 0.1)',
+                      borderRadius: 6,
+                      fontSize: 12,
+                      color: '#34c759',
+                    }}>
+                      ✅ 已输入 3 遍，释义已解锁
+                    </div>
                   </div>
                 )}
 
-                {!loading && !entry && currentWord && (
+                {error && (
                   <div style={{
                     marginTop: 10,
                     padding: '10px 12px',
                     background: '#fef3cd',
-                    borderRadius: 6,
+                    borderRadius: 8,
                     fontSize: 13,
                     color: '#856404',
                   }}>
-                    ⚠️ 未找到释义，请检查拼写
+                    ⚠️ {error}
                   </div>
                 )}
               </div>
-
-              {/* Unlock animation */}
-              {!loading && history[currentWord]?.unlocked && !entry && currentWord && (
-                <div style={{
-                  textAlign: 'center',
-                  padding: '20px 0',
-                  animation: 'fadeIn 0.5s ease',
-                }}>
-                  <div style={{ fontSize: 36, marginBottom: 8 }}>✨</div>
-                  <div style={{ fontSize: 14, color: '#1d1d1f', fontWeight: 600 }}>
-                    已输入 3 遍，正在查询...
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -445,9 +466,14 @@ export default function Dictionary() {
                     onClick={() => {
                       setCurrentWord(word)
                       setShowResult(true)
+                      setError('')
                       if (record.unlocked) {
                         setLoading(true)
-                        fetchDefinition(word).then(r => { setEntry(r); setLoading(false) })
+                        fetchDefinition(word).then(r => {
+                          if (r) setEntry(r)
+                          else setError('未找到释义')
+                          setLoading(false)
+                        })
                       } else {
                         setEntry(null)
                       }
@@ -456,28 +482,25 @@ export default function Dictionary() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      padding: '8px 10px',
+                      padding: '10px 12px',
                       border: 'none',
-                      borderRadius: 6,
-                      background: record.unlocked ? 'rgba(31, 78, 156, 0.06)' : 'rgba(0, 0, 0, 0.02)',
+                      borderRadius: 8,
+                      background: record.unlocked ? 'rgba(0, 113, 227, 0.06)' : 'rgba(0, 0, 0, 0.02)',
                       cursor: 'pointer',
                       textAlign: 'left',
                       fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
                       transition: 'background 0.15s',
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(31, 78, 156, 0.1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = record.unlocked ? 'rgba(31, 78, 156, 0.06)' : 'rgba(0, 0, 0, 0.02)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = record.unlocked ? 'rgba(0, 113, 227, 0.12)' : 'rgba(0, 0, 0, 0.04)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = record.unlocked ? 'rgba(0, 113, 227, 0.06)' : 'rgba(0, 0, 0, 0.02)'}
                   >
-                    <span style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: '#1d1d1f',
-                    }}>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f' }}>
                       {record.unlocked ? '🔓' : '🔒'} {word}
                     </span>
                     <span style={{
                       fontSize: 11,
-                      color: '#86868b',
+                      color: record.unlocked ? '#34c759' : '#86868b',
+                      fontWeight: record.unlocked ? 600 : 400,
                     }}>
                       {record.count}/3
                     </span>
@@ -494,13 +517,14 @@ export default function Dictionary() {
               padding: '40px 20px',
               color: '#86868b',
             }}>
-              <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.6 }}>📖</div>
-              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
+              <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.5 }}>📖</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>
                 Mac 风格汉英词典
               </div>
-              <div style={{ fontSize: 12, lineHeight: 1.6 }}>
-                输入单词并敲写 3 遍<br />
-                解锁释义，加深记忆
+              <div style={{ fontSize: 13, lineHeight: 1.8, maxWidth: 200, margin: '0 auto' }}>
+                输入英文单词<br />
+                <b>敲写 3 遍</b>解锁中文释义<br />
+                深度记忆每一个生词
               </div>
             </div>
           )}
@@ -513,9 +537,9 @@ export default function Dictionary() {
           fontSize: 11,
           color: '#86868b',
           textAlign: 'center',
-          background: 'rgba(255, 255, 255, 0.6)',
+          background: 'rgba(255, 255, 255, 0.7)',
         }}>
-          Free Dictionary API · MyMemory Translation
+          MyMemory Translation API
         </div>
       </div>
 
@@ -525,8 +549,8 @@ export default function Dictionary() {
           to { transform: rotate(360deg); }
         }
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>
