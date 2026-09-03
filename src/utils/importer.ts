@@ -49,7 +49,7 @@ export function parseImport(text: string): ImportResult {
   // 限制导入大小（100KB）
   const MAX_SIZE = 100 * 1024
   if (text.length > MAX_SIZE) {
-    errors.push(`文本过大（${Math.round(text.length / 1024)}KB），请控制在 100KB 以内。建议分批导入。`)
+    errors.push({ line: 0, message: `文本过大（${Math.round(text.length / 1024)}KB），请控制在 100KB 以内。建议分批导入。` })
     return { questions, errors }
   }
 
