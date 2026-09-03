@@ -37,16 +37,6 @@ function extractContext(passage: string, keywords: string[], radius = 80): strin
   return ''
 }
 
-function getOptionText(item: SubQuestion, optionId: string): string {
-  if (item.options) {
-    const opt = item.options.find(o => o.id === optionId)
-    if (opt) {
-      const idx = item.options.indexOf(opt)
-      return `${LETTERS[idx]}. ${opt.text}`
-    }
-  }
-  return optionId
-}
 
 function WrongItemCard({
   r, q, item, onEdit, onReview,
