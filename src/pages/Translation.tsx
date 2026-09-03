@@ -17,42 +17,62 @@ function formatDate(ts: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-/** Vercel 部署地址（AI 评分后端） */
-const VERCEL_API = 'https://english-kaoyan-mac.vercel.app/api/deepseek-score'
-
-/** 调用后端代理进行 AI 评分 */
+/** 调用 DeepSeek API 对翻译进行 AI 评分（CORS 直连，无需代理） */
 async function aiScoreTranslation(
   englishText: string,
   chineseTranslation: string,
   referenceTranslation?: string,
 ): Promise<{ score: number; comment: string } | null> {
-  // 先尝试本地 API（Vercel 部署时）
-  const urls = [ '/api/deepseek-score', VERCEL_API ]
-  
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ englishText, chineseTranslation, referenceTranslation }),
-        signal: AbortSignal.timeout(10000),
-      })
-
-      if (!res.ok) continue
-
-      const data = await res.json()
-      return {
-        score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
-        comment: String(data.comment ?? '无法点评').slice(0, 100),
-      }
-    } catch {
-      continue
-    }
+  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY as string
+  if (!apiKey) {
+    console.warn('[AI] DeepSeek API key not configured')
+    return null
   }
-  
-  // 全部失败
-  console.warn('[AI] All scoring endpoints failed')
-  return null
+
+  const prompt = `你是英语翻译评分专家。请从"信（忠实原文）"、"达（通顺流畅）"、"雅（文采表达）"三个维度对以下英译汉翻译进行评分（0-10分，取整），并用50字以内点评不足之处。
+
+原文：${englishText}
+参考译文：${referenceTranslation || '无'}
+用户译文：${chineseTranslation}
+
+请严格按以下JSON格式返回（不要返回其他内容）：
+{"score": 分数, "comment": "点评"}`
+
+  try {
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+        temperature: 0.3,
+      }),
+      signal: AbortSignal.timeout(15000),
+    })
+
+    if (!res.ok) {
+      console.error('[AI] DeepSeek API error:', res.status)
+      return null
+    }
+
+    const data = await res.json()
+    const msg = data.choices?.[0]?.message?.content || ''
+    const jsonMatch = msg.match(/\{[^}]+\}/)
+    if (!jsonMatch) return null
+
+    const result = JSON.parse(jsonMatch[0])
+    return {
+      score: Math.max(0, Math.min(10, Math.round(result.score ?? 5))),
+      comment: String(result.comment ?? '').slice(0, 100),
+    }
+  } catch (err) {
+    console.error('[AI] Score error:', err)
+    return null
+  }
 }
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -138,7 +158,7 @@ export default function Translation() {
         }),
       )
     } else {
-      setAiError('AI 评分需要访问 Vercel 版本：english-kaoyan-mac.vercel.app')
+      setAiError('AI 评分失败，请检查网络后重试')
     }
     setAiScoringId(null)
   }
