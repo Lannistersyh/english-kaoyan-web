@@ -408,4 +408,1018 @@ export const clozeQuestions: Question[] = [
       },
     ],
   },
+
+  {
+    id: 'cloze-3',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '核心考点',
+    title: '完形 · 人工智能与就业的博弈',
+    suggestedMinutes: 15,
+    passage: [
+      'The debate over artificial intelligence and employment tends to oscillate between two extremes: utopian visions of a leisure-filled paradise and dystopian fears of mass unemployment. The {{1}} truth, as history suggests, lies somewhere in between. Every major technological revolution — from the spinning jenny to the internet — has {{2}} destroyed more jobs than it created, yet the long-run employment rate has remained remarkably {{3}}. The reason is not that technology is harmless, but that human wants are {{4}}: as old needs are met, new ones emerge.',
+      'What makes the AI revolution {{5}} from its predecessors is the speed and breadth of its reach. Previous waves of automation {{6}} manual labour — factory floors, assembly lines, farm work. AI encroaches on cognitive tasks once thought {{7}} to machines: legal analysis, medical diagnosis, even creative writing. A radiologist who spent a decade mastering image interpretation may find that a neural network {{8}} her accuracy in months.',
+      'The policy responses, however, have been {{9}} slow. Retraining programmes designed for the industrial age are ill-suited to a world where the half-life of professional skills is shrinking. The challenge is not merely to teach displaced workers new trades, but to cultivate the {{10}} capacity to adapt — a meta-skill that no algorithm can yet replicate.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c3-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c3-1-a', text: 'glamorous' }, { id: 'c3-1-b', text: 'messy' },
+          { id: 'c3-1-c', text: 'obvious' }, { id: 'c3-1-d', text: 'fatal' },
+        ],
+        correctIds: ['c3-1-b'],
+        analysis: '前文说两极（乌托邦/反乌托邦），后文说"介于两者之间"——现实是"混乱的、复杂的"，messy 最贴切。',
+        distractors: [
+          { optionId: 'c3-1-a', type: '无中生有', why: 'glamorous（迷人的）与"两极之间"的复杂语义不符。' },
+          { optionId: 'c3-1-c', type: '偷换概念', why: 'obvious（明显的）与"lies somewhere in between"矛盾——如果明显就不需要说"介于之间"。' },
+          { optionId: 'c3-1-d', type: '无中生有', why: 'fatal（致命的）语气过重，文章整体是分析性而非灾难性。' },
+        ],
+        vocabNotes: ['oscillate v. 摆动、摇摆（oscillate between A and B 在A和B之间摇摆）'],
+      },
+      {
+        id: 'c3-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c3-2-a', text: 'temporarily' }, { id: 'c3-2-b', text: 'accidentally' },
+          { id: 'c3-2-c', text: 'occasionally' }, { id: 'c3-2-d', text: 'frequently' },
+        ],
+        correctIds: ['c3-2-a'],
+        analysis: '每场技术革命"暂时"摧毁了更多岗位，但长期就业率保持不变——temporarily 与 long-run 形成时间对比。',
+        distractors: [
+          { optionId: 'c3-2-b', type: '无中生有', why: 'accidentally（意外地）暗示技术革命是无心之失，与论述逻辑不符。' },
+          { optionId: 'c3-2-c', type: '无中生有', why: 'occasionally（偶尔）频率过低，不符合"每场革命都如此"的表述。' },
+          { optionId: 'c3-2-d', type: '偷换概念', why: 'frequently（频繁地）只强调频率，未表达"短期摧毁但长期恢复"的转折关系。' },
+        ],
+        vocabNotes: ['dystopian adj. 反乌托邦的', 'leisure n. 休闲'],
+      },
+      {
+        id: 'c3-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c3-3-a', text: 'declining' }, { id: 'c3-3-b', text: 'stable' },
+          { id: 'c3-3-c', text: 'unpredictable' }, { id: 'c3-3-d', text: 'artificial' },
+        ],
+        correctIds: ['c3-3-b'],
+        analysis: 'yet 表转折——虽然短期摧毁岗位，但长期就业率保持"稳定"，stable 与前文 destroyed 形成反差。',
+        distractors: [
+          { optionId: 'c3-3-a', type: '偷换概念', why: 'declining（下降的）与 yet 转折后的"乐观"基调矛盾。' },
+          { optionId: 'c3-3-c', type: '无中生有', why: 'unpredictable（不可预测的）与"remarkably"（显著地）矛盾——remarkably 修饰的是一个确定的事实。' },
+          { optionId: 'c3-3-d', type: '无中生有', why: 'artificial（人工的）与 employment rate 搭配不当。' },
+        ],
+        vocabNotes: ['remarkably adv. 显著地、值得注意地'],
+      },
+      {
+        id: 'c3-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c3-4-a', text: 'limited' }, { id: 'c3-4-b', text: 'identical' },
+          { id: 'c3-4-c', text: 'insatiable' }, { id: 'c3-4-d', text: 'rational' },
+        ],
+        correctIds: ['c3-4-c'],
+        analysis: '后句"旧需求被满足，新需求涌现"——人类欲望是"永不满足的"，insatiable 最准确。',
+        distractors: [
+          { optionId: 'c3-4-a', type: '偷换概念', why: 'limited（有限的）与后文"新需求涌现"矛盾——欲望恰恰是无限的。' },
+          { optionId: 'c3-4-b', type: '无中生有', why: 'identical（相同的）与语义无关。' },
+          { optionId: 'c3-4-d', type: '局部正确', why: 'rational（理性的）可以修饰人，但此处描述的是欲望的本质（无限），不是理性。' },
+        ],
+        vocabNotes: ['insatiable adj. 永不满足的（in- + satiate 喂饱 + -able = 无法被喂饱的）'],
+      },
+      {
+        id: 'c3-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c3-5-a', text: 'similar' }, { id: 'c3-5-b', text: 'different' },
+          { id: 'c3-5-c', text: 'compatible' }, { id: 'c3-5-d', text: 'familiar' },
+        ],
+        correctIds: ['c3-5-b'],
+        analysis: '后文说AI触及认知领域（之前只触及体力劳动），所以与前几次革命"不同"，different 与 from 搭配。',
+        distractors: [
+          { optionId: 'c3-5-a', type: '偷换概念', why: 'similar（相似的）与后文"previous waves...AI encroaches on cognitive tasks"的对比逻辑矛盾。' },
+          { optionId: 'c3-5-c', type: '无中生有', why: 'compatible（兼容的）与 from 搭配不当，且语义不符。' },
+          { optionId: 'c3-5-d', type: '无中生有', why: 'familiar（熟悉的）与 from 搭配不当。' },
+        ],
+        vocabNotes: ['encroach v. 侵占、侵蚀（encroach on/upon = 逐步侵占）'],
+      },
+      {
+        id: 'c3-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c3-6-a', text: 'targeted' }, { id: 'c3-6-b', text: 'ignored' },
+          { id: 'c3-6-c', text: 'celebrated' }, { id: 'c3-6-d', text: 'protected' },
+        ],
+        correctIds: ['c3-6-a'],
+        analysis: '前几次自动化"瞄准"了体力劳动——factory floors, assembly lines 都是体力劳动的场景，targeted 与 encroaches 形成递进。',
+        distractors: [
+          { optionId: 'c3-6-b', type: '偷换概念', why: 'ignored（忽略的）与后文列举的工厂/流水线场景矛盾——那些正是被自动化瞄准的领域。' },
+          { optionId: 'c3-6-c', type: '无中生有', why: 'celebrated（庆祝的）与语境无关。' },
+          { optionId: 'c3-6-d', type: '偷换概念', why: 'protected（保护的）方向反了——体力劳动是被"瞄准"而非"保护"。' },
+        ],
+        vocabNotes: ['manual labour 体力劳动', 'assembly line 装配线'],
+      },
+      {
+        id: 'c3-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c3-7-a', text: 'accessible' }, { id: 'c3-7-b', text: 'superior' },
+          { id: 'c3-7-c', text: 'exclusive' }, { id: 'c3-7-d', text: 'inferior' },
+        ],
+        correctIds: ['c3-7-c'],
+        analysis: 'once thought ___ to machines = 曾被认为对机器是"专属的"——即人类独有能力，exclusive 意为"独占的"。',
+        distractors: [
+          { optionId: 'c3-7-a', type: '偷换概念', why: 'accessible（可及的）方向反了——原意是"机器无法触及"，不是"可以触及"。' },
+          { optionId: 'c3-7-b', type: '无中生有', why: 'superior（优于）与 to machines 搭配语义混乱。' },
+          { optionId: 'c3-7-d', type: '无中生有', why: 'inferior（劣于）与"曾被认为机器做不了"的语义不符。' },
+        ],
+        vocabNotes: ['exclusive adj. 独占的、专属的（exclusive to = 为…所独有）'],
+      },
+      {
+        id: 'c3-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c3-8-a', text: 'equals' }, { id: 'c3-8-b', text: 'surpasses' },
+          { id: 'c3-8-c', text: 'undermines' }, { id: 'c3-8-d', text: 'imitates' },
+        ],
+        correctIds: ['c3-8-b'],
+        analysis: 'neural network 在数月内"超越"她十年的训练——surpasses 与"十年 vs 数月"的速度对比吻合。',
+        distractors: [
+          { optionId: 'c3-8-a', type: '局部正确', why: 'equals（等于）语义尚可，但"数月超越十年"的语境暗示的不只是"打平"。' },
+          { optionId: 'c3-8-c', type: '偷换概念', why: 'undermines（削弱）是"破坏"而非"超越"，且与 accuracy 搭配不当。' },
+          { optionId: 'c3-8-d', type: '无中生有', why: 'imitates（模仿）与"超越精度"的逻辑不符。' },
+        ],
+        vocabNotes: ['radiologist n. 放射科医生', 'neural network 神经网络'],
+      },
+      {
+        id: 'c3-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c3-9-a', text: 'admirably' }, { id: 'c3-9-b', text: 'painfully' },
+          { id: 'c3-9-c', text: 'appropriately' }, { id: 'c3-9-d', text: 'arguably' },
+        ],
+        correctIds: ['c3-9-b'],
+        analysis: 'however 转折——前文说挑战严峻，但政策响应却"痛苦地缓慢"，painfully = 令人痛苦地、极度地。',
+        distractors: [
+          { optionId: 'c3-9-a', type: '偷换概念', why: 'admirably（令人钦佩地）与 however 后的批评基调矛盾。' },
+          { optionId: 'c3-9-c', type: '偷换概念', why: 'appropriately（恰当地）同样与批评基调矛盾。' },
+          { optionId: 'c3-9-d', type: '无中生有', why: 'arguably（可以说地）是模糊限定词，无法表达"缓慢"的批评。' },
+        ],
+        vocabNotes: ['policy response 政策响应', 'retraining programme 再培训项目'],
+      },
+      {
+        id: 'c3-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c3-10-a', text: 'technical' }, { id: 'c3-10-b', text: 'physical' },
+          { id: 'c3-10-c', text: 'adaptive' }, { id: 'c3-10-d', text: 'financial' },
+        ],
+        correctIds: ['c3-10-c'],
+        analysis: '末句说"适应的元技能是算法无法复制的"——adaptive capacity = 适应能力，这是全文的核心论点。',
+        distractors: [
+          { optionId: 'c3-10-a', type: '偷换概念', why: 'technical（技术的）与"meta-skill"（元技能）矛盾——元技能是超越具体技术的。' },
+          { optionId: 'c3-10-b', type: '无中生有', why: 'physical（体力的）与全文"认知领域"的主题不符。' },
+          { optionId: 'c3-10-d', type: '无中生有', why: 'financial（金融的）与语境无关。' },
+        ],
+        vocabNotes: ['meta-skill 元技能（关于技能的技能，即学习如何学习）'],
+      },
+    ],
+    tips: ['注意 yet/however/nevertheless 等转折词，它们标记了观点的关键转折', '完形常考"熟词僻义"——如 story（情况）、exclusive（独占的）、painfully（极度地）'],
+  },
+
+  // ──── 完形 4: 气候变化与农业 ────
+  {
+    id: 'cloze-4',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '核心考点',
+    title: '完形 · 气候变化下的粮食安全',
+    suggestedMinutes: 15,
+    passage: [
+      'Global agriculture faces a paradox: it must produce more food to feed a growing population, yet it is itself one of the largest {{1}} of greenhouse-gas emissions. The sector accounts for roughly a quarter of global emissions — more than transport — and the demand for food is {{2}} projected to rise by 50 per cent by 2050. Feeding the world without cooking the planet is the {{3}} challenge of our time.',
+      'One promising avenue is the {{4}} of precision agriculture. By combining satellite imagery, soil sensors, and machine-learning algorithms, farmers can apply water, fertiliser, and pesticides only where and when they are needed. Trials in sub-Saharan Africa have {{5}} that targeted irrigation can raise crop yields by up to 30 per cent while cutting water use in half. The technology is {{6}}: a smartphone app that guides a drip-irrigation system costs a fraction of traditional methods.',
+      'Yet technology alone will not {{7}} the problem. The global food system is riddled with waste: roughly a third of all food produced is lost or discarded, squandering the water, land, and energy that went into growing it. Reducing waste {{8}} an enormous opportunity — one that requires no new invention, only new habits, better cold-chain infrastructure, and policy {{9}} that make waste economically irrational.',
+      'The deepest obstacle, however, is cultural. Eating patterns are deeply {{10}} — tied to identity, tradition, and convenience. Shifting diets away from resource-intensive animal protein toward plant-based alternatives requires not just better products, but a reimagining of what constitutes a satisfying meal.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c4-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c4-1-a', text: 'victims' }, { id: 'c4-1-b', text: 'sources' },
+          { id: 'c4-1-c', text: 'beneficiaries' }, { id: 'c4-1-d', text: 'bystanders' },
+        ],
+        correctIds: ['c4-1-b'],
+        analysis: '后句说"sector accounts for a quarter of global emissions"——农业是排放的"来源"，sources 与 accounts for 呼应。',
+        distractors: [
+          { optionId: 'c4-1-a', type: '偷换概念', why: 'victims（受害者）方向反了——农业是排放的施加者，不是受害者。' },
+          { optionId: 'c4-1-c', type: '偷换概念', why: 'beneficiaries（受益者）与 emissions 搭配不当。' },
+          { optionId: 'c4-1-d', type: '无中生有', why: 'bystanders（旁观者）与"accounts for a quarter"矛盾——农业不是旁观者。' },
+        ],
+        vocabNotes: ['paradox n. 悖论、矛盾', 'greenhouse gas 温室气体'],
+      },
+      {
+        id: 'c4-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c4-2-a', text: 'barely' }, { id: 'c4-2-b', text: 'reluctantly' },
+          { id: 'c4-2-c', text: 'steeply' }, { id: 'c4-2-d', text: 'randomly' },
+        ],
+        correctIds: ['c4-2-c'],
+        analysis: '"50 per cent by 2050"是一个大幅增长的数字，steeply（急剧地）修饰 projected to rise 最准确。',
+        distractors: [
+          { optionId: 'c4-2-a', type: '偷换概念', why: 'barely（几乎不）与"50 per cent"的增长幅度矛盾。' },
+          { optionId: 'c4-2-b', type: '无中生有', why: 'reluctantly（不情愿地）不能修饰数字趋势。' },
+          { optionId: 'c4-2-d', type: '无中生有', why: 'randomly（随机地）与人口增长的确定性趋势矛盾。' },
+        ],
+        vocabNotes: ['project v. 预测、预计（be projected to = 预计将会）'],
+      },
+      {
+        id: 'c4-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c4-3-a', text: 'political' }, { id: 'c4-3-b', text: 'defining' },
+          { id: 'c4-3-c', text: 'temporary' }, { id: 'c4-3-d', text: 'artificial' },
+        ],
+        correctIds: ['c4-3-b'],
+        analysis: '"feeding the world without cooking the planet"是这个时代最根本的挑战——defining（决定性的、标志性的）表达这一核心地位。',
+        distractors: [
+          { optionId: 'c4-3-a', type: '局部正确', why: 'political（政治的）可以是挑战的一个维度，但文章强调的是"人类文明的根本问题"。' },
+          { optionId: 'c4-3-c', type: '无中生有', why: 'temporary（临时的）与"of our time"矛盾——这不是暂时的。' },
+          { optionId: 'c4-3-d', type: '无中生有', why: 'artificial（人工的）与"challenge"搭配不当。' },
+        ],
+        vocabNotes: ['defining adj. 决定性的、标志性的（a defining challenge = 最核心的挑战）'],
+      },
+      {
+        id: 'c4-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c4-4-a', text: 'rejection' }, { id: 'c4-4-b', text: 'adoption' },
+          { id: 'c4-4-c', text: 'invention' }, { id: 'c4-4-d', text: 'criticism' },
+        ],
+        correctIds: ['c4-4-b'],
+        analysis: '后文描述精确农业的好处和低成本——所以是"采用"这项技术，adoption 与 trials（试验）递进。',
+        distractors: [
+          { optionId: 'c4-4-a', type: '偷换概念', why: 'rejection（拒绝）与后文积极评价矛盾。' },
+          { optionId: 'c4-4-c', type: '偷换概念', why: 'invention（发明）与后文"technology is ___"矛盾——技术已经存在，问题是采用。' },
+          { optionId: 'c4-4-d', type: '无中生有', why: 'criticism（批评）与积极基调矛盾。' },
+        ],
+        vocabNotes: ['precision agriculture 精准农业', 'satellite imagery 卫星图像'],
+      },
+      {
+        id: 'c4-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c4-5-a', text: 'denied' }, { id: 'c4-5-b', text: 'demonstrated' },
+          { id: 'c4-5-c', text: 'delayed' }, { id: 'c4-5-d', text: 'diminished' },
+        ],
+        correctIds: ['c4-5-b'],
+        analysis: 'trials in sub-Saharan Africa 证明了精确农业的效果——demonstrated（证明、表明）与 "raise crop yields by 30%" 的数据呼应。',
+        distractors: [
+          { optionId: 'c4-5-a', type: '偷换概念', why: 'denied（否认）与后文积极数据矛盾。' },
+          { optionId: 'c4-5-c', type: '无中生有', why: 'delayed（延迟）与试验结果无关。' },
+          { optionId: 'c4-5-d', type: '偷换概念', why: 'diminished（减少）与"raise yields"矛盾。' },
+        ],
+        vocabNotes: ['yield n. 产量', 'drip-irrigation 滴灌'],
+      },
+      {
+        id: 'c4-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c4-6-a', text: 'expensive' }, { id: 'c4-6-b', text: 'unavailable' },
+          { id: 'c4-6-c', text: 'affordable' }, { id: 'c4-6-d', text: 'obsolete' },
+        ],
+        correctIds: ['c4-6-c'],
+        analysis: '后句"a smartphone app...costs a fraction of traditional methods"说明成本低——affordable（负担得起的）。',
+        distractors: [
+          { optionId: 'c4-6-a', type: '偷换概念', why: 'expensive（昂贵的）与"costs a fraction"矛盾。' },
+          { optionId: 'c4-6-b', type: '偷换概念', why: 'unavailable（不可用的）与"smartphone app"矛盾——手机应用是可获取的。' },
+          { optionId: 'c4-6-d', type: '无中生有', why: 'obsolete（过时的）与语境矛盾——精确农业是新技术。' },
+        ],
+        vocabNotes: ['affordable adj. 负担得起的（a fraction of = 一小部分）'],
+      },
+      {
+        id: 'c4-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c4-7-a', text: 'worsen' }, { id: 'c4-7-b', text: 'address' },
+          { id: 'c4-7-c', text: 'ignore' }, { id: 'c4-7-d', text: 'create' },
+        ],
+        correctIds: ['c4-7-b'],
+        analysis: 'yet 转折——技术好，但单独不能"解决"问题，address the problem = 解决问题。',
+        distractors: [
+          { optionId: 'c4-7-a', type: '偷换概念', why: 'worsen（恶化）与语义矛盾——技术不会让问题更糟。' },
+          { optionId: 'c4-7-c', type: '无中生有', why: 'ignore（忽略）与上下文无关——文章在讨论技术能做什么。' },
+          { optionId: 'c4-7-d', type: '无中生有', why: 'create（制造）方向反了——技术不会制造问题。' },
+        ],
+        vocabNotes: ['address v. 处理、解决（熟词僻义）'],
+      },
+      {
+        id: 'c4-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c4-8-a', text: 'represents' }, { id: 'c4-8-b', text: 'eliminates' },
+          { id: 'c4-8-c', text: 'conceals' }, { id: 'c4-8-d', text: 'diminishes' },
+        ],
+        correctIds: ['c4-8-a'],
+        analysis: '减少浪费"代表着"一个巨大的机会——represents an opportunity = 代表着一个机遇。',
+        distractors: [
+          { optionId: 'c4-8-b', type: '偷换概念', why: 'eliminates（消除）与"opportunity"搭配不当——机会不能被"消除"。' },
+          { optionId: 'c4-8-c', type: '无中生有', why: 'conceals（隐藏）与文章鼓励行动的基调矛盾。' },
+          { optionId: 'c4-8-d', type: '无中生有', why: 'diminishes（减少）与"opportunity"搭配不当。' },
+        ],
+        vocabNotes: ['riddled with 充满、充斥着', 'squander v. 挥霍、浪费'],
+      },
+      {
+        id: 'c4-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c4-9-a', text: 'sanctions' }, { id: 'c4-9-b', text: 'incentives' },
+          { id: 'c4-9-c', text: 'penalties' }, { id: 'c4-9-d', text: 'obstacles' },
+        ],
+        correctIds: ['c4-9-b'],
+        analysis: '后文说"make waste economically irrational"——让浪费在经济上不合理，需要的是"激励"机制，incentives 比 penalties 更符合"让…变得不合理"的逻辑。',
+        distractors: [
+          { optionId: 'c4-9-a', type: '偷换概念', why: 'sanctions（制裁）语气过重，且通常用于国际关系。' },
+          { optionId: 'c4-9-c', type: '局部正确', why: 'penalties（惩罚）可以减少浪费，但"make waste economically irrational"更偏向"让正确的事变得划算"（激励），而非惩罚。' },
+          { optionId: 'c4-9-d', type: '偷换概念', why: 'obstacles（障碍）方向反了——需要的是促进而非阻碍。' },
+        ],
+        vocabNotes: ['incentive n. 激励、动机', 'cold-chain infrastructure 冷链基础设施'],
+      },
+      {
+        id: 'c4-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c4-10-a', text: 'superficial' }, { id: 'c4-10-b', text: 'entrenched' },
+          { id: 'c4-10-c', text: 'artificial' }, { id: 'c4-10-d', text: 'optional' },
+        ],
+        correctIds: ['c4-10-b'],
+        analysis: '后文说饮食"与身份、传统、便利绑定"——这些是根深蒂固的，entrenched（根深蒂固的）最准确。',
+        distractors: [
+          { optionId: 'c4-10-a', type: '偷换概念', why: 'superficial（表面的）与"tied to identity, tradition"矛盾——这些不是表面的。' },
+          { optionId: 'c4-10-c', type: '无中生有', why: 'artificial（人工的）与"deeply"搭配矛盾。' },
+          { optionId: 'c4-10-d', type: '偷换概念', why: 'optional（可选的）与"deeply"和"tied to identity"矛盾——这些不是可选的。' },
+        ],
+        vocabNotes: ['entrenched adj. 根深蒂固的（trench = 战壕，entrenched = 挖了战壕的 → 根深蒂固的）'],
+      },
+    ],
+    tips: ['注意 yet/although 引导的转折——完形核心逻辑', '关注前后句的因果和递进关系'],
+  },
+
+  // ──── 完形 5: 奥德赛电影影评 ────
+  {
+    id: 'cloze-5',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '奥德赛',
+    title: '完形 · 诺兰《奥德赛》：史诗电影的现代重构',
+    suggestedMinutes: 15,
+    passage: [
+      'Christopher Nolan\'s adaptation of Homer\'s Odyssey arrives with an impossible burden: the source material is not merely a story but a civilisational {{1}}. Every Mediterranean culture has claimed Odysseus as its own — the cunning hero, the restless wanderer, the man who {{2}} ten years to reach a home he had never stopped longing for. To film this myth is to {{3}} with three thousand years of collective imagination.',
+      'Nolan\'s most audacious choice is to {{4}} the narrative chronology. Rather than the linear journey home, the film opens with Odysseus already {{5}} — older, scarred, and haunted by memories he cannot organise into sequence. Flashbacks {{6}} forward not in neat order but in emotional clusters: a battle recalled by a song, a death triggered by the smell of salt. The effect is less storytelling than {{7}} archaeology — the excavation of a mind undone by experience.',
+      'The visual language is characteristically Nolan: IMAX-scale {{8}} of the Aegean, practical effects over CGI, and a deliberate restraint in the mythological spectacle. Where lesser films would populate the screen with gods and monsters, Nolan {{9}} the camera on human faces — the terror in Odysseus\'s eyes as the Cyclops speaks, the quiet devastation of Penelope recognising her husband after two decades. The monsters are {{10}}; the humans are the point.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c5-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c5-1-a', text: 'anecdote' }, { id: 'c5-1-b', text: 'property' },
+          { id: 'c5-1-c', text: 'inheritance' }, { id: 'c5-1-d', text: 'obsession' },
+        ],
+        correctIds: ['c5-1-c'],
+        analysis: '后文说"地中海文化都认领了奥德修斯"——这不只是故事，是文明的"遗产"，inheritance 与 civilisational 搭配最贴切。',
+        distractors: [
+          { optionId: 'c5-1-a', type: '偷换概念', why: 'anecdote（轶事）语义过轻——荷马史诗不是轶事。' },
+          { optionId: 'c5-1-b', type: '局部正确', why: 'property（财产）可以是"属于"的意思，但与 civilisational 搭配不如 inheritance 有文化底蕴。' },
+          { optionId: 'c5-1-d', type: '无中生有', why: 'obsession（痴迷）与文明的"拥有"逻辑不符。' },
+        ],
+        vocabNotes: ['civilisational adj. 文明的', 'cunning adj. 狡猾的、机智的'],
+      },
+      {
+        id: 'c5-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c5-2-a', text: 'survived' }, { id: 'c5-2-b', text: 'enjoyed' },
+          { id: 'c5-2-c', text: 'endured' }, { id: 'c5-2-d', text: 'abandoned' },
+        ],
+        correctIds: ['c5-2-c'],
+        analysis: '"花了十年到达一个他从未停止渴望的家"——十年的苦难是"忍受"，endured 与 longed for 形成痛苦/渴望的对比。',
+        distractors: [
+          { optionId: 'c5-2-a', type: '局部正确', why: 'survived（幸存）语义尚可，但"忍受"比"幸存"更能表达十年的煎熬。' },
+          { optionId: 'c5-2-b', type: '偷换概念', why: 'enjoyed（享受）与"十年漂泊"的苦难基调矛盾。' },
+          { optionId: 'c5-2-d', type: '偷换概念', why: 'abandoned（抛弃）方向反了——奥德修斯是被迫漂泊，不是主动抛弃。' },
+        ],
+        vocabNotes: ['endure v. 忍受、承受', 'longing for 渴望'],
+      },
+      {
+        id: 'c5-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c5-3-a', text: 'collaborate' }, { id: 'c5-3-b', text: 'confront' },
+          { id: 'c5-3-c', text: 'negotiate' }, { id: 'c5-3-d', text: 'compete' },
+        ],
+        correctIds: ['c5-3-b'],
+        analysis: '拍摄这个神话就是与三千年集体想象"对抗"——confront 暗示面对巨大的挑战和传统。',
+        distractors: [
+          { optionId: 'c5-3-a', type: '无中生有', why: 'collaborate（合作）与"三千年的想象"搭配不当——无法与想象合作。' },
+          { optionId: 'c5-3-c', type: '无中生有', why: 'negotiate（谈判）与艺术创作语境不符。' },
+          { optionId: 'c5-3-d', type: '无中生有', why: 'compete（竞争）与"集体想象"搭配不当。' },
+        ],
+        vocabNotes: ['audacious adj. 大胆的、无畏的', 'chronology n. 年代顺序'],
+      },
+      {
+        id: 'c5-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c5-4-a', text: 'preserve' }, { id: 'c5-4-b', text: 'abandon' },
+          { id: 'c5-4-c', text: 'disrupt' }, { id: 'c5-4-d', text: 'simplify' },
+        ],
+        correctIds: ['c5-4-c'],
+        analysis: '后文说"非线性叙事，闪回按情感而非时间排列"——这是"打乱"时间线，disrupt（打破）。',
+        distractors: [
+          { optionId: 'c5-4-a', type: '偷换概念', why: 'preserve（保留）与"非线性叙事"矛盾——诺兰打破了时间线。' },
+          { optionId: 'c5-4-b', type: '偷换概念', why: 'abandon（抛弃）与"disrupt"不同——时间线被打破，不是被抛弃。' },
+          { optionId: 'c5-4-d', type: '无中生有', why: 'simplify（简化）与"情感集群"的复杂结构矛盾。' },
+        ],
+        vocabNotes: ['narrative n. 叙事', 'flashback n. 闪回（电影手法）'],
+      },
+      {
+        id: 'c5-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c5-5-a', text: 'arriving' }, { id: 'c5-5-b', text: 'aging' },
+          { id: 'c5-5-c', text: 'fighting' }, { id: 'c5-5-d', text: 'sailing' },
+        ],
+        correctIds: ['c5-5-b'],
+        analysis: '后文说"older, scarred"——影片以奥德修斯"衰老"的状态开场，aging 最直接对应。',
+        distractors: [
+          { optionId: 'c5-5-a', type: '局部正确', why: 'arriving（到达）看似合理（他终于到家了），但后文的"older, scarred"更指向衰老的状态。' },
+          { optionId: 'c5-5-c', type: '无中生有', why: 'fighting（战斗）与"older, scarred, haunted"的内省基调不符。' },
+          { optionId: 'c5-5-d', type: '偷换概念', why: 'sailing（航行）是旅途的意象，但开场已是旅途结束后的状态。' },
+        ],
+        vocabNotes: ['scarred adj. 留有伤疤的', 'haunted adj. 被困扰的'],
+      },
+      {
+        id: 'c5-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c5-6-a', text: 'surge' }, { id: 'c5-6-b', text: 'fade' },
+          { id: 'c5-6-c', text: 'drift' }, { id: 'c5-6-d', text: 'float' },
+        ],
+        correctIds: ['c5-6-a'],
+        analysis: '闪回"涌现"——不是线性流动，而是情感触发后突然涌出，surge（涌现、涌动）最生动。',
+        distractors: [
+          { optionId: 'c5-6-b', type: '无中生有', why: 'fade（消退）方向反了——闪回是出现，不是消失。' },
+          { optionId: 'c5-6-c', type: '局部正确', why: 'drift（漂移）可以形容非线性，但不如 surge 有力——闪回是情感的"涌"。' },
+          { optionId: 'c5-6-d', type: '无中生有', why: 'float（漂浮）过于轻柔，与战争和死亡的记忆不符。' },
+        ],
+        vocabNotes: ['cluster n. 集群、组'],
+      },
+      {
+        id: 'c5-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c5-7-a', text: 'emotional' }, { id: 'c5-7-b', text: 'digital' },
+          { id: 'c5-7-c', text: 'mechanical' }, { id: 'c5-7-d', text: 'spiritual' },
+        ],
+        correctIds: ['c5-7-a'],
+        analysis: '后文说"excavation of a mind undone by experience"——情感考古，emotional archaeology 最贴切。',
+        distractors: [
+          { optionId: 'c5-7-b', type: '无中生有', why: 'digital（数字的）与"archaeology"搭配不当，且与情感主题无关。' },
+          { optionId: 'c5-7-c', type: '偷换概念', why: 'mechanical（机械的）与"mind undone by experience"的内省基调矛盾。' },
+          { optionId: 'c5-7-d', type: '局部正确', why: 'spiritual（精神的）与 emotional 语义接近，但 emotional 更直接对应前文的"情感触发"。' },
+        ],
+        vocabNotes: ['archaeology n. 考古学', 'excavation n. 挖掘、发掘'],
+      },
+      {
+        id: 'c5-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c5-8-a', text: 'portraits' }, { id: 'c5-8-b', text: 'vistas' },
+          { id: 'c5-8-c', text: 'sketches' }, { id: 'c5-8-d', text: 'patterns' },
+        ],
+        correctIds: ['c5-8-b'],
+        analysis: 'IMAX 尺幅的爱琴海"全景"——vistas（全景、远景）与 IMAX-scale 和 Aegean 搭配最贴切。',
+        distractors: [
+          { optionId: 'c5-8-a', type: '偷换概念', why: 'portraits（肖像）是近景，与 IMAX 的宏大尺度矛盾。' },
+          { optionId: 'c5-8-c', type: '无中生有', why: 'sketches（素描）过于粗糙，与 IMAX 的精致制作矛盾。' },
+          { optionId: 'c5-8-d', type: '无中生有', why: 'patterns（图案）与自然景观搭配不当。' },
+        ],
+        vocabNotes: ['vista n. 全景、远景', 'Aegean n. 爱琴海'],
+      },
+      {
+        id: 'c5-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c5-9-a', text: 'focuses' }, { id: 'c5-9-b', text: 'turns' },
+          { id: 'c5-9-c', text: 'averts' }, { id: 'c5-9-d', text: 'fixates' },
+        ],
+        correctIds: ['c5-9-a'],
+        analysis: '与前文"lesser films would populate the screen with gods"对比——诺兰把镜头"聚焦"在人脸上，focuses on。',
+        distractors: [
+          { optionId: 'c5-9-b', type: '局部正确', why: 'turns（转向）语义尚可，但 focuses 更直接表达"聚焦"。' },
+          { optionId: 'c5-9-c', type: '偷换概念', why: 'averts（转移目光）方向反了——诺兰没有回避，而是聚焦。' },
+          { optionId: 'c5-9-d', type: '偷换概念', why: 'fixates（固着）带有病态含义（如 fixation），不适合描述电影技法。' },
+        ],
+        vocabNotes: ['restraint n. 克制、节制', 'CGI 计算机生成图像'],
+      },
+      {
+        id: 'c5-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c5-10-a', text: 'irrelevant' }, { id: 'c5-10-b', text: 'magnificent' },
+          { id: 'c5-10-c', text: 'secondary' }, { id: 'c5-10-d', text: 'terrifying' },
+        ],
+        correctIds: ['c5-10-c'],
+        analysis: '末句"the monsters are ___; the humans are the point"——怪物是"次要的"，人才是重点，secondary 与 the point 形成对比。',
+        distractors: [
+          { optionId: 'c5-10-a', type: '偷换概念', why: 'irrelevant（无关的）语气过重——怪物在故事中仍有作用，只是不是重点。' },
+          { optionId: 'c5-10-b', type: '偷换概念', why: 'magnificent（壮丽的）与 "the humans are the point" 的对比逻辑矛盾。' },
+          { optionId: 'c5-10-d', type: '无中生有', why: 'terrifying（恐怖的）是怪物的特征，不是它们在影片中的地位。' },
+        ],
+        vocabNotes: ['secondary adj. 次要的', 'Cyclops n. 独眼巨人（荷马史诗中的怪物）'],
+      },
+    ],
+    tips: ['影评类完形的转折结构：先讲挑战，再讲导演如何回应，最后给出评价', '注意 yet/whereas 引导的对比——诺兰的选择 vs 传统做法'],
+  },
+
+  // ──── 完形 6: 荷马史诗《奥德赛》 ────
+  {
+    id: 'cloze-6',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '奥德赛',
+    title: '完形 · 荷马史诗：文明的记忆与回家之路',
+    suggestedMinutes: 15,
+    passage: [
+      'The Odyssey is not merely a tale of adventure; it is a meditation on what it means to {{1}}. In the ancient world, where oral tradition was the only medium of collective memory, Homer\'s poem served as a {{2}} — a repository of values, warnings, and aspirations that shaped how entire civilisations understood themselves. To lose the poem was to lose the {{3}}.',
+      'What makes the epic enduringly {{4}} is its psychological depth. Odysseus is not a flawless hero like Achilles; he is clever, deceptive, and emotionally {{5}}. He weeps for his homeland, deceives gods and monsters alike, and sometimes makes choices that {{6}} consequences for everyone around him. In this complexity, ancient audiences recognised something {{7}}: a hero who reflected their own vulnerabilities back to them.',
+      'The poem\'s structure — a journey that is simultaneously outward through hostile seas and inward toward self-knowledge — has {{8}} virtually every Western narrative that follows. Joyce set Ulysses in a single day in Dublin; the Coen brothers named their film O Brother, Where Art Thou? after the epic. The {{9}} is not imitation but recognition: the idea that life itself is a voyage through temptation, loss, and the {{10}} longing for home.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c6-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c6-1-a', text: 'surrender' }, { id: 'c6-1-b', text: 'return' },
+          { id: 'c6-1-c', text: 'remember' }, { id: 'c6-1-d', text: 'forget' },
+        ],
+        correctIds: ['c6-1-c'],
+        analysis: '后文说"口述传统是集体记忆的唯一媒介"——奥德赛是关于"记忆"的冥想，remember 与 memory 呼应。',
+        distractors: [
+          { optionId: 'c6-1-a', type: '无中生有', why: 'surrender（投降）与"冒险故事"的冒险基调矛盾。' },
+          { optionId: 'c6-1-b', type: '局部正确', why: 'return（回家）是情节主题，但本段讨论的是诗歌的"记忆"功能，不是情节。' },
+          { optionId: 'c6-1-d', type: '偷换概念', why: 'forget（忘记）方向反了——诗歌是为了"记住"，不是"遗忘"。' },
+        ],
+        vocabNotes: ['meditation n. 冥想、沉思', 'oral tradition 口述传统'],
+      },
+      {
+        id: 'c6-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c6-2-a', text: 'weapon' }, { id: 'c6-2-b', text: 'container' },
+          { id: 'c6-2-c', text: 'monument' }, { id: 'c6-2-d', text: 'archive' },
+        ],
+        correctIds: ['c6-2-d'],
+        analysis: '后文说"a repository of values, warnings, and aspirations"——诗歌是"存储"价值观的容器，archive（档案库）最准确。',
+        distractors: [
+          { optionId: 'c6-2-a', type: '无中生有', why: 'weapon（武器）与"repository"（存储库）语义不符。' },
+          { optionId: 'c6-2-b', type: '局部正确', why: 'container（容器）过于泛泛，不如 archive 有"文化记忆"的正式感。' },
+          { optionId: 'c6-2-c', type: '局部正确', why: 'monument（纪念碑）强调"纪念"，但 archive 强调"存储和检索"，更贴合"repository"。' },
+        ],
+        vocabNotes: ['repository n. 存储库、宝库', 'aspiration n. 渴望、抱负'],
+      },
+      {
+        id: 'c6-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c6-3-a', text: 'way' }, { id: 'c6-3-b', text: 'game' },
+          { id: 'c6-3-c', text: 'future' }, { id: 'c6-3-d', text: 'war' },
+        ],
+        correctIds: ['c6-3-a'],
+        analysis: '"失去诗歌就失去了道路"——记忆是文明的方向，失去记忆就失去了文明的指引。',
+        distractors: [
+          { optionId: 'c6-3-b', type: '无中生有', why: 'game（游戏）与文明的严肃基调矛盾。' },
+          { optionId: 'c6-3-c', type: '局部正确', why: 'future（未来）可以是"失去方向"的隐喻，但"the way"更贴合"记忆/方向"的双重含义。' },
+          { optionId: 'c6-3-d', type: '无中生有', why: 'war（战争）与"失去诗歌就失去战争"逻辑不通。' },
+        ],
+        vocabNotes: ['civilisation n. 文明', 'repository n. 宝库'],
+      },
+      {
+        id: 'c6-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c6-4-a', text: 'controversial' }, { id: 'c6-4-b', text: 'relevant' },
+          { id: 'c6-4-c', text: 'outdated' }, { id: 'c6-4-d', text: 'dangerous' },
+        ],
+        correctIds: ['c6-4-b'],
+        analysis: '后文说奥德修斯的复杂性让古代观众看到自己的脆弱——史诗至今"有现实意义"，relevant。',
+        distractors: [
+          { optionId: 'c6-4-a', type: '无中生有', why: 'controversial（有争议的）与"enduringly"搭配不当——有争议不是持久的原因。' },
+          { optionId: 'c6-4-c', type: '偷换概念', why: 'outdated（过时的）与"enduringly"矛盾——持久意味着不过时。' },
+          { optionId: 'c6-4-d', type: '无中生有', why: 'dangerous（危险的）与语境无关。' },
+        ],
+        vocabNotes: ['enduringly adv. 持久地', 'flawless adj. 完美的、无瑕疵的'],
+      },
+      {
+        id: 'c6-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c6-5-a', text: 'detached' }, { id: 'c6-5-b', text: 'vulnerable' },
+          { id: 'c6-5-c', text: 'indifferent' }, { id: 'c6-5-d', text: 'resolute' },
+        ],
+        correctIds: ['c6-5-b'],
+        analysis: '后文说"他为家乡哭泣"——他是情感"脆弱的"，vulnerable 与后文"reflected their own vulnerabilities"直接呼应。',
+        distractors: [
+          { optionId: 'c6-5-a', type: '偷换概念', why: 'detached（超脱的）与"weeps for his homeland"矛盾——他不是超脱的。' },
+          { optionId: 'c6-5-c', type: '偷换概念', why: 'indifferent（冷漠的）与"weeps"矛盾——他不冷漠。' },
+          { optionId: 'c6-5-d', type: '偷换概念', why: 'resolute（坚定的）与"emotionally vulnerable"矛盾。' },
+        ],
+        vocabNotes: ['vulnerable adj. 脆弱的、易受伤的', 'deceptive adj. 欺骗的'],
+      },
+      {
+        id: 'c6-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c6-6-a', text: 'prevents' }, { id: 'c6-6-b', text: 'triggers' },
+          { id: 'c6-6-c', text: 'avoids' }, { id: 'c6-6-d', text: 'reverses' },
+        ],
+        correctIds: ['c6-6-b'],
+        analysis: '他有时做出"引发"后果的选择——triggers（触发）与"consequences"搭配最自然。',
+        distractors: [
+          { optionId: 'c6-6-a', type: '偷换概念', why: 'prevents（阻止）方向反了——他的选择是导致后果，不是阻止。' },
+          { optionId: 'c6-6-c', type: '偷换概念', why: 'avoids（避免）方向反了——他没有避免后果。' },
+          { optionId: 'c6-6-d', type: '无中生有', why: 'reverses（逆转）与"consequences"搭配不当。' },
+        ],
+        vocabNotes: ['consequence n. 后果、结果'],
+      },
+      {
+        id: 'c6-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c6-7-a', text: 'alien' }, { id: 'c6-7-b', text: 'familiar' },
+          { id: 'c6-7-c', text: 'absurd' }, { id: 'c6-7-d', text: 'forbidden' },
+        ],
+        correctIds: ['c6-7-b'],
+        analysis: '后文"reflected their own vulnerabilities back to them"——观众在英雄身上看到了自己，是"熟悉的"，familiar。',
+        distractors: [
+          { optionId: 'c6-7-a', type: '偷换概念', why: 'alien（陌生的）与"reflected their own"矛盾——观众看到的是自己，不是陌生的东西。' },
+          { optionId: 'c6-7-c', type: '无中生有', why: 'absurd（荒谬的）与"recognition"（认同）矛盾。' },
+          { optionId: 'c6-7-d', type: '无中生有', why: 'forbidden（被禁止的）与语境无关。' },
+        ],
+        vocabNotes: ['vulnerability n. 脆弱性、弱点'],
+      },
+      {
+        id: 'c6-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c6-8-a', text: 'contradicted' }, { id: 'c6-8-b', text: 'influenced' },
+          { id: 'c6-8-c', text: 'replaced' }, { id: 'c6-8-d', text: 'undermined' },
+        ],
+        correctIds: ['c6-8-b'],
+        analysis: '后文列举 Joyce 和 Coen brothers 的作品——史诗"影响了"几乎所有西方叙事，influenced。',
+        distractors: [
+          { optionId: 'c6-8-a', type: '偷换概念', why: 'contradicted（反驳）与后文 Joyce/Coen 的致敬矛盾——他们不是反驳，而是继承。' },
+          { optionId: 'c6-8-c', type: '偷换概念', why: 'replaced（取代）与"every Western narrative"矛盾——史诗没有被取代，而是被继承。' },
+          { optionId: 'c6-8-d', type: '偷换概念', why: 'undermined（破坏）与积极的致敬基调矛盾。' },
+        ],
+        vocabNotes: ['simultaneously adv. 同时地', 'temptation n. 诱惑'],
+      },
+      {
+        id: 'c6-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c6-9-a', text: 'result' }, { id: 'c6-9-b', text: 'danger' },
+          { id: 'c6-9-c', text: 'secret' }, { id: 'c6-9-d', text: 'mistake' },
+        ],
+        correctIds: ['c6-9-a'],
+        analysis: '"not imitation but recognition"——不是模仿，而是"结果"是认同——result 与 "not X but Y" 搭配表达"结果是"。',
+        distractors: [
+          { optionId: 'c6-9-b', type: '无中生有', why: 'danger（危险）与"not imitation but recognition"的对比逻辑无关。' },
+          { optionId: 'c6-9-c', type: '无中生有', why: 'secret（秘密）与"recognition"（认同）矛盾。' },
+          { optionId: 'c6-9-d', type: '无中生有', why: 'mistake（错误）与"not imitation but recognition"的积极基调矛盾。' },
+        ],
+        vocabNotes: ['imitation n. 模仿', 'recognition n. 认同、认可'],
+      },
+      {
+        id: 'c6-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c6-10-a', text: 'constant' }, { id: 'c6-10-b', text: 'fleeting' },
+          { id: 'c6-10-c', text: 'occasional' }, { id: 'c6-10-d', text: 'diminishing' },
+        ],
+        correctIds: ['c6-10-a'],
+        analysis: '生命是一场穿越诱惑、失去和"永恒的"对家的渴望——constant（永恒的）与奥德修斯十年不灭的思乡之情吻合。',
+        distractors: [
+          { optionId: 'c6-10-b', type: '偷换概念', why: 'fleeting（短暂的）与"ten years"的持久渴望矛盾。' },
+          { optionId: 'c6-10-c', type: '偷换概念', why: 'occasional（偶尔的）与奥德修斯"从未停止渴望"矛盾。' },
+          { optionId: 'c6-10-d', type: '偷换概念', why: 'diminishing（递减的）与"longing for home"的坚定基调矛盾。' },
+        ],
+        vocabNotes: ['longing n. 渴望、向往', 'voyage n. 航行、旅程'],
+      },
+    ],
+    tips: ['文学类完形常考"功能/意义"类词汇——archive, inheritance, influence 等', '注意 "not X but Y" 结构，这是完形的常见考点'],
+  },
+
+  // ──── 完形 7: 英语学习方法 ────
+  {
+    id: 'cloze-7',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '学习方法论',
+    title: '完形 · 如何真正提高英语考试成绩',
+    suggestedMinutes: 15,
+    passage: [
+      'Most students preparing for English examinations share a common frustration: they study harder than their peers but {{1}} to improve. The reason is not lack of effort but the {{2}} of effort — spending hours on activities that feel productive but yield diminishing returns. The grammar workbook, the vocabulary flashcards, the endless practice tests: all are {{3}} if they become ends in themselves rather than tools for deeper engagement with language.',
+      'Research in second-language acquisition suggests that the most {{4}} learners are not those who study the most, but those who study the most strategically. The concept of "comprehensible input" — exposure to material just above one\'s current {{5}} — explains why reading novels slightly beyond one\'s level builds proficiency faster than drilling grammar rules. The brain {{6}} language not through abstract patterns but through meaningful context: a word encountered in a gripping story is remembered far more {{7}} than one memorised from a list.',
+      'This does not mean tests are {{8}}. They serve a vital diagnostic function, revealing which aspects of language remain weak. But the student who {{9}} the highest scores is typically not the one who practises the most past papers; it is the one who reads voraciously, writes regularly, and treats English not as a subject to be {{10}} but as a living medium of thought.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c7-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c7-1-a', text: 'manage' }, { id: 'c7-1-b', text: 'struggle' },
+          { id: 'c7-1-c', text: 'refuse' }, { id: 'c7-1-d', text: 'learn' },
+        ],
+        correctIds: ['c7-1-b'],
+        analysis: '前文说"比同学更努力"，后文说"无法提高"——转折用 struggle（努力但挣扎），表达"费力却无果"。',
+        distractors: [
+          { optionId: 'c7-1-a', type: '偷换概念', why: 'manage（设法做到）方向反了——他们没有成功提高。' },
+          { optionId: 'c7-1-c', type: '无中生有', why: 'refuse（拒绝）暗示主动放弃，与"frustration"的被动无奈矛盾。' },
+          { optionId: 'c7-1-d', type: '无中生有', why: 'learn（学习）与"but"转折后的否定基调矛盾。' },
+        ],
+        vocabNotes: ['frustration n. 挫败感', 'diminishing returns 收益递减'],
+      },
+      {
+        id: 'c7-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c7-2-a', text: 'quality' }, { id: 'c7-2-b', text: 'quantity' },
+          { id: 'c7-2-c', text: 'direction' }, { id: 'c7-2-d', text: 'source' },
+        ],
+        correctIds: ['c7-2-c'],
+        analysis: '后文解释"花了时间在无效活动上"——问题不是努力的"数量"，而是"方向"，direction 最准确。',
+        distractors: [
+          { optionId: 'c7-2-a', type: '偷换概念', why: 'quality（质量）虽然相关，但后文说"spending hours on activities that feel productive"——他们确实在努力，问题是方向不对。' },
+          { optionId: 'c7-2-b', type: '局部正确', why: 'quantity（数量）与"harder than peers"矛盾——他们的数量不缺。' },
+          { optionId: 'c7-2-d', type: '无中生有', why: 'source（来源）与"effort"搭配不当。' },
+        ],
+        vocabNotes: ['comprehensible input 可理解输入（语言习得理论核心概念）'],
+      },
+      {
+        id: 'c7-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c7-3-a', text: 'harmful' }, { id: 'c7-3-b', text: 'useful' },
+          { id: 'c7-3-c', text: 'pointless' }, { id: 'c7-3-d', text: 'harmless' },
+        ],
+        correctIds: ['c7-3-c'],
+        analysis: 'if they become ends in themselves（如果它们变成了目的本身）——那样做就"毫无意义"，pointless。',
+        distractors: [
+          { optionId: 'c7-3-a', type: '偷换概念', why: 'harmful（有害的）语气过重——文章说"不是工具"而非"有害"。' },
+          { optionId: 'c7-3-b', type: '偷换概念', why: 'useful（有用的）与 if 条件句的否定逻辑矛盾。' },
+          { optionId: 'c7-3-d', type: '偷换概念', why: 'harmless（无害的）语气过轻——文章强调的是"无效"而非"无害"。' },
+        ],
+        vocabNotes: ['diminishing returns 收益递减', 'end in itself 目的本身（哲学概念）'],
+      },
+      {
+        id: 'c7-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c7-4-a', text: 'diligent' }, { id: 'c7-4-b', text: 'successful' },
+          { id: 'c7-4-c', text: 'creative' }, { id: 'c7-4-d', text: 'talented' },
+        ],
+        correctIds: ['c7-4-b'],
+        analysis: '后文解释"不是学最多，而是最有效"——最"成功"的学习者，successful 与 "not those who study the most" 形成对比。',
+        distractors: [
+          { optionId: 'c7-4-a', type: '偷换概念', why: 'diligent（勤奋的）与"not those who study the most"矛盾——勤奋的人学得多。' },
+          { optionId: 'c7-4-c', type: '局部正确', why: 'creative（创造性的）与学习方法相关，但文章核心是"有效"，不是"创造"。' },
+          { optionId: 'c7-4-d', type: '无中生有', why: 'talented（有天赋的）暗示先天能力，与"strategic"（策略性）的学习方法论矛盾。' },
+        ],
+        vocabNotes: ['acquisition n. 习得（second-language acquisition 第二语言习得）'],
+      },
+      {
+        id: 'c7-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c7-5-a', text: 'budget' }, { id: 'c7-5-b', text: 'horizon' },
+          { id: 'c7-5-c', text: 'capacity' }, { id: 'c7-5-d', text: 'ambition' },
+        ],
+        correctIds: ['c7-5-c'],
+        analysis: '"just above one\'s current ___"——略高于当前"水平/能力"，capacity（能力）与 comprehensible input 的"i+1"理论吻合。',
+        distractors: [
+          { optionId: 'c7-5-a', type: '无中生有', why: 'budget（预算）与语言学习的"能力"概念无关。' },
+          { optionId: 'c7-5-b', type: '局部正确', why: 'horizon（视野）与"current"搭配不如 capacity 直接——capacity 是可衡量的能力。' },
+          { optionId: 'c7-5-d', type: '无中生有', why: 'ambition（野心）与"comprehensible input"理论无关。' },
+        ],
+        vocabNotes: ['comprehensible input 可理解输入（Krashen 的 i+1 理论）', 'proficiency n. 熟练度'],
+      },
+      {
+        id: 'c7-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c7-6-a', text: 'absorbs' }, { id: 'c7-6-b', text: 'rejects' },
+          { id: 'c7-6-c', text: 'ignores' }, { id: 'c7-6-d', text: 'measures' },
+        ],
+        correctIds: ['c7-6-a'],
+        analysis: '大脑通过有意义的上下文"吸收"语言——absorbs（吸收）与"meaningful context"搭配最贴切。',
+        distractors: [
+          { optionId: 'c7-6-b', type: '偷换概念', why: 'rejects（拒绝）与"meaningful context"的积极学习逻辑矛盾。' },
+          { optionId: 'c7-6-c', type: '偷换概念', why: 'ignores（忽略）与大脑学习语言的事实矛盾。' },
+          { optionId: 'c7-6-d', type: '无中生有', why: 'measures（衡量）与"through meaningful context"的习得过程不符。' },
+        ],
+        vocabNotes: ['context n. 上下文、语境', 'gripping adj. 引人入胜的'],
+      },
+      {
+        id: 'c7-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c7-7-a', text: 'quickly' }, { id: 'c7-7-b', text: 'vaguely' },
+          { id: 'c7-7-c', text: 'persistently' }, { id: 'c7-7-d', text: 'reluctantly' },
+        ],
+        correctIds: ['c7-7-c'],
+        analysis: '在故事中遇到的词比从列表中记忆的词"更持久地"被记住——persistently（持久地）与记忆效果对比。',
+        distractors: [
+          { optionId: 'c7-7-a', type: '局部正确', why: 'quickly（快速地）可以描述记忆速度，但文章强调的是记忆的"持久性"而非"速度"。' },
+          { optionId: 'c7-7-b', type: '偷换概念', why: 'vaguely（模糊地）与"far more"的加强语气矛盾——不可能更模糊地记住。' },
+          { optionId: 'c7-7-d', type: '无中生有', why: 'reluctantly（不情愿地）不能描述记忆效果。' },
+        ],
+        vocabNotes: ['persistently adv. 持久地', 'voraciously adv. 贪婪地、如饥似渴地'],
+      },
+      {
+        id: 'c7-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c7-8-a', text: 'essential' }, { id: 'c7-8-b', text: 'useless' },
+          { id: 'c7-8-c', text: 'harmful' }, { id: 'c7-8-d', text: 'unnecessary' },
+        ],
+        correctIds: ['c7-8-b'],
+        analysis: 'however 转折——前文说阅读更重要，后文说"测试不是无用的"——useless 与 not 搭配表达"不是没用"。',
+        distractors: [
+          { optionId: 'c7-8-a', type: '偷换概念', why: 'essential（必要的）与 not 搭配后变成"不是必要的"，但文章说测试有诊断功能，所以不能说不必要。' },
+          { optionId: 'c7-8-c', type: '无中生有', why: 'harmful（有害的）语气过重——文章承认测试有诊断功能。' },
+          { optionId: 'c7-8-d', type: '偷换概念', why: 'unnecessary（不必要的）与 essential 语义接近，但 useless 更贴合"不是没用"的口语化表达。' },
+        ],
+        vocabNotes: ['diagnostic adj. 诊断的', 'voraciously adv. 贪婪地'],
+      },
+      {
+        id: 'c7-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c7-9-a', text: 'avoids' }, { id: 'c7-9-b', text: 'ignores' },
+          { id: 'c7-9-c', text: 'achieves' }, { id: 'c7-9-d', text: 'claims' },
+        ],
+        correctIds: ['c7-9-c'],
+        analysis: '"the one who ___ the highest scores"——"取得"最高分，achieves scores 是标准搭配。',
+        distractors: [
+          { optionId: 'c7-9-a', type: '偷换概念', why: 'avoids（避免）与"highest scores"矛盾——没有人会避免高分。' },
+          { optionId: 'c7-9-b', type: '偷换概念', why: 'ignores（忽略）与"highest scores"搭配不当。' },
+          { optionId: 'c7-9-d', type: '局部正确', why: 'claims（声称）可以搭配 scores，但 achieves 更强调"通过努力获得"。' },
+        ],
+        vocabNotes: ['achieve v. 取得、达到', 'voraciously adv. 如饥似渴地'],
+      },
+      {
+        id: 'c7-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c7-10-a', text: 'mastered' }, { id: 'c7-10-b', text: 'abandoned' },
+          { id: 'c7-10-c', text: 'perfected' }, { id: 'c7-10-d', text: 'defeated' },
+        ],
+        correctIds: ['c7-10-a'],
+        analysis: '"not as a subject to be ___ but as a living medium"——不是一门要被"掌握"的学科，而是活的思维工具——mastered 与 subject 搭配最自然。',
+        distractors: [
+          { optionId: 'c7-10-b', type: '偷换概念', why: 'abandoned（抛弃）与"subject to be"搭配不当——没有人会"被抛弃"一门学科。' },
+          { optionId: 'c7-10-c', type: '局部正确', why: 'perfected（完善）语义接近，但 mastered 更贴合"掌握一门学科"的表达。' },
+          { optionId: 'c7-10-d', type: '无中生有', why: 'defeated（击败）与学科搭配不当。' },
+        ],
+        vocabNotes: ['medium n. 媒介、工具（a medium of thought = 思维的媒介）'],
+      },
+    ],
+    tips: ['学习方法类文章常考"not X but Y"对比结构', '关注研究/理论的引入方式——comprehensible input 是语言习得核心概念'],
+  },
+
+  // ──── 完形 8: 人生学习与无限进步 ────
+  {
+    id: 'cloze-8',
+    type: 'cloze',
+    source: 'builtin',
+    sourceLabel: '学习方法论',
+    title: '完形 · 学习是永无止境的旅程',
+    suggestedMinutes: 15,
+    passage: [
+      'There is a peculiar comfort in the idea that learning has an endpoint — that one day, armed with sufficient degrees and certifications, a person can {{1}} sit back and apply what they know. But this vision of education as a pipeline with a definite {{2}} is increasingly at odds with reality. The half-life of professional knowledge is shrinking: what a medical student learns in the first year of university may be {{3}} by the time they graduate. The world does not stand still, and neither can we.',
+      'The ancient Greek concept of {{4}} — the love of wisdom — captures something that modern education often {{5}}: learning is not a means to an end but an end in itself. Socrates famously declared that he knew nothing, not out of false modesty but from a genuine {{6}} that the more one learns, the more one understands how much remains {{7}}. This intellectual humility is not a weakness; it is the engine of all genuine progress.',
+      'The practical implications are profound. In a world where any fact can be {{8}} in seconds, the value of education shifts from what you know to how you think — the ability to synthesise, to question assumptions, to {{9}} errors in one\'s own reasoning. These meta-cognitive skills are not taught through rote memorisation but through the {{10}} practice of engaging with ideas that challenge one\'s existing beliefs.',
+    ].join('\n\n'),
+    passageAnnotations: [],
+    items: [
+      {
+        id: 'c8-1', kind: 'choice', stem: '1',
+        options: [
+          { id: 'c8-1-a', text: 'finally' }, { id: 'c8-1-b', text: 'quickly' },
+          { id: 'c8-1-c', text: 'carefully' }, { id: 'c8-1-d', text: 'eagerly' },
+        ],
+        correctIds: ['c8-1-a'],
+        analysis: '前文说"学习有终点"这个舒适的想法——"终于"可以坐下来了，finally 与"endpoint"呼应。',
+        distractors: [
+          { optionId: 'c8-1-b', type: '无中生有', why: 'quickly（快速地）与"endpoint"的终极感不符。' },
+          { optionId: 'c8-1-c', type: '无中生有', why: 'carefully（仔细地）与"sit back"（坐下来休息）的放松基调矛盾。' },
+          { optionId: 'c8-1-d', type: '偷换概念', why: 'eagerly（渴望地）与"sit back"的放松语义矛盾——渴望是积极的，坐下来是消极的。' },
+        ],
+        vocabNotes: ['peculiar adj. 奇特的、特有的', 'certification n. 证书、认证'],
+      },
+      {
+        id: 'c8-2', kind: 'choice', stem: '2',
+        options: [
+          { id: 'c8-2-a', text: 'purpose' }, { id: 'c8-2-b', text: 'destination' },
+          { id: 'c8-2-c', text: 'obstacle' }, { id: 'c8-2-d', text: 'origin' },
+        ],
+        correctIds: ['c8-2-b'],
+        analysis: '前文说"pipeline with a definite ___"——管道有明确的"终点"，destination 与 pipeline 的比喻吻合。',
+        distractors: [
+          { optionId: 'c8-2-a', type: '局部正确', why: 'purpose（目的）可以是教育的目标，但 pipeline 的比喻需要"终点/目的地"，不是"目的"。' },
+          { optionId: 'c8-2-c', type: '偷换概念', why: 'obstacle（障碍）与"definite"矛盾——障碍不是确定的。' },
+          { optionId: 'c8-2-d', type: '偷换概念', why: 'origin（起点）方向反了——pipeline 的终点，不是起点。' },
+        ],
+        vocabNotes: ['pipeline n. 管道（比喻：学习管道）', 'half-life n. 半衰期'],
+      },
+      {
+        id: 'c8-3', kind: 'choice', stem: '3',
+        options: [
+          { id: 'c8-3-a', text: 'absorbed' }, { id: 'c8-3-b', text: 'validated' },
+          { id: 'c8-3-c', text: 'outdated' }, { id: 'c8-3-d', text: 'expanded' },
+        ],
+        correctIds: ['c8-3-c'],
+        analysis: '前文说"专业知识的半衰期在缩短"——到毕业时知识已经"过时"了，outdated。',
+        distractors: [
+          { optionId: 'c8-3-a', type: '偷换概念', why: 'absorbed（被吸收的）方向反了——知识不是被吸收，而是被淘汰。' },
+          { optionId: 'c8-3-b', type: '偷换概念', why: 'validated（被验证的）与"half-life"（半衰期）的衰减逻辑矛盾。' },
+          { optionId: 'c8-3-d', type: '偷换概念', why: 'expanded（被扩展的）与"half-life"的衰减逻辑矛盾。' },
+        ],
+        vocabNotes: ['outdated adj. 过时的', 'half-life n. 半衰期（知识的有效期）'],
+      },
+      {
+        id: 'c8-4', kind: 'choice', stem: '4',
+        options: [
+          { id: 'c8-4-a', text: 'philosophy' }, { id: 'c8-4-b', text: 'politics' },
+          { id: 'c8-4-c', text: 'economics' }, { id: 'c8-4-d', text: 'logistics' },
+        ],
+        correctIds: ['c8-4-a'],
+        analysis: '后文解释"philosophy = love of wisdom"——古希腊的"爱智慧"就是"哲学"，philosophy。',
+        distractors: [
+          { optionId: 'c8-4-b', type: '无中生有', why: 'politics（政治）与"love of wisdom"无关。' },
+          { optionId: 'c8-4-c', type: '无中生有', why: 'economics（经济学）与"love of wisdom"无关。' },
+          { optionId: 'c8-4-d', type: '无中生有', why: 'logistics（后勤）与"爱智慧"完全无关。' },
+        ],
+        vocabNotes: ['philosophy n. 哲学（philo- 爱 + sophy 智慧 = 爱智慧）', 'Socrates n. 苏格拉底'],
+      },
+      {
+        id: 'c8-5', kind: 'choice', stem: '5',
+        options: [
+          { id: 'c8-5-a', text: 'celebrates' }, { id: 'c8-5-b', text: 'captures' },
+          { id: 'c8-5-c', text: 'neglects' }, { id: 'c8-5-d', text: 'promotes' },
+        ],
+        correctIds: ['c8-5-c'],
+        analysis: 'however 转折——古希腊 concept 抓住了 something 现代教育"忽视"的，neglects。',
+        distractors: [
+          { optionId: 'c8-5-a', type: '偷换概念', why: 'celebrates（庆祝）与 however 转折后的批评基调矛盾。' },
+          { optionId: 'c8-5-b', type: '偷换概念', why: 'captures（抓住）方向反了——是古希腊 concept 抓住了，不是现代教育。' },
+          { optionId: 'c8-5-d', type: '偷换概念', why: 'promotes（促进）与 however 转折后的批评基调矛盾。' },
+        ],
+        vocabNotes: ['modestly adv. 谦虚地', 'intellectual humility 知识上的谦逊'],
+      },
+      {
+        id: 'c8-6', kind: 'choice', stem: '6',
+        options: [
+          { id: 'c8-6-a', text: 'doubt' }, { id: 'c8-6-b', text: 'desire' },
+          { id: 'c8-6-c', text: 'suspicion' }, { id: 'c8-6-d', text: 'ignorance' },
+        ],
+        correctIds: ['c8-6-a'],
+        analysis: '不是虚伪的谦虚，而是"真诚的怀疑"——doubt 与"the more one learns, the more one understands how much remains unknown"吻合。',
+        distractors: [
+          { optionId: 'c8-6-b', type: '偷换概念', why: 'desire（渴望）与"knows nothing"的怀疑基调不符。' },
+          { optionId: 'c8-6-c', type: '偷换概念', why: 'suspicion（怀疑）带有负面含义（怀疑别人），而 doubt 是对知识的谦逊。' },
+          { optionId: 'c8-6-d', type: '偷换概念', why: 'ignorance（无知）与"genuine"（真诚的）搭配不当——无知不是真诚的。' },
+        ],
+        vocabNotes: ['genuine adj. 真诚的、真正的', 'intellectual humility 知识谦逊'],
+      },
+      {
+        id: 'c8-7', kind: 'choice', stem: '7',
+        options: [
+          { id: 'c8-7-a', text: 'forgotten' }, { id: 'c8-7-b', text: 'unknown' },
+          { id: 'c8-7-c', text: 'irrelevant' }, { id: 'c8-7-d', text: 'dangerous' },
+        ],
+        correctIds: ['c8-7-b'],
+        analysis: '苏格拉底说"我知道我什么都不知道"——学得越多，越知道有多少是"未知的"，unknown。',
+        distractors: [
+          { optionId: 'c8-7-a', type: '偷换概念', why: 'forgotten（被遗忘的）方向不对——是"不知道"而非"忘记了"。' },
+          { optionId: 'c8-7-c', type: '无中生有', why: 'irrelevant（无关的）与苏格拉底的"无知"论题无关。' },
+          { optionId: 'c8-7-d', type: '无中生有', why: 'dangerous（危险的）与知识的未知领域无关。' },
+        ],
+        vocabNotes: ['remain v. 仍然是（remain unknown = 仍然是未知的）'],
+      },
+      {
+        id: 'c8-8', kind: 'choice', stem: '8',
+        options: [
+          { id: 'c8-8-a', text: 'produced' }, { id: 'c8-8-b', text: 'searched' },
+          { id: 'c8-8-c', text: 'verified' }, { id: 'c8-8-d', text: 'created' },
+        ],
+        correctIds: ['c8-8-c'],
+        analysis: '"any fact can be ___ in seconds"——在信息时代，任何事实都能在几秒内"查证"，verified。',
+        distractors: [
+          { optionId: 'c8-8-a', type: '无中生有', why: 'produced（生产）与"fact"搭配不当——事实不是被生产的。' },
+          { optionId: 'c8-8-b', type: '局部正确', why: 'searched（搜索）语义尚可，但 verified 更强调"验证"——信息时代的挑战是验证，不是搜索。' },
+          { optionId: 'c8-8-d', type: '偷换概念', why: 'created（创造）与"fact"搭配不当——事实是被发现的，不是被创造的。' },
+        ],
+        vocabNotes: ['synthesise v. 综合、合成', 'meta-cognitive 元认知的'],
+      },
+      {
+        id: 'c8-9', kind: 'choice', stem: '9',
+        options: [
+          { id: 'c8-9-a', text: 'conceal' }, { id: 'c8-9-b', text: 'embrace' },
+          { id: 'c8-9-c', text: 'detect' }, { id: 'c8-9-d', text: 'ignore' },
+        ],
+        correctIds: ['c8-9-c'],
+        analysis: '"the ability to ___ errors in one\'s own reasoning"——"发现"自己推理中的错误，detect。',
+        distractors: [
+          { optionId: 'c8-9-a', type: '偷换概念', why: 'conceal（隐藏）方向反了——教育的目标是发现错误，不是隐藏。' },
+          { optionId: 'c8-9-b', type: '偷换概念', why: 'embrace（拥抱）与"errors"搭配不当——不会"拥抱"错误。' },
+          { optionId: 'c8-9-d', type: '偷换概念', why: 'ignore（忽略）与"ability"矛盾——忽略错误不是能力。' },
+        ],
+        vocabNotes: ['assumption n. 假设、假定', 'reasoning n. 推理、推论'],
+      },
+      {
+        id: 'c8-10', kind: 'choice', stem: '10',
+        options: [
+          { id: 'c8-10-a', text: 'repetitive' }, { id: 'c8-10-b', text: 'reluctant' },
+          { id: 'c8-10-c', text: 'rewarding' }, { id: 'c8-10-d', text: 'relentless' },
+        ],
+        correctIds: ['c8-10-d'],
+        analysis: '"not through rote memorisation but through the ___ practice"——不是死记硬背，而是"持续不断的"实践，relentless 与永无止境的主题吻合。',
+        distractors: [
+          { optionId: 'c8-10-a', type: '偷换概念', why: 'repetitive（重复的）与"not rote memorisation"矛盾——重复就是死记硬背。' },
+          { optionId: 'c8-10-b', type: '无中生有', why: 'reluctant（不情愿的）不能修饰 practice。' },
+          { optionId: 'c8-10-c', type: '局部正确', why: 'rewarding（有回报的）语义积极，但 relentless 更贴合"永无止境"的主题——学习不是一次性的回报，而是持续的过程。' },
+        ],
+        vocabNotes: ['rote memorisation 死记硬背', 'relentless adj. 持续不断的、永不停息的'],
+      },
+    ],
+    tips: ['哲学类完形常考"古今对比"——苏格拉底的智慧 vs 现代教育的缺失', '注意 "not X but Y" 结构——这是完形高频考点'],
+  },
 ]

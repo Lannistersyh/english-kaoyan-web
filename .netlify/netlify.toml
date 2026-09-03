@@ -3,6 +3,7 @@ headers = []
 redirects = []
 
 [functions]
+directory = "netlify/functions"
 
 [functions."*"]
 

@@ -23,29 +23,55 @@ async function aiScoreTranslation(
   chineseTranslation: string,
   referenceTranslation?: string,
 ): Promise<{ score: number; comment: string } | null> {
+  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
+  if (!apiKey) return null
+
+  const refPart = referenceTranslation
+    ? `\n参考译文：${referenceTranslation}`
+    : ''
+
+  const prompt = `你是一位考研英语翻译评分老师（满分 10 分）。请对以下学生的翻译进行打分并给出简短点评（50 字以内）。
+
+英文原文：${englishText}
+
+学生译文：${chineseTranslation}${refPart}
+
+请从"信（准确）、达（通顺）、雅（地道）"三个维度评判。按 JSON 格式回复：
+{"score": <整数0-10>, "comment": "<点评>"}`
+
   try {
-    const res = await fetch('/api/deepseek-score', {
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        englishText,
-        chineseTranslation,
-        referenceTranslation,
+        model: 'deepseek-chat',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+        temperature: 0.3,
       }),
     })
 
     if (!res.ok) return null
     const data = await res.json()
-    return {
-      score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
-      comment: String(data.comment ?? '无法点评').slice(0, 100),
+    const raw = data.choices?.[0]?.message?.content ?? ''
+    // 尝试从回复中提取 JSON
+    const jsonMatch = raw.match(/\{[\s\S]*\}/)
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0])
+      return {
+        score: Math.max(0, Math.min(10, Math.round(parsed.score ?? 5))),
+        comment: String(parsed.comment ?? '无法点评').slice(0, 100),
+      }
     }
+    return null
   } catch {
     return null
   }
 }
+
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('practice')
@@ -130,7 +156,7 @@ export default function Translation() {
         }),
       )
     } else {
-      setAiError('AI 评分失败，请稍后重试')
+      setAiError('AI 评分失败，请确认已配置 VITE_DEEPSEEK_API_KEY')
     }
     setAiScoringId(null)
   }
