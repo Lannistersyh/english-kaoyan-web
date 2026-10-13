@@ -39,8 +39,8 @@ export function ExplanationCard({ graded }: { graded: GradedAnswer }) {
       )}
       {isReorder && (
         <div className="small" style={{ marginBottom: 6 }}>
-          你的顺序：{answer.length === 0 ? '（未作答）' : answer.join(' → ')}
-          　正确：{item.correctIds.join(' → ')}
+          你的顺序：{answer.length === 0 ? '（未作答）' : answer.map(k => LETTERS[Number(k)]).join(' → ')}
+          　正确：{item.correctIds.map(k => LETTERS[Number(k)]).join(' → ')}
         </div>
       )}
 

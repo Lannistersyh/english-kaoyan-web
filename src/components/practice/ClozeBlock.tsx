@@ -27,7 +27,10 @@ function GapSelect({
   // 用 radio 按钮替代下拉框，选项一目了然
   return (
     <span className="gap-slot" style={{ display: 'inline-block', verticalAlign: 'middle', margin: '2px 4px' }}>
-      <span style={{
+      <span
+        role="radiogroup"
+        aria-label={`完形第 ${index} 题`}
+        style={{
         display: 'inline-flex',
         gap: 3,
         alignItems: 'center',
@@ -56,6 +59,10 @@ function GapSelect({
           <label
             key={o.id}
             title={o.text}
+            role="radio"
+            aria-checked={value === o.id}
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange(o.id) } }}
             style={{
               display: 'inline-flex',
               alignItems: 'center',

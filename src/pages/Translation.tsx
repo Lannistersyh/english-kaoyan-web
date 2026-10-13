@@ -4,6 +4,7 @@ import { STORAGE_KEYS } from '../types'
 import { getQuestionsByType } from '../utils/questions'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { PracticeSession } from '../components/practice/PracticeSession'
+import { supabase } from '../lib/supabase'
 import { Button } from '../components/ui/Button'
 import { Tag } from '../components/ui/Tag'
 import { Card } from '../components/ui/Card'
@@ -17,34 +18,20 @@ function formatDate(ts: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-/** 调用 DeepSeek API 对翻译进行 AI 评分 */
-async function aiScoreTranslation(
-  englishText: string,
-  chineseTranslation: string,
-  referenceTranslation?: string,
-): Promise<{ score: number; comment: string } | null> {
-  try {
-    const res = await fetch('/api/deepseek-score', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        englishText,
-        chineseTranslation,
-        referenceTranslation,
-      }),
-    })
-
-    if (!res.ok) return null
-    const data = await res.json()
-    return {
-      score: Math.max(0, Math.min(10, Math.round(data.score ?? 5))),
-      comment: String(data.comment ?? '无法点评').slice(0, 100),
-    }
-  } catch {
-    return null
-  }
+/** 密钥仅保存在评分服务端。 */
+async function aiScoreTranslation(englishText: string, chineseTranslation: string, referenceTranslation?: string): Promise<{ score: number; comment: string }> {
+  const session = supabase ? (await supabase.auth.getSession()).data.session : null
+  const res = await fetch(import.meta.env.VITE_AI_API_URL || '/api/deepseek-score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+    body: JSON.stringify({ englishText, chineseTranslation, referenceTranslation }),
+    signal: AbortSignal.timeout(25000),
+  })
+  let data
+  try { data = await res.json() } catch { throw new Error('评分服务未连接，请检查服务配置') }
+  if (!res.ok) throw new Error(data.error || 'AI 评分失败，请稍后重试')
+  if (!Number.isFinite(data.score) || typeof data.comment !== 'string') throw new Error('评分结果格式异常')
+  return { score: Math.max(0, Math.min(10, Math.round(data.score))), comment: data.comment.slice(0, 100) }
 }
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -109,30 +96,14 @@ export default function Translation() {
     setAiScoringId(session.id)
     setAiError('')
 
-    const result = await aiScoreTranslation(
-      q.passage,
-      userText,
-      q.referenceTranslation,
-    )
-
-    if (result) {
-      setSessions(
-        sessions.map((s) => {
-          if (s.id !== session.id) return s
-          return {
-            ...s,
-            answers: s.answers.map((a) =>
-              a.itemId === s.questionId
-                ? { ...a, selfScore: result.score, aiComment: result.comment }
-                : a,
-            ),
-          }
-        }),
-      )
-    } else {
-      setAiError('AI 评分失败，请稍后重试')
-    }
-    setAiScoringId(null)
+    try {
+      const result = await aiScoreTranslation(q.passage, userText, q.referenceTranslation)
+      setSessions(current => current.map(s => s.id !== session.id ? s : {
+        ...s, answers: s.answers.map(a => a.itemId === s.questionId ? { ...a, selfScore: result.score, aiComment: result.comment } : a),
+      }))
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : 'AI 评分失败，请稍后重试')
+    } finally { setAiScoringId(null) }
   }
 
   const active = questions.find((q) => q.id === activeId)
@@ -169,7 +140,7 @@ export default function Translation() {
           ) : (
             <div className="item-list">
               {questions.map((q: Question) => (
-                <div key={q.id} className="item-row" onClick={() => setActiveId(q.id)}>
+                <div key={q.id} className="item-row" role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}>
                   <div className="item-row__main">
                     <div className="item-row__title">{q.title}</div>
                     <div className="item-row__meta">
@@ -382,7 +353,7 @@ export default function Translation() {
                                     <Button
                                       variant="primary"
                                       style={{ padding: '5px 14px' }}
-                                      onClick={() => setActiveId(q.id)}
+                                      role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}
                                     >
                                       再练一次
                                     </Button>

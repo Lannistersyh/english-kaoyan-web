@@ -11,8 +11,8 @@ import { load } from '../../utils/storage'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useTimer } from '../../hooks/useTimer'
 import { formatTime, gradeAnswers, type GradedAnswer } from '../../utils/scoring'
+import { resolveItem } from '../../utils/questions'
 import { uid } from '../../utils/ids'
-import { silentPush } from '../../lib/sync'
 import { Button } from '../ui/Button'
 import { Tag } from '../ui/Tag'
 import { QuestionView } from './QuestionView'
@@ -118,7 +118,6 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
       ])
       updateProgress(0, 0)
       setPhase('graded')
-      if (!isReview) silentPush()
       return
     }
 
@@ -158,9 +157,6 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
 
     setPhase('graded')
     onGraded?.(result.graded, result.score, result.total)
-
-    // 非回顾模式：自动推送到云端
-    if (!isReview) silentPush()
 
     // 设置开启时自动弹出第一道错题的三问表单
     const settings = load<Settings>(STORAGE_KEYS.settings, { promptThinkingOnWrong: true })
@@ -275,7 +271,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           const existingRec = wrongRecords.find((r) => r.questionId === question.id && r.itemId === thinkingItem.id)
           return (
             <ThinkingForm
-              item={thinkingItem}
+              item={resolveItem(question, thinkingItem)}
               wrongAnswer={existingRec?.wrongAnswer ?? []}
               initialThought={existingRec?.myThought}
               initialTrap={existingRec?.distractorTrap}
@@ -292,20 +288,23 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   // answering
   return (
     <div>
-      <div className="flex-row" style={{ marginBottom: 12 }}>
-        <Button variant="ghost" onClick={onExit}>
-          ← 退出
-        </Button>
-        <Tag variant="plain">{question.sourceLabel}</Tag>
-        <Tag>{question.title}</Tag>
-        <span className="toolbar__spacer" />
-        <span className="muted">
-          ⏱ {formatTime(timer.seconds)}
-          {question.suggestedMinutes ? ` / ${question.suggestedMinutes} 分钟建议` : ''}
-        </span>
-        <Button variant="primary" onClick={submit}>
-          交卷
-        </Button>
+      {/* PubMed 式文章顶部动作栏 */}
+      <div className="action-bar" style={{ marginBottom: 20, marginLeft: -20, marginRight: -20, marginTop: -24 }}>
+        <div className="action-bar__inner">
+          <Button variant="ghost" onClick={onExit}>
+            ← 返回检索
+          </Button>
+          <span className="muted small">{question.sourceLabel}</span>
+          <span className="action-bar__actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+            <span className="muted">
+              ⏱ {formatTime(timer.seconds)}
+              {question.suggestedMinutes ? ` / ${question.suggestedMinutes} 分钟建议` : ''}
+            </span>
+            <Button variant="primary" onClick={submit}>
+              交卷
+            </Button>
+          </span>
+        </div>
       </div>
       <QuestionView
         question={question}
@@ -314,7 +313,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
         onAnswer={(itemId, a) => setAnswers({ ...answers, [itemId]: a })}
         onUncertain={(itemId, v) => setUncertain({ ...uncertain, [itemId]: v })}
       />
-      <div className="flex-row" style={{ marginTop: 20 }}>
+      <div className="flex-row" style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--c-divider)' }}>
         <span className="muted">
           已完成 {Object.keys(answers).filter((k) => (answers[k] ?? []).length > 0).length} /{' '}
           {question.items.length > 0 ? question.items.length : '—'} 题

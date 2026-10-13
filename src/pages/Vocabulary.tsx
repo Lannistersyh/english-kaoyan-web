@@ -70,7 +70,7 @@ export default function Vocabulary() {
   return (
     <div>
       <h1 className="page-title">词汇</h1>
-      <p className="page-sub">熟词僻义专项：如 address（处理）、subject（易受…的）、promising（有前景的）——GRE 阅读中的「隐藏生词」</p>
+      <p className="page-sub">熟词僻义专项：如 address（处理）、subject（易受…的）、promising（有前景的）——考研英语阅读中的「隐藏生词」</p>
 
       <div className="toolbar">
         <button className={`btn${mode === 'review' ? ' btn--primary' : ''}`} onClick={() => { setMode('review'); setIndex(0); setFlipped(false) }}>

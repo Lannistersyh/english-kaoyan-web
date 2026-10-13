@@ -41,8 +41,8 @@ export default function Settings() {
     window.setTimeout(() => setSyncStatus(''), 5000)
   }
 
-  const doExport = () => {
-    const json = exportAll()
+  const doExport = (offline = false) => {
+    const json = offline ? exportAll(null) : exportAll()
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -63,7 +63,7 @@ export default function Settings() {
         flash(`恢复失败：${failed.join('、')}`)
       } else {
         setUsage(estimateUsage())
-        flash('恢复成功，数据已覆盖（切页或刷新后生效）')
+        flash('恢复成功，页面数据已更新')
       }
     }
     reader.readAsText(file, 'utf-8')
@@ -74,7 +74,7 @@ export default function Settings() {
     setUsage(0)
     setConfirmClear2(false)
     setConfirmClear(false)
-    flash('已清空全部数据，刷新后生效')
+    flash('已清空当前账号的全部学习数据')
   }
 
   const doSync = async (dir: 'push' | 'pull') => {
@@ -138,7 +138,7 @@ export default function Settings() {
             </div>
           )}
           <div className="muted small" style={{ marginTop: 10 }}>
-            💡 练习提交后会自动上传（静默同步），无需手动操作。跨设备使用时先点「从云端恢复」拉取最新数据。
+            💡 练习提交后会自动上传（静默同步），无需手动操作。原有离线数据保存在离线模式中，可导出备份再恢复到当前账号。跨设备使用时先点「从云端恢复」拉取最新数据。
           </div>
         </Card>
       )}
@@ -176,7 +176,8 @@ export default function Settings() {
       {/* ── 备份 ── */}
       <Card title="数据备份与恢复" style={{ marginBottom: 18 }}>
         <div className="flex-row" style={{ gap: 10, flexWrap: 'wrap' }}>
-          <Button variant="primary" onClick={doExport}>⬇️ 导出备份 JSON</Button>
+          <Button variant="primary" onClick={() => doExport()}>⬇️ 导出备份 JSON</Button>
+          {user && <Button onClick={() => doExport(true)}>导出原有离线数据</Button>}
           <Button onClick={() => fileRef.current?.click()}>⬆️ 从备份恢复</Button>
           <input
             ref={fileRef}

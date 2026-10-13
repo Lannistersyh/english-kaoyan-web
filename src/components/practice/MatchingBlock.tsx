@@ -6,23 +6,26 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
 function ReorderBody({ item, answer, onAnswer }: { item: SubQuestion; answer: string[]; onAnswer: (a: string[]) => void }) {
   const items = item.reorderItems ?? []
-  const chosen = new Set(answer)
+  const ordered = answer.length ? answer : item.fixedFirstId ? [item.fixedFirstId] : []
+  const chosen = new Set(ordered)
 
   return (
     <div>
-      <div className="form-label">已排顺序（点击右侧 × 可移除；首段 B 已固定）</div>
+      <div className="form-label">已排顺序（点击可移除{item.fixedFirstId ? '；首段已固定' : ''}）</div>
       <div className="reorder-answer" style={{ marginBottom: 14 }}>
-        {answer.length === 0 && <span className="muted">从下方段落中依次点击，按你认为的正确顺序排列</span>}
-        {answer.map((key) => (
-          <span
+        {ordered.length === 0 && <span className="muted">从下方段落中依次点击，按你认为的正确顺序排列</span>}
+        {ordered.map((key) => (
+          <button
+            type="button"
+            disabled={key === item.fixedFirstId}
             key={key}
             className="reorder-chip"
-            onClick={() => onAnswer(answer.filter((k) => k !== key))}
+            onClick={() => onAnswer(ordered.filter((k) => k !== key))}
             title="点击移除"
           >
             {LETTERS[parseInt(key, 10)]}
-            <span className="small">×</span>
-          </span>
+            <span className="small">{key === item.fixedFirstId ? '固定' : '×'}</span>
+          </button>
         ))}
       </div>
       <div className="form-label">待选段落（点击加入顺序）</div>
@@ -32,8 +35,12 @@ function ReorderBody({ item, answer, onAnswer }: { item: SubQuestion; answer: st
           return (
             <div
               key={key}
+              role="button"
+              tabIndex={chosen.has(key) ? -1 : 0}
+              aria-disabled={chosen.has(key)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }}
               className={`reorder-item${chosen.has(key) ? ' reorder-item--chosen' : ''}`}
-              onClick={() => (chosen.has(key) ? undefined : onAnswer([...answer, key]))}
+              onClick={() => (chosen.has(key) ? undefined : onAnswer([...ordered, key]))}
             >
               <span style={{ fontWeight: 700, color: 'var(--c-primary)', marginRight: 8 }}>{LETTERS[idx]}.</span>
               {t}
@@ -63,12 +70,13 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
                 <select
                   className="gap-select"
                   value={(answers[item.id] ?? [''])[0] ?? ''}
-                  onChange={(e) => onAnswer(item.id, [e.target.value])}
-                  style={{ minWidth: 200 }}
+                  aria-label={`第 ${n} 空`}
+                  onChange={(e) => onAnswer(item.id, e.target.value ? [e.target.value] : [])}
+                  style={{ minWidth: 80, maxWidth: '100%' }}
                 >
                   <option value="">请选择…</option>
                   {pool.map((o, i) => (
-                    <option key={o.id} value={o.id}>
+                    <option key={o.id} value={o.id} disabled={items.some(other => other.id !== item.id && (answers[other.id] ?? []).includes(o.id))}>
                       {LETTERS[i]}
                     </option>
                   ))}
@@ -123,7 +131,11 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
             {(item.options ?? []).map((o, i) => (
               <div
                 key={o.id}
-                className={`option${selected === o.id ? ' option--selected' : ''}`}
+                role="radio"
+                    aria-checked={selected === o.id}
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onAnswer(item.id, [o.id]) } }}
+                    className={`option${selected === o.id ? ' option--selected' : ''}`}
                 onClick={() => onAnswer(item.id, [o.id])}
               >
                 <span className="option__letter">{LETTERS[i]}.</span>

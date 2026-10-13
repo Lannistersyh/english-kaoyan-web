@@ -184,7 +184,7 @@ export default function Import() {
         >
           {result.errors.length > 0 && (
             <div className="card card--flat" style={{ borderColor: 'var(--c-warning)', marginBottom: 12 }}>
-              <b className="small" style={{ color: 'var(--c-warning)' }}>解析问题（不影响入库）：</b>
+              <b className="small" style={{ color: 'var(--c-warning)' }}>解析问题（无效题目已排除）：</b>
               <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 13 }}>
                 {result.errors.map((e, i) => (
                   <li key={i}>第 {e.line} 行：{e.message}</li>

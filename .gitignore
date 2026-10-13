@@ -6,3 +6,5 @@ scratch-test/importer.ts
 .env
 .env.local
 .DS_Store
+.env.local
+.vercel

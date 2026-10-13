@@ -50,6 +50,7 @@ export interface SubQuestion {
   options?: Option[] // choice：本题选项；gapfill 用 optionPoolId 引用共享池
   optionPoolId?: string // 7选5 共享选项池
   correctIds: string[] // choice/gapfill: [正确项id]；reorder: 正确顺序的 key 数组
+  fixedFirstId?: string // 排序题已给首段的 key
   reorderItems?: string[] // 排序题：乱序片段（下标即 key）
   analysis?: string // 解题思路：正确项如何同义替换原文
   distractors?: DistractorAnalysis[]
@@ -209,6 +210,7 @@ export const STORAGE_KEYS = {
   vocabProgress: 'ekw:vocabProgress',
   patterns: 'ekw:patterns',
   settings: 'ekw:settings',
+  dictHistory: 'ekw:dictHistory',
 } as const
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS]

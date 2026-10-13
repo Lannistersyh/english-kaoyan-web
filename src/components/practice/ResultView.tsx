@@ -4,6 +4,7 @@ import type { GradedAnswer } from '../../utils/scoring'
 import { formatTime } from '../../utils/scoring'
 import { Button } from '../ui/Button'
 import { Tag } from '../ui/Tag'
+import { resolveItem } from '../../utils/questions'
 import { ExplanationCard } from './ExplanationCard'
 
 interface Props {
@@ -95,7 +96,7 @@ export function ResultView({
               <div className="form-label" style={{ margin: '12px 0 6px' }}>
                 {i + 1}. {g.item.stem ?? (g.item.kind === 'reorder' ? '排序题' : '')}
               </div>
-              <ExplanationCard graded={g} />
+              <ExplanationCard graded={{ ...g, item: resolveItem(question, g.item) }} />
               {!g.correct && (
                 <div style={{ marginTop: 6 }}>
                   <Button variant="ghost" onClick={() => onOpenThinking(g.itemId)}>

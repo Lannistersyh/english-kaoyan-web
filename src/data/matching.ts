@@ -98,6 +98,7 @@ export const matchingQuestions: Question[] = [
     items: [
       {
         id: 'm2-1',
+        fixedFirstId: '1',
         kind: 'reorder',
         stem: '请将 A-F 段按正确顺序排列，与已给首段 B 组成完整文章。',
         reorderItems: [
@@ -108,8 +109,8 @@ export const matchingQuestions: Question[] = [
           'What matters most, in the end, is that both practices survive. Journals continue to certify what preprints can only circulate, and preprints continue to do what journals cannot: make knowledge public while it is still useful. The two institutions, rivals in appearance, are in fact partners in the same enterprise.',
           'Yet the speed is not free. Peer review exists to catch what enthusiasm misses, and a community that reads only preprints may never see the corrections that follow. The preprint\'s openness is also, paradoxically, its weakness: a claim that is easy to post is easy to ignore.',
         ],
-        correctIds: ['1', '0', '5', '3', '2', '4'],
-        analysis: '正确顺序：B(首段：昔日发表是研究终点) → A(物理学的分享传统) → D(预印本革命改变规则) → F(但速度有代价：同行评审) → C(批评者指出真实风险) → E(最终两者应共存)。逻辑链：旧模式→新传统→变革→代价→批评→调和。排序题 key 为 reorderItems 下标：B=1, A=0, D=5, F=3, C=2, E=4。',
+        correctIds: ['1', '3', '0', '5', '2', '4'],
+        analysis: '正确顺序：B（昔日发表是研究终点）→ D（物理学的分享传统扩展到各学科）→ A（预印本革命改变规则）→ F（速度有代价）→ C（未经评审的风险）→ E（两者共存）。逻辑链：旧模式→新传统→变革→代价→批评→调和。',
         distractors: [],
         vocabNotes: ['preprint n. 预印本（同行评审前公开的论文稿）', 'refereed adj. 经同行评审的（referee v. 评审）'],
       },

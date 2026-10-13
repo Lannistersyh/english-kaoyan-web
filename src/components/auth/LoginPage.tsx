@@ -19,6 +19,20 @@ export function LoginPage() {
     setInfo('')
     setLoading(true)
 
+    // 注册时密码强度校验
+    if (isSignUp) {
+      if (password.length < 6) {
+        setError('密码至少需要 6 位')
+        setLoading(false)
+        return
+      }
+      if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+        setError('密码需包含字母和数字')
+        setLoading(false)
+        return
+      }
+    }
+
     const fn = isSignUp ? signUp : signIn
     const result = await fn(email, password)
 
@@ -63,7 +77,7 @@ export function LoginPage() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
-          <h2 style={{ margin: 0, fontSize: 20 }}>GRE · 精英训练</h2>
+          <h2 style={{ margin: 0, fontSize: 20 }}>考研英语 · 精读训练</h2>
           <p className="muted" style={{ marginTop: 6 }}>
             {cloudReady
               ? isSignUp ? '创建账号，开始跨设备同步' : '登录以同步学习数据'
@@ -164,7 +178,7 @@ export function LoginPage() {
         </div>
 
         {/* 离线模式：直接进入 */}
-        {!cloudReady && (
+        {(
           <div style={{ textAlign: 'center', marginTop: 16 }}>
             <Button onClick={() => {
               // 离线模式：什么都不用做，AuthContext 的 user 为 null 但 loading 结束

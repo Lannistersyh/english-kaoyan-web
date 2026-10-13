@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div>
       <h1 className="page-title">仪表盘</h1>
-      <p className="page-sub">目标：GRE Verbal 165+。缺的不是词汇量，而是逻辑深度与表达精致度。</p>
+      <p className="page-sub">目标：考研英语 80+ 分。通过精读、错题复盘与表达训练巩固各板块能力。</p>
 
       <div className="stat-grid">
         <div className="stat-card">

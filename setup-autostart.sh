@@ -15,18 +15,18 @@ cat > ~/Library/LaunchAgents/com.english-site.server.plist << PLIST
     <key>ProgramArguments</key>
     <array>
         <string>/usr/local/bin/node</string>
-        <string>/Users/Admin/english-kaoyan-mac/server.js</string>
+        <string>/Users/admin/学习资料/english-kaoyan-mac/server.js</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/Admin/english-kaoyan-mac</string>
+    <string>/Users/admin/学习资料/english-kaoyan-mac</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>/Users/Admin/english-kaoyan-mac/server.log</string>
+    <string>/Users/admin/学习资料/english-kaoyan-mac/server.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/Admin/english-kaoyan-mac/server.error.log</string>
+    <string>/Users/admin/学习资料/english-kaoyan-mac/server.error.log</string>
 </dict>
 </plist>
 PLIST

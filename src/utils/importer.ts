@@ -46,6 +46,13 @@ export function parseImport(text: string): ImportResult {
   const errors: ImportResult['errors'] = []
   const questions: Question[] = []
 
+  // 限制导入大小（100KB）
+  const MAX_SIZE = 100 * 1024
+  if (text.length > MAX_SIZE) {
+    errors.push({ line: 0, message: `文本过大（${Math.round(text.length / 1024)}KB），请控制在 100KB 以内。建议分批导入。` })
+    return { questions, errors }
+  }
+
   const lines = text.split(/\r?\n/)
 
   let q: Question = newQuestion()
@@ -151,6 +158,15 @@ export function parseImport(text: string): ImportResult {
       .filter((s) => stepLines[s])
       .map((s) => ({ step: s, zh: stepLines[s] as string }) satisfies TranslationStep)
     if (steps.length) q.translationSteps = steps
+    if (q.type !== 'translation' && q.type !== 'writing') {
+      const invalid = q.items.filter(it => it.correctIds.length === 0 ||
+        (it.kind === 'choice' && (it.options?.length ?? 0) < 2) ||
+        (it.kind === 'reorder' && (it.correctIds.length !== it.reorderItems?.length || new Set(it.correctIds).size !== it.correctIds.length)))
+      if (!q.items.length || invalid.length) {
+        pushError(0, `「${q.title}」缺少有效小题或标准答案，未入库，请补齐后重新导入`)
+        return
+      }
+    }
     questions.push(q)
   }
 

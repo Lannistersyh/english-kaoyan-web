@@ -8,7 +8,7 @@ directory = "netlify/functions"
 [functions."*"]
 
 [build]
-publish = "/Users/Admin/english-kaoyan-mac/dist"
+publish = "dist"
 publishOrigin = "ui"
 commandOrigin = "ui"
 command = "npm run build"

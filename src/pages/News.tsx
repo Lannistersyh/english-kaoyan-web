@@ -38,7 +38,7 @@ export default function News() {
           <div
             key={article.id}
             className="news-card"
-            onClick={() => setActiveId(article.id)}
+            role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(article.id)}
             style={{
               background: 'var(--c-surface)',
               border: '1px solid var(--c-border)',

@@ -1,14 +1,26 @@
 import { useMemo, useState } from 'react'
-import type { Question, WrongRecord } from '../types'
+import type { Question, WrongRecord, SubQuestion } from '../types'
 import { STORAGE_KEYS } from '../types'
 import { QUESTION_TYPE_LABELS } from '../data'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import { getQuestion } from '../utils/questions'
+import { getQuestion, resolveItem } from '../utils/questions'
 import { PracticeSession } from '../components/practice/PracticeSession'
 import { ThinkingForm } from '../components/practice/ThinkingForm'
 import { Button } from '../components/ui/Button'
 import { Tag } from '../components/ui/Tag'
 import { EmptyState } from '../components/ui/EmptyState'
+/** HTML 转义，防止 XSS */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 function timeAgo(ts: number): string {
   const days = Math.floor((Date.now() - ts) / 86400000)
@@ -16,6 +28,369 @@ function timeAgo(ts: number): string {
   if (days === 1) return '昨天'
   if (days < 30) return `${days} 天前`
   return new Date(ts).toLocaleDateString('zh-CN')
+}
+
+function extractContext(passage: string, keywords: string[], radius = 80): string {
+  if (!passage || keywords.length === 0) return ''
+  const lower = passage.toLowerCase()
+  for (const kw of keywords) {
+    const idx = lower.indexOf(kw.toLowerCase())
+    if (idx !== -1) {
+      const start = Math.max(0, idx - radius)
+      const end = Math.min(passage.length, idx + kw.length + radius)
+      let excerpt = passage.slice(start, end)
+      if (start > 0) excerpt = '…' + excerpt
+      if (end < passage.length) excerpt = excerpt + '…'
+      return excerpt
+    }
+  }
+  return ''
+}
+
+
+function WrongItemCard({
+  r, q, item, onEdit, onReview,
+}: {
+  r: WrongRecord
+  q: Question | undefined
+  item: SubQuestion | undefined
+  onEdit: () => void
+  onReview: () => void
+}) {
+  if (!item) return <p className="muted">题目已删除，思维记录：{r.myThought || '暂无'} {r.distractorTrap} {r.correctMapping}</p>
+
+  const options = item.options ?? q?.optionPools?.[item.optionPoolId ?? ''] ?? []
+  const passage = q?.passage || ''
+  const correctText = options.find(o => item.correctIds.includes(o.id))?.text || ''
+  const keywords = [
+    ...(item.stem || '').split(/\s+/).filter(w => w.length > 4),
+    ...correctText.split(/\s+/).filter(w => w.length > 4),
+  ].slice(0, 3)
+  const context = extractContext(passage, keywords)
+
+  return (
+    <div style={{
+      padding: '12px 16px',
+      borderLeft: '3px solid var(--c-danger)',
+      background: '#fefefe',
+      borderRadius: '0 8px 8px 0',
+      marginBottom: 8,
+    }}>
+      {/* 题目展示：完形提取上下文句，阅读显示完整题干 */}
+      {(() => {
+        // 完形填空：stem 只是数字，从 passage 提取包含 {{n}} 的句子
+        if ((q?.type === 'cloze' || item.kind === 'gapfill') && q?.passage) {
+          const blankNum = String(q.items.findIndex(it => it.id === item.id) + 1)
+          const paragraphs = q.passage.split(/\n\s*\n/)
+          let contextSentence = ''
+          for (const para of paragraphs) {
+            if (para.includes('{{' + blankNum + '}}')) {
+              // 提取包含 {{n}} 的那一句
+              const sentences = para.split(/(?<=[.!?])\s+/)
+              for (const sent of sentences) {
+                if (sent.includes('{{' + blankNum + '}}')) {
+                  contextSentence = sent.replace('\{\{' + blankNum + '\}\}', '______').trim()
+                  break
+                }
+              }
+              if (!contextSentence) contextSentence = para.replace('\{\{' + blankNum + '\}\}', '______').trim()
+              break
+            }
+          }
+          if (contextSentence) {
+            return (
+              <div style={{
+                marginBottom: 10,
+                padding: '10px 12px',
+                background: 'linear-gradient(135deg, #fef9e7 0%, #fdf2e9 100%)',
+                borderRadius: 8,
+                borderLeft: '3px solid #f39c12',
+                fontSize: 14,
+                lineHeight: 1.8,
+                color: '#2c3e50',
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#e67e22', marginBottom: 4 }}>
+                  📝 第 {blankNum} 空 · 上下文
+                </div>
+                <span dangerouslySetInnerHTML={{
+                  __html: escapeHtml(contextSentence).replace(
+                    new RegExp('______'),
+                    '<b style="color:#e74c3c;text-decoration:underline;">______</b>'
+                  )
+                }} />
+              </div>
+            )
+          }
+        }
+        // 阅读理解：显示完整题干
+        if (item.stem && !/^\d+$/.test(item.stem)) {
+          return (
+            <div style={{
+              marginBottom: 10,
+              padding: '10px 12px',
+              background: 'linear-gradient(135deg, #eaf2f8 0%, #ebf5fb 100%)',
+              borderRadius: 8,
+              borderLeft: '3px solid #3498db',
+              fontSize: 14,
+              lineHeight: 1.7,
+              color: '#2c3e50',
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: '#2980b9', marginBottom: 4 }}>
+                📋 题目
+              </div>
+              {item.stem}
+            </div>
+          )
+        }
+        return null
+      })()}
+
+      {options.length > 0 && (
+        <div style={{ marginBottom: 8 }}>
+          {options.map((opt, idx) => {
+            const isCorrect = item.correctIds.includes(opt.id)
+            const isWrong = r.wrongAnswer.includes(opt.id)
+            return (
+              <div key={opt.id} style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 8,
+                padding: '5px 8px',
+                marginBottom: 3,
+                borderRadius: 6,
+                background: isCorrect ? 'rgba(52, 199, 89, 0.1)' :
+                           isWrong ? 'rgba(255, 59, 48, 0.08)' : 'transparent',
+                border: isCorrect ? '1px solid rgba(52, 199, 89, 0.3)' :
+                       isWrong ? '1px solid rgba(255, 59, 48, 0.2)' : '1px solid transparent',
+                fontSize: 13,
+                lineHeight: 1.5,
+              }}>
+                <span style={{
+                  fontWeight: 600,
+                  minWidth: 20,
+                  color: isCorrect ? '#34c759' : isWrong ? '#ff3b30' : '#86868b',
+                }}>
+                  {LETTERS[idx]}.
+                </span>
+                <span style={{ flex: 1, color: '#1d1d1f' }}>{opt.text}</span>
+                {isCorrect && <span style={{ color: '#34c759', fontSize: 12 }}>✓ 正确</span>}
+                {isWrong && !isCorrect && <span style={{ color: '#ff3b30', fontSize: 12 }}>✗ 你的答案</span>}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {context && (
+        <div style={{
+          margin: '8px 0',
+          padding: '10px 12px',
+          background: 'linear-gradient(135deg, #e8f8f5 0%, #eafaf1 100%)',
+          borderRadius: 8,
+          borderLeft: '3px solid #27ae60',
+          fontSize: 13,
+          lineHeight: 1.8,
+          color: '#2c3e50',
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#27ae60', marginBottom: 4, fontStyle: 'normal' }}>
+            📖 原文核心句
+          </div>
+          <span style={{ fontStyle: 'italic' }}>{context}</span>
+        </div>
+      )}
+
+      {item.kind === 'reorder' && (
+        <div className="card card--flat">
+          <p>你的顺序：{r.wrongAnswer.map(k => LETTERS[Number(k)]).join(' → ') || '未作答'}</p>
+          <p>正确顺序：{item.correctIds.map(k => LETTERS[Number(k)]).join(' → ')}</p>
+          <ol>{item.correctIds.map(k => <li key={k}><b>{LETTERS[Number(k)]}.</b> {item.reorderItems?.[Number(k)]}</li>)}</ol>
+        </div>
+      )}
+      {item.analysis && (
+        <div style={{
+          margin: '8px 0',
+          padding: '8px 10px',
+          background: '#f0f7ff',
+          borderRadius: 6,
+          fontSize: 13,
+          lineHeight: 1.6,
+        }}>
+          <b>💡 解析：</b>{item.analysis}
+        </div>
+      )}
+
+      {item.distractors && item.distractors.length > 0 && (
+        <div style={{ margin: '8px 0' }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#86868b', marginBottom: 4 }}>
+            🎯 干扰项分析
+          </div>
+          {item.distractors.map((d, i) => {
+            const optObj = options.find(o => o.id === d.optionId)
+            const optIdx = optObj ? options.indexOf(optObj) : -1
+            return (
+              <div key={i} style={{
+                fontSize: 12,
+                color: '#555',
+                padding: '4px 0',
+                borderBottom: i < item.distractors!.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
+              }}>
+                <span style={{ color: '#ff3b30', fontWeight: 600 }}>
+                  {optIdx >= 0 ? LETTERS[optIdx] + '. ' : ''}{optObj?.text}
+                </span>
+                <Tag variant="danger">{d.type}</Tag>
+                <span style={{ marginLeft: 4 }}>{d.why}</span>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {(r.myThought || r.distractorTrap || r.correctMapping) && (
+        <div style={{
+          marginTop: 10,
+          background: '#f8fafc',
+          padding: '8px 12px',
+          borderRadius: 8,
+          fontSize: 13,
+          lineHeight: 1.6,
+        }}>
+          {r.myThought && <div style={{ marginBottom: 4 }}><b>① 我的想法：</b>{r.myThought}</div>}
+          {r.distractorTrap && <div style={{ marginBottom: 4 }}><b>② 干扰项如何诱导我：</b>{r.distractorTrap}</div>}
+          {r.correctMapping && <div><b>③ 正确项如何替换：</b>{r.correctMapping}</div>}
+        </div>
+      )}
+
+      <div className="flex-row" style={{ marginTop: 10, gap: 8 }}>
+        <Button variant="primary" style={{ padding: '4px 12px', fontSize: 12 }} onClick={onReview}>
+          重做此题
+        </Button>
+        {(r.myThought || r.distractorTrap || r.correctMapping) ? (
+          <Button variant="ghost" style={{ padding: '4px 12px', fontSize: 12 }} onClick={onEdit}>
+            编辑三问
+          </Button>
+        ) : (
+          <Button variant="ghost" style={{ padding: '4px 12px', fontSize: 12, color: 'var(--c-warning)' }} onClick={onEdit}>
+            补填三问
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function QuestionGroup({
+  questionId,
+  records,
+  onEdit,
+  onReview,
+  onToggleMastered,
+}: {
+  questionId: string
+  records: WrongRecord[]
+  onEdit: (r: WrongRecord) => void
+  onReview: (q: Question, r: WrongRecord) => void
+  onToggleMastered: (r: WrongRecord) => void
+}) {
+  const [expanded, setExpanded] = useState(true)
+  const q = getQuestion(questionId)
+  const activeCount = records.filter(r => r.status === 'active').length
+
+  return (
+    <div className="card" style={{ marginBottom: 12, overflow: 'hidden' }}>
+      <div
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 16px',
+          cursor: 'pointer',
+          background: expanded ? '#fafbfd' : 'transparent',
+          borderBottom: expanded ? '1px solid var(--c-border)' : 'none',
+          transition: 'background 0.15s',
+        }}
+        onMouseEnter={(e) => { if (!expanded) e.currentTarget.style.background = '#f5f7fa' }}
+        onMouseLeave={(e) => { if (!expanded) e.currentTarget.style.background = 'transparent' }}
+      >
+        <div style={{ flex: 1 }}>
+          <div className="flex-row" style={{ gap: 8, marginBottom: 4 }}>
+            {q && <Tag variant="plain">{QUESTION_TYPE_LABELS[q.type]}</Tag>}
+            {q?.source === 'imported' && <Tag variant="warning">导入</Tag>}
+            {activeCount > 0 && <Tag variant="danger">{activeCount} 题待复习</Tag>}
+            {activeCount === 0 && <Tag variant="success">全部掌握</Tag>}
+          </div>
+          <div style={{ fontWeight: 600, fontSize: 15 }}>
+            {q ? q.title : '（题目已删除）'}
+          </div>
+          <div className="muted small" style={{ marginTop: 2 }}>
+            共 {records.length} 道小题错题 · 最后错于 {timeAgo(Math.max(...records.map(r => r.lastWrongAt)))}
+          </div>
+        </div>
+        <div style={{
+          fontSize: 18,
+          color: '#86868b',
+          transition: 'transform 0.2s',
+          transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+        }}>
+          ›
+        </div>
+      </div>
+
+      {expanded && (
+        <div style={{ padding: '8px 0' }}>
+          {records.map(r => {
+            const item = q?.items.find(it => it.id === r.itemId)
+            return (
+              <div key={r.id} style={{ position: 'relative' }}>
+                <WrongItemCard
+                  r={r}
+                  q={q}
+                  item={item}
+                  onEdit={() => onEdit(r)}
+                  onReview={() => { if (q) onReview(q, r) }}
+                />
+                <div style={{ position: 'absolute', top: 12, right: 16 }}>
+                  {r.status === 'active' ? (
+                    <button
+                      onClick={() => onToggleMastered(r)}
+                      style={{
+                        padding: '3px 10px',
+                        border: '1px solid var(--c-border)',
+                        borderRadius: 6,
+                        background: 'transparent',
+                        color: '#86868b',
+                        fontSize: 11,
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      标记掌握
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onToggleMastered(r)}
+                      style={{
+                        padding: '3px 10px',
+                        border: '1px solid rgba(52, 199, 89, 0.3)',
+                        borderRadius: 6,
+                        background: 'rgba(52, 199, 89, 0.08)',
+                        color: '#34c759',
+                        fontSize: 11,
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      ✓ 已掌握
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function WrongBook() {
@@ -29,6 +404,20 @@ export default function WrongBook() {
       .filter((r) => statusFilter === 'all' || r.status === statusFilter)
       .sort((a, b) => b.lastWrongAt - a.lastWrongAt)
   }, [records, statusFilter])
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, WrongRecord[]>()
+    for (const r of shown) {
+      const arr = map.get(r.questionId) || []
+      arr.push(r)
+      map.set(r.questionId, arr)
+    }
+    return [...map.entries()].sort(([, a], [, b]) => {
+      const latestA = Math.max(...a.map(r => r.lastWrongAt))
+      const latestB = Math.max(...b.map(r => r.lastWrongAt))
+      return latestB - latestA
+    })
+  }, [shown])
 
   const handleGraded = (graded: { itemId: string; correct: boolean }[]) => {
     if (!reviewing) return
@@ -44,6 +433,12 @@ export default function WrongBook() {
         return { ...r, wrongCount: r.wrongCount + 1, lastWrongAt: now, status: 'active' }
       }),
     )
+  }
+
+  const toggleMastered = (r: WrongRecord) => {
+    setRecords(records.map(x =>
+      x.id === r.id ? { ...x, status: x.status === 'active' ? 'mastered' : 'active' } : x
+    ))
   }
 
   if (reviewing) {
@@ -82,76 +477,28 @@ export default function WrongBook() {
         </span>
       </div>
 
-      {shown.length === 0 ? (
+      {grouped.length === 0 ? (
         <EmptyState icon="📕" title="没有错题记录">
           {statusFilter === 'active' ? '做错题目后会自动收录到这里' : '练习时做错题会自动入档'}
         </EmptyState>
       ) : (
-        <div className="item-list">
-          {shown.map((r) => {
-            const q = getQuestion(r.questionId)
-            const item = q?.items.find((it) => it.id === r.itemId)
-            return (
-              <div key={r.id} className="card" style={{ marginBottom: 12 }}>
-                <div className="flex-row" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ flex: 1 }}>
-                    <div className="flex-row" style={{ gap: 8, marginBottom: 4 }}>
-                      {q && <Tag variant="plain">{QUESTION_TYPE_LABELS[q.type]}</Tag>}
-                      <Tag variant={r.status === 'mastered' ? 'success' : 'danger'}>
-                        {r.status === 'mastered' ? '已掌握' : `错 ${r.wrongCount} 次`}
-                      </Tag>
-                      {!r.myThought && <Tag variant="warning">待补三问</Tag>}
-                    </div>
-                    <div style={{ fontWeight: 600 }}>{q ? q.title : '（题目已删除）'}</div>
-                    <div className="muted small">
-                      {item?.stem ?? (item?.kind === 'reorder' ? '排序题' : '')}
-                      {'　'}最后错于 {timeAgo(r.lastWrongAt)}
-                      {r.reviewCount > 0 ? ` · 回顾答对 ${r.reviewCount} 次` : ''}
-                    </div>
-                    {(r.myThought || r.distractorTrap || r.correctMapping) && (
-                      <div style={{ marginTop: 8, background: '#f8fafc', padding: '8px 12px', borderRadius: 8, fontSize: 13 }}>
-                        {r.myThought && <div><b>① 当时的想法：</b>{r.myThought}</div>}
-                        {r.distractorTrap && <div><b>② 干扰项陷阱：</b>{r.distractorTrap}</div>}
-                        {r.correctMapping && <div><b>③ 正确项替换：</b>{r.correctMapping}</div>}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-row" style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
-                    {q && (
-                      <Button variant="primary" style={{ padding: '5px 12px' }} onClick={() => setReviewing({ question: q, record: r })}>
-                        重做
-                      </Button>
-                    )}
-                    {/* 有任何已填内容 → 编辑三问；完全没填 → 补填三问 */}
-                    {(r.myThought || r.distractorTrap || r.correctMapping) ? (
-                      <Button variant="ghost" style={{ padding: '5px 12px' }} onClick={() => setEditing(r)}>
-                        编辑三问
-                      </Button>
-                    ) : (
-                      <Button variant="ghost" style={{ padding: '5px 12px', color: 'var(--c-warning)' }} onClick={() => setEditing(r)}>
-                        补填三问
-                      </Button>
-                    )}
-                    {r.status === 'active' ? (
-                      <Button variant="ghost" style={{ padding: '5px 12px' }} onClick={() => setRecords(records.map((x) => (x.id === r.id ? { ...x, status: 'mastered' } : x)))}>
-                        标记掌握
-                      </Button>
-                    ) : (
-                      <Button variant="ghost" style={{ padding: '5px 12px' }} onClick={() => setRecords(records.map((x) => (x.id === r.id ? { ...x, status: 'active' } : x)))}>
-                        恢复待复习
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+        <div>
+          {grouped.map(([questionId, recs]) => (
+            <QuestionGroup
+              key={questionId}
+              questionId={questionId}
+              records={recs}
+              onEdit={(r) => setEditing(r)}
+              onReview={(q, r) => setReviewing({ question: q, record: r })}
+              onToggleMastered={toggleMastered}
+            />
+          ))}
         </div>
       )}
 
       {editing && (
         <ThinkingForm
-          item={getQuestion(editing.questionId)?.items.find((it) => it.id === editing.itemId) ?? { id: editing.itemId, kind: 'choice', correctIds: [] }}
+          item={(() => { const q = getQuestion(editing.questionId); const item = q?.items.find(it => it.id === editing.itemId); return q && item ? resolveItem(q, item) : { id: editing.itemId, kind: 'choice' as const, correctIds: [] } })()}
           wrongAnswer={editing.wrongAnswer}
           initialThought={editing.myThought}
           initialTrap={editing.distractorTrap}

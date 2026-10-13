@@ -4,7 +4,7 @@ echo "🖥️ 创建桌面快捷方式..."
 # 创建 Automator 应用
 cat > ~/Desktop/英语学习网站.command << AUTOMATOR
 #!/bin/bash
-cd /Users/Admin/english-kaoyan-mac
+cd /Users/admin/学习资料/english-kaoyan-mac
 echo "🚀 启动英语学习网站..."
 echo "📌 网站地址：http://localhost:5173/"
 echo "💡 按 Ctrl+C 可以停止服务"

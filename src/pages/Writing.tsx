@@ -40,7 +40,7 @@ export default function Writing() {
       ) : (
         <div className="item-list">
           {questions.map((q: Question) => (
-            <div key={q.id} className="item-row" onClick={() => setActiveId(q.id)}>
+            <div key={q.id} className="item-row" role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}>
               <div className="item-row__main">
                 <div className="item-row__title">{q.title}</div>
                 <div className="item-row__meta">

@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase, isCloudEnabled } from './supabase'
+import { setStorageUser } from '../utils/storage'
+import { installAutoSync } from './sync'
 
 interface AuthState {
   user: User | null
@@ -31,20 +33,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
+    const stopSync = installAutoSync()
+    let active = true
+    let authRevision = 0
     // 初始 session
     supabase!.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setUser(data.session?.user ?? null)
+      if (!active) return
+      if (authRevision === 0) {
+        setStorageUser(data.session?.user.id ?? null)
+        setSession(data.session)
+        setUser(data.session?.user ?? null)
+      }
       setLoading(false)
-    })
+    }).catch(() => { if (active) setLoading(false) })
 
     // 监听认证状态变化
     const { data: sub } = supabase!.auth.onAuthStateChange((_event, newSession) => {
+      authRevision++
+      setStorageUser(newSession?.user.id ?? null)
       setSession(newSession)
       setUser(newSession?.user ?? null)
+      setLoading(false)
     })
 
-    return () => sub.subscription.unsubscribe()
+    return () => { active = false; stopSync(); sub.subscription.unsubscribe() }
   }, [])
 
   const signUp = async (email: string, password: string) => {

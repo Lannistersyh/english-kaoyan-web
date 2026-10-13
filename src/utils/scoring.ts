@@ -7,7 +7,7 @@ import type { AnswerRecord, SubQuestion } from '../types'
  * - freeform：不判对错，由用户自评（correct 恒 false）
  */
 export function judgeAnswer(item: SubQuestion, answer: string[]): boolean {
-  if (item.kind === 'freeform') return false
+  if (item.kind === 'freeform' || item.correctIds.length === 0 || answer.length === 0 || answer.some(id => !id)) return false
   if (item.kind === 'reorder') {
     if (answer.length !== item.correctIds.length) return false
     return answer.every((a, i) => a === item.correctIds[i])
