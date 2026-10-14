@@ -9,14 +9,14 @@ import { Tag } from '../ui/Tag'
 import { EmptyState } from '../ui/EmptyState'
 
 const CATEGORIES: { key: PatternCategory; label: string }[] = [
-  { key: 'introduction', label: '引出话题' },
-  { key: 'describePicture', label: '描述图画' },
-  { key: 'thesis', label: '点明主旨' },
-  { key: 'example', label: '举例论证' },
-  { key: 'cause', label: '因果分析' },
-  { key: 'concession', label: '让步转折' },
-  { key: 'conclusion', label: '总结' },
-  { key: 'suggestion', label: '建议' },
+  { key: 'introduction', label: "Introduce the topic" },
+  { key: 'describePicture', label: "Describe the picture" },
+  { key: 'thesis', label: "State the main idea" },
+  { key: 'example', label: "Give examples for argumentation" },
+  { key: 'cause', label: "Causal analysis" },
+  { key: 'concession', label: "Concession and transition" },
+  { key: 'conclusion', label: "Summary" },
+  { key: 'suggestion', label: "Suggestions" },
 ]
 
 const CATEGORY_LABELS: Record<PatternCategory, string> = Object.fromEntries(
@@ -24,10 +24,10 @@ const CATEGORY_LABELS: Record<PatternCategory, string> = Object.fromEntries(
 ) as Record<PatternCategory, string>
 
 interface Props {
-  compact?: boolean // 写作页内嵌模式（不显示自定义表单）
+  compact?: boolean // Embedded mode in the writing page (do not show the custom form)
 }
 
-/** 功能性句型库：中英对照 + 复制 + 自定义 */
+/* Functional sentence pattern library: English examples and explanations + copy + custom */
 export function PatternLibrary({ compact = false }: Props) {
   const [custom, setCustom] = useLocalStorage<Pattern[]>(STORAGE_KEYS.patterns, [])
   const [filter, setFilter] = useState<PatternCategory | 'all'>('all')
@@ -46,7 +46,7 @@ export function PatternLibrary({ compact = false }: Props) {
       setCopiedId(p.id)
       setTimeout(() => setCopiedId(null), 1500)
     } catch {
-      window.alert('复制失败，请手动选择复制')
+      window.alert("Copy failed, please manually select and copy")
     }
   }
 
@@ -63,85 +63,56 @@ export function PatternLibrary({ compact = false }: Props) {
   }
 
   return (
-    <div>
-      <div className="toolbar">
-        {[{ key: 'all', label: '全部' } as const, ...CATEGORIES].map((c) => (
-          <button
-            key={c.key}
-            className={`btn${filter === c.key ? ' btn--primary' : ''}`}
-            style={{ padding: '5px 12px', fontSize: 13 }}
-            onClick={() => setFilter(c.key)}
-          >
-            {c.label}
-          </button>
-        ))}
-        <span className="toolbar__spacer" />
-        {!compact && (
-          <Button variant="primary" onClick={() => setAdding(!adding)}>
-            {adding ? '取消' : '+ 自定义句型'}
-          </Button>
-        )}
-      </div>
-
-      {adding && !compact && (
-        <div className="card card--flat" style={{ background: '#f8fafc', marginBottom: 14 }}>
-          <div className="form-row">
-            <div className="form-label">英文句型（用 … 表示可变部分）</div>
-            <input className="input" value={en} onChange={(e) => setEn(e.target.value)} placeholder="e.g. It is worth noting that …" />
-          </div>
-          <div className="form-row">
-            <div className="form-label">中文释义</div>
-            <input className="input" value={zh} onChange={(e) => setZh(e.target.value)} placeholder="e.g. 值得注意的是……" />
-          </div>
-          <div className="form-row">
-            <div className="form-label">分类</div>
-            <select className="select" value={cat} onChange={(e) => setCat(e.target.value as PatternCategory)}>
-              {CATEGORIES.map((c) => (
-                <option key={c.key} value={c.key}>{c.label}</option>
-              ))}
+    <section className="study-page pattern-library" aria-label="Sentence pattern library">
+      <h2 className="study-section-title">Sentence pattern library</h2>
+      <div className="pm-results-head" role="status">{shown.length} sentence patterns</div>
+      <div className="pm-results-layout">
+        <aside className="pm-filters" aria-label="Sentence pattern filters">
+          <label className="pm-filter-group__label study-filter-label">
+            Function
+            <select className="select" value={filter} onChange={e => setFilter(e.target.value as PatternCategory | 'all')}>
+              <option value="all">All functions</option>
+              {CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
             </select>
-          </div>
-          <Button variant="primary" onClick={addPattern} disabled={!en.trim() || !zh.trim()}>
-            保存句型
-          </Button>
-        </div>
-      )}
-
-      {shown.length === 0 ? (
-        <EmptyState icon="📚" title="该分类暂无句型" />
-      ) : (
-        <div className="item-list">
-          {shown.map((p) => (
-            <div key={p.id} className="collapse">
-              <div className="collapse__head">
-                <span>
-                  <Tag variant="plain" >{CATEGORY_LABELS[p.category]}</Tag>{' '}
-                  {p.builtin ? <Tag>内置</Tag> : <Tag variant="warning">自定义</Tag>}
-                  <span style={{ marginLeft: 8, color: 'var(--c-text)' }}>{p.zh}</span>
-                </span>
-                <span className="flex-row" style={{ gap: 6 }}>
-                  <Button
-                    variant="ghost"
-                    style={{ padding: '3px 10px', fontSize: 12.5 }}
-                    onClick={() => copy(p)}
-                  >
-                    {copiedId === p.id ? '✓ 已复制' : '复制'}
-                  </Button>
-                  {!p.builtin && !compact && (
-                    <Button variant="ghost" style={{ padding: '3px 10px', fontSize: 12.5, color: 'var(--c-danger)' }} onClick={() => removePattern(p.id)}>
-                      删除
-                    </Button>
-                  )}
-                </span>
+          </label>
+          {!compact && <Button variant="primary" style={{ marginTop: 16 }} onClick={() => setAdding(!adding)}>{adding ? 'Cancel' : 'Add sentence pattern'}</Button>}
+        </aside>
+        <div className="pm-results-list">
+          {adding && !compact && (
+            <div className="card card--flat">
+              <div className="form-row">
+                <label className="form-label" htmlFor="pattern-sentence">English sentence pattern</label>
+                <input id="pattern-sentence" className="input" value={en} onChange={e => setEn(e.target.value)} placeholder="Use … for variable parts" />
               </div>
-              <div className="collapse__body">
-                <div style={{ fontWeight: 600, color: 'var(--c-primary)' }}>{p.en}</div>
-                {p.usage && <div className="muted" style={{ marginTop: 4 }}>💡 {p.usage}</div>}
+              <div className="form-row">
+                <label className="form-label" htmlFor="pattern-meaning">Meaning and usage</label>
+                <input id="pattern-meaning" className="input" value={zh} onChange={e => setZh(e.target.value)} />
               </div>
+              <div className="form-row">
+                <label className="form-label" htmlFor="pattern-category">Function</label>
+                <select id="pattern-category" className="select" value={cat} onChange={e => setCat(e.target.value as PatternCategory)}>
+                  {CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+                </select>
+              </div>
+              <Button variant="primary" onClick={addPattern} disabled={!en.trim() || !zh.trim()}>Save sentence pattern</Button>
             </div>
+          )}
+          {shown.length === 0 ? <EmptyState title="No sentence patterns in this category" /> : shown.map((p, index) => (
+            <article className="study-pattern" key={p.id}>
+              <div className="study-pattern__meta">
+                <span><span className="docsum__num">{index + 1}. </span><Tag>{CATEGORY_LABELS[p.category]}</Tag><Tag>{p.builtin ? 'Built-in' : 'Custom'}</Tag></span>
+                <div className="flex-row">
+                  <Button variant="ghost" onClick={() => copy(p)}>{copiedId === p.id ? 'Copied' : 'Copy'}</Button>
+                  {!p.builtin && !compact && <Button variant="danger" onClick={() => removePattern(p.id)}>Delete</Button>}
+                </div>
+              </div>
+              <p className="study-prose">{p.en}</p>
+              <div className="study-pattern__description">{p.zh}</div>
+              {p.usage && <p className="muted">{p.usage}</p>}
+            </article>
           ))}
         </div>
-      )}
-    </div>
+      </div>
+    </section>
   )
 }

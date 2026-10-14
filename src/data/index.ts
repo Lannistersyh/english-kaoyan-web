@@ -12,7 +12,7 @@ export { builtinPatterns } from './patterns'
 export { newsArticles } from './news'
 export { sciencePhilosophyArticles } from './science-philosophy'
 
-/** 全部内置题目（代码内置，不入 localStorage） */
+/* All built-in questions (built into the code, not stored in localStorage) */
 export const builtinQuestions: Question[] = [
   ...clozeQuestions,
   ...readingQuestions,
@@ -24,9 +24,9 @@ export const builtinQuestions: Question[] = [
 ]
 
 export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
-  cloze: '完形填空',
-  reading: '阅读理解',
-  matching: '新题型',
-  translation: '英译汉',
-  writing: '写作',
+  cloze: "Cloze",
+  reading: "Reading Comprehension",
+  matching: "New Question Types",
+  translation: "Paraphrasing",
+  writing: "Writing",
 }

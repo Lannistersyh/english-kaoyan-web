@@ -10,17 +10,17 @@ function normalize(value: unknown, fallback: unknown) {
   return wrap(value ?? fallback)
 }
 let uploadQueue: Promise<unknown> = Promise.resolve()
-/** 在调用时取快照，并按顺序上传，避免慢请求覆盖较新的记录。 */
+/* Take a snapshot at call time and upload in order, to avoid slow requests overwriting newer records. */
 export function pushToCloud(): Promise<SyncResult> {
   const owner = getStorageUser()
   let snapshot: Record<string, unknown>
-  try { snapshot = JSON.parse(exportAll()) } catch { return Promise.resolve({ ok: false, direction: 'push', message: '本地数据无法导出' }) }
+  try { snapshot = JSON.parse(exportAll()) } catch { return Promise.resolve({ ok: false, direction: 'push', message: "Local data cannot be exported" }) }
   const task = async (): Promise<SyncResult> => {
-    if (!isCloudEnabled() || !owner) return { ok: false, direction: 'push', message: '请先登录再同步' }
+    if (!isCloudEnabled() || !owner) return { ok: false, direction: 'push', message: "Please log in before syncing" }
     try {
       const { data, error: sessionError } = await supabase!.auth.getSession()
-      if (sessionError || data.session?.user.id !== owner || getStorageUser() !== owner) return { ok: false, direction: 'push', message: '账号已切换，已取消上传' }
-      // 额外数据放入现有 settings JSONB 的元数据，兼容已有数据库结构。
+      if (sessionError || data.session?.user.id !== owner || getStorageUser() !== owner) return { ok: false, direction: 'push', message: "Account has been switched; upload canceled" }
+      // Put extra data into the metadata of the existing settings JSONB, for compatibility with the existing database structure.
       const settings = normalize(snapshot[STORAGE_KEYS.settings], { promptThinkingOnWrong: true }) as Record<string, unknown>
       const row = {
         user_id: owner,
@@ -37,9 +37,9 @@ export function pushToCloud(): Promise<SyncResult> {
       }
       const { error } = await supabase!.from('user_data').upsert(row, { onConflict: 'user_id' })
       if (error) throw error
-      return { ok: true, direction: 'push', message: `已上传 · ${new Date().toLocaleTimeString('zh-CN')}` }
+      return { ok: true, direction: 'push', message: ` Uploaded · ${new Date().toLocaleTimeString('en-US')}` }
     } catch (err) {
-      return { ok: false, direction: 'push', message: `上传失败：${err instanceof Error ? err.message : '网络或云端错误'}` }
+      return { ok: false, direction: 'push', message: ` Upload failed:${err instanceof Error ? err.message : "Network or cloud error"}` }
     }
   }
   const result = uploadQueue.then(task, task)
@@ -48,16 +48,16 @@ export function pushToCloud(): Promise<SyncResult> {
 }
 export async function pullFromCloud(): Promise<SyncResult> {
   const owner = getStorageUser()
-  if (!isCloudEnabled() || !owner) return { ok: false, direction: 'pull', message: '请先登录再同步' }
+  if (!isCloudEnabled() || !owner) return { ok: false, direction: 'pull', message: "Please log in before syncing" }
   try {
     const before = exportAll()
     const { data: sessionData } = await supabase!.auth.getSession()
-    if (sessionData.session?.user.id !== owner) throw new Error('账号已切换')
+    if (sessionData.session?.user.id !== owner) throw new Error("Account has been switched")
     const { data: row, error } = await supabase!.from('user_data').select('*').eq('user_id', owner).maybeSingle()
     if (error) throw error
-    if (getStorageUser() !== owner) throw new Error('账号已切换，已取消恢复')
-    if (!row) return { ok: true, direction: 'pull', message: '云端尚无数据，保留此账号本地数据' }
-    if (before !== exportAll()) throw new Error('下载期间本地数据已更改，请完成操作后重新恢复')
+    if (getStorageUser() !== owner) throw new Error("Account has been switched; restore canceled")
+    if (!row) return { ok: true, direction: 'pull', message: "No data in the cloud yet; keeping this account's local data" }
+    if (before !== exportAll()) throw new Error("Local data changed during download; please complete the operation and restore again")
     window.sessionStorage.setItem(`ekw:pre-pull-backup:${owner}`, before)
     const settings = normalize(row.settings, { promptThinkingOnWrong: true }) as { extras?: Record<string, unknown> }
     const cloud: Record<string, unknown> = {
@@ -69,23 +69,23 @@ export async function pullFromCloud(): Promise<SyncResult> {
       [STORAGE_KEYS.questions]: normalize(row.imported_questions, []),
       [STORAGE_KEYS.settings]: settings,
     }
-    // 旧云端记录没有 extras 时保留本账号的本地扩展数据。
+    // Keep local extensions when an older cloud backup has no extras.
     if (settings.extras) {
       cloud[STORAGE_KEYS.patterns] = normalize(settings.extras.patterns, [])
       cloud[STORAGE_KEYS.dictHistory] = normalize(settings.extras.dictHistory, {})
     }
     const failed = importAll(JSON.stringify(cloud))
     if (failed.length) throw new Error(failed.join('、'))
-    return { ok: true, direction: 'pull', message: '已从云端恢复，页面已更新' }
+    return { ok: true, direction: 'pull', message: "Restored from the cloud; the page has been updated" }
   } catch (err) {
-    return { ok: false, direction: 'pull', message: `恢复失败：${err instanceof Error ? err.message : '网络或云端错误'}` }
+    return { ok: false, direction: 'pull', message: ` Restore failed:${err instanceof Error ? err.message : "Network or cloud error"}` }
   }
 }
 export async function silentPush() {
   const result = await pushToCloud()
   if (!result.ok) console.warn('[sync]', result.message)
 }
-/** 所有本地写入均触发同步；云端恢复不触发回传。 */
+/* Local writes schedule uploads; restoring cloud data does not upload it again. */
 export function installAutoSync() {
   let timer: number | undefined
   const listener = (event: Event) => {

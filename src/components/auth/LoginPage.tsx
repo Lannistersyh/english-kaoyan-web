@@ -19,15 +19,15 @@ export function LoginPage() {
     setInfo('')
     setLoading(true)
 
-    // 注册时密码强度校验
+    // Password strength validation during registration
     if (isSignUp) {
       if (password.length < 6) {
-        setError('密码至少需要 6 位')
+        setError("Password must be at least 6 characters")
         setLoading(false)
         return
       }
       if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
-        setError('密码需包含字母和数字')
+        setError("Password must contain letters and numbers")
         setLoading(false)
         return
       }
@@ -43,13 +43,13 @@ export function LoginPage() {
     }
 
     if (isSignUp) {
-      setInfo('注册成功！请检查邮箱确认链接（部分 Supabase 项目开启了邮箱确认），然后登录。')
+      setInfo("Registration successful! Please check your email for the confirmation link (some Supabase projects have email confirmation enabled), then log in.")
       setLoading(false)
       return
     }
 
-    // 登录成功后自动拉取云端数据
-    setInfo('登录成功，正在同步数据...')
+    // Automatically fetch cloud data after successful login
+    setInfo("Login successful, syncing data...")
     const syncResult = await pullFromCloud()
     setInfo(syncResult.message)
     setLoading(false)
@@ -77,11 +77,11 @@ export function LoginPage() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
-          <h2 style={{ margin: 0, fontSize: 20 }}>考研英语 · 精读训练</h2>
+          <h2 style={{ margin: 0, fontSize: 20 }}> Postgraduate Entrance Exam English · Intensive Reading Training </h2>
           <p className="muted" style={{ marginTop: 6 }}>
             {cloudReady
-              ? isSignUp ? '创建账号，开始跨设备同步' : '登录以同步学习数据'
-              : '离线模式 · 数据仅存本地浏览器'}
+              ? isSignUp ? "Create an account to start cross-device syncing" : "Log in to sync your study data"
+              : "Offline mode · Data is stored only in the local browser"}
           </p>
         </div>
 
@@ -94,8 +94,8 @@ export function LoginPage() {
             fontSize: 13,
             color: 'var(--c-warning)',
           }}>
-            <b>Supabase 未配置</b>：创建 <code>.env</code> 文件并设置密钥后可开启云端同步。
-            当前仅使用本地存储，换设备数据不互通。
+            <b> Supabase not configured </b> : Create  <code>.env</code>   file and set the key to enable cloud sync.
+            Currently only local storage is used, and data does not transfer between devices.
           </div>
         )}
 
@@ -128,7 +128,7 @@ export function LoginPage() {
         {cloudReady && (
           <form onSubmit={handleSubmit}>
             <div className="form-row">
-              <div className="form-label">邮箱</div>
+              <div className="form-label"> Email </div>
               <input
                 className="input"
                 type="email"
@@ -140,13 +140,13 @@ export function LoginPage() {
               />
             </div>
             <div className="form-row">
-              <div className="form-label">密码</div>
+              <div className="form-label"> Password </div>
               <input
                 className="input"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="至少 6 位"
+                placeholder="At least 6 characters"
                 minLength={6}
                 required
               />
@@ -156,7 +156,7 @@ export function LoginPage() {
               style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}
               disabled={loading || !email.trim() || password.length < 6}
             >
-              {loading ? '处理中...' : isSignUp ? '注册' : '登录'}
+              {loading ? "Processing..." : isSignUp ? "Sign up" : "Log in"}
             </Button>
           </form>
         )}
@@ -173,20 +173,21 @@ export function LoginPage() {
             }}
             disabled={!cloudReady}
           >
-            {isSignUp ? '已有账号？去登录' : '没有账号？注册'}
+            {isSignUp ? "Already have an account? Log in" : "No account? Sign up"}
           </button>
         </div>
 
-        {/* 离线模式：直接进入 */}
+        {/* Offline mode: enter directly */}
         {(
           <div style={{ textAlign: 'center', marginTop: 16 }}>
             <Button onClick={() => {
-              // 离线模式：什么都不用做，AuthContext 的 user 为 null 但 loading 结束
-              // 设置一个标记跳过登录
+              // Offline mode: do nothing; AuthContext's user is null but loading has finished
+              // Set a flag to skip login
               window.sessionStorage.setItem('ekw:offline', '1')
               window.location.reload()
             }}>
-              离线使用（数据仅存本机）
+
+               Use offline (data is stored only on this device)
             </Button>
           </div>
         )}

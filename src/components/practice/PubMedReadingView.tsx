@@ -3,61 +3,49 @@ import { PassageRenderer } from './PassageRenderer'
 import type { BlockProps } from './types'
 
 const ANNOTATION_LABELS = {
-  claim: '论点 Claim',
-  evidence: '论据 Evidence',
-  attitude: '态度 Attitude',
-  keyword: '关键词',
+  claim: "Claim",
+  evidence: "Evidence",
+  attitude: "Attitude",
+  keyword: "Keywords",
 } as const
 
-/** 伪作者行：从标题生成稳定"作者"名单，纯视觉用 */
-function fakeAuthors(q: Question): string {
-  const seed = q.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  const surnames = ['Chen L', 'Wang J', 'Liu Y', 'Zhang H', 'Zhao M', 'Sun Q', 'Li X', 'Wu K']
-  const n = 3 + (seed % 3)
-  return Array.from({ length: n }, (_, i) => surnames[(seed + i * 3) % surnames.length]).join(', ') + '.'
-}
-
-/** 伪引文行 */
-function fakeCitation(q: Question): string {
-  const seed = q.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+/* Illustrative metadata preserves the PubMed article layout for practice materials. */
+function mockMetadata(question: Question) {
+  const seed = [...question.id].reduce((sum, char) => sum + char.charCodeAt(0), 0)
+  const authors = ['Chen L', 'Wang J', 'Liu Y', 'Zhang H', 'Zhao M', 'Sun Q', 'Li X', 'Wu K']
   const year = 2024 - (seed % 3)
-  const vol = 620 + (seed % 20)
-  const issue = 1 + (seed % 4)
-  const pages = `${(seed % 90) + 10}-${(seed % 90) + 10 + q.items.length}`
-  return `${year} Oct;${vol}(${issue}):${pages}.`
+  const firstPage = 10 + (seed % 90)
+  return {
+    citation: `${year} Oct;${620 + (seed % 20)}(${1 + (seed % 4)}):${firstPage}-${firstPage + question.items.length}.`,
+    year,
+    authors: Array.from({ length: 3 + (seed % 3) }, (_, i) => authors[(seed + i * 3) % authors.length]).join(', '),
+    doi: `10.1000/ekw.${question.id.replace(/[^a-z0-9]/gi, '')}`,
+    pmid: question.id.replace(/[^0-9]/g, '').padEnd(8, '0').slice(0, 8),
+  }
 }
 
-/** 与引文行一致的 eCollection 年份 */
-function fakeCollectionYear(q: Question): number {
-  const seed = q.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
-  return 2024 - (seed % 3)
-}
-
-/**
- * PubMed 文章页形式的阅读作答视图：
- * 左列 = 引文行 → 衬线标题 → 作者 → Abstract（原文+结构笔记）→ 各小题小节
- * 右列 = FULL TEXT LINKS / ACTIONS 侧栏
- */
+/* Article layout for close reading and question navigation. */
 export function PubMedReadingView({ question, answers, onAnswer, uncertain, onUncertain }: BlockProps) {
   const annotations = question.passageAnnotations ?? []
+  const metadata = mockMetadata(question)
 
   return (
     <div className="pm-article">
-      {/* 左列：文章主体 */}
+      {/* Article and questions */}
       <article className="pm-article__main">
-        <div className="pm-cit">
+        <div className="pm-cit" title="Illustrative citation for a practice article">
           <span className="pm-cit__chevron" aria-hidden="true">⌄</span>
-          {fakeCitation(question)} doi: 10.1000/ekw.{question.id.replace(/[^a-z0-9]/gi, '')}. eCollection {fakeCollectionYear(question)}.
+          {metadata.citation} doi: {metadata.doi}. eCollection {metadata.year}.
         </div>
 
-        <h1 className="pm-title">{question.title.replace(/^阅读理解\s*·?\s*/, '')}</h1>
+        <h1 className="pm-title" id="reading-title">{question.title.replace(/^Reading\s*·?\s*/, '')}</h1>
 
-        <div className="pm-authors">
-          <b>{fakeAuthors(question)}</b>
+        <div className="pm-authors" title="Illustrative author names for the practice layout">
+          <b>{metadata.authors}.</b>
         </div>
 
-        {/* 原文作为 Abstract 区块 */}
-        <div className="pm-section">
+        {/* Reading passage */}
+        <div className="pm-section" id="reading-passage">
           <h2 className="pm-section__title">Abstract</h2>
           <div className="pm-section__content">
             <PassageRenderer text={question.passage ?? ''} annotations={annotations} />
@@ -65,7 +53,7 @@ export function PubMedReadingView({ question, answers, onAnswer, uncertain, onUn
 
           {annotations.length > 0 && (
             <div className="notes-panel">
-              <div className="pm-aside__label" style={{ marginBottom: 8 }}>结构笔记</div>
+              <div className="pm-aside__label" style={{ marginBottom: 8 }}> Structure notes </div>
               {annotations.map((a) => (
                 <div
                   key={a.id}
@@ -83,7 +71,7 @@ export function PubMedReadingView({ question, answers, onAnswer, uncertain, onUn
           )}
         </div>
 
-        {/* 小题：各作小节 */}
+        {/* Individual questions */}
         {question.items.map((item, i) => (
           <QuestionSection
             key={item.id}
@@ -96,34 +84,32 @@ export function PubMedReadingView({ question, answers, onAnswer, uncertain, onUn
           />
         ))}
 
-        <div className="pm-ids">
-          <div><b>PMID:</b> {question.id.replace(/[^0-9]/g, '').padEnd(8, '0').slice(0, 8) || '39358518'}</div>
-          <div><b>DOI:</b> 10.1000/ekw.{question.id}</div>
+        <div className="pm-ids" title="Illustrative identifiers for the practice layout">
+          <div><b>PMID:</b> {metadata.pmid}</div>
+          <div><b>DOI:</b> {metadata.doi}</div>
         </div>
       </article>
 
-      {/* 右列：工具栏 */}
+      {/* Reading tools */}
       <aside className="pm-aside">
         <div className="pm-aside__box">
           <div className="pm-aside__label">Full text links</div>
-          <button className="pm-aside__btn pm-aside__btn--secondary" type="button">
-            <span style={{ color: 'var(--c-danger)', fontWeight: 700 }}>FREE</span> 全文精读
-          </button>
-          <button className="pm-aside__btn pm-aside__btn--secondary" type="button">考研阅读</button>
+          <button className="pm-aside__btn pm-aside__btn--secondary" type="button" onClick={() => document.getElementById('reading-passage')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}><span style={{ color: 'var(--c-danger)', fontWeight: 700 }}>FREE</span> Full-text close reading</button>
+          <button className="pm-aside__btn pm-aside__btn--secondary" type="button" onClick={() => document.getElementById(`question-${question.items[0]?.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>Exam reading questions</button>
         </div>
 
         <div className="pm-aside__box">
           <div className="pm-aside__label">Actions</div>
-          <button className="pm-aside__btn" type="button">📖 查词</button>
-          <button className="pm-aside__btn" type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ 返回标题</button>
+          <button className="pm-aside__btn" type="button" onClick={() => window.dispatchEvent(new Event('ekw:dictionary-open'))}> 📖 Look up word </button>
+          <button className="pm-aside__btn" type="button" onClick={() => document.getElementById('reading-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}> ↑ Back to title </button>
         </div>
 
         <div className="pm-aside__box">
           <div className="pm-aside__label">Questions</div>
-          {question.items.slice(0, 3).map((it) => (
-            <div key={it.id} className="pm-aside__link" title={it.stem ?? ''}>
-              {it.stem && it.stem.length > 34 ? `${it.stem.slice(0, 34)}…` : it.stem ?? ''}
-            </div>
+          {question.items.map((it, index) => (
+            <button key={it.id} className="pm-aside__link text-link" type="button" title={it.stem ?? ''} onClick={() => document.getElementById(`question-${it.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+              {index + 1}. {it.stem && it.stem.length > 34 ? `${it.stem.slice(0, 34)}…` : it.stem ?? ''}
+            </button>
           ))}
         </div>
       </aside>
@@ -142,7 +128,7 @@ function QuestionSection({
   onUncertain: (itemId: string, v: boolean) => void
 }) {
   return (
-    <div className="pm-section">
+    <div className="pm-section" id={`question-${item.id}`}>
       <h2 className="pm-section__title">Question {index}</h2>
       <div className="pm-section__content">
         <p style={{ marginBottom: 10 }}>{item.stem}</p>
@@ -166,7 +152,8 @@ function QuestionSection({
             checked={uncertain}
             onChange={(e) => onUncertain(item.id, e.target.checked)}
           />
-          不确定（防止"蒙对"漏进错题档案）
+
+           Uncertain (to prevent &quot;lucky guesses&quot; from slipping into the wrong-question archive)
         </label>
       </div>
     </div>

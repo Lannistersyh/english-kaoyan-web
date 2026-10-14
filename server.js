@@ -13,7 +13,7 @@ const server = http.createServer(async (req, res) => {
   const local = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress)
   const origin = req.headers.origin
   let host
-  try { host = new URL(`http://${req.headers.host}`).hostname } catch { /* 无效 Host */ }
+  try { host = new URL(`http://${req.headers.host}`).hostname } catch { /* Invalid Host */ }
   if (!local || !['localhost', '127.0.0.1', '[::1]'].includes(host)) { res.writeHead(403); res.end(); return }
   if (origin) {
     try { if (!['localhost', '127.0.0.1', '[::1]'].includes(new URL(origin).hostname)) throw new Error() }
@@ -26,9 +26,9 @@ const server = http.createServer(async (req, res) => {
     let body = ''; let size = 0
     for await (const chunk of req) { size += chunk.length; if (size > 100000) { res.writeHead(413); res.end(); return }; body += chunk.toString() }
     let payload
-    try { payload = JSON.parse(body) } catch { res.writeHead(400); res.end(JSON.stringify({ error: 'JSON 格式错误' })); return }
+    try { payload = JSON.parse(body) } catch { res.writeHead(400); res.end(JSON.stringify({ error: "JSON format error" })); return }
     const result = await scoreTranslation(payload, req.headers.authorization, { local: true })
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(result))
-  } catch (err) { res.writeHead(err.status || 502, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: err.status ? err.message : '评分服务暂时不可用' })) }
+  } catch (err) { res.writeHead(err.status || 502, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: err.status ? err.message : "Scoring service is temporarily unavailable" })) }
 })
 server.listen(PORT, '127.0.0.1', () => console.log(`AI proxy: http://127.0.0.1:${PORT}`))

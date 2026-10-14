@@ -1,112 +1,110 @@
-/**
- * 全部数据模型与 localStorage key 约定（系统契约层）
- * 修改结构时请同步提升 STORAGE_VERSION 并写迁移函数
- */
+/* * All data models and localStorage key conventions (system contract layer)
+ * When modifying the structure, please also bump STORAGE_VERSION and write a migration function */
 
-// ========== 题型 ==========
+// ========== Question types ==========
 
 export type QuestionType = 'cloze' | 'reading' | 'matching' | 'translation' | 'writing'
 export type QuestionSource = 'builtin' | 'imported'
 
-/** 小题作答方式 */
+/* Answer mode for sub-questions */
 export type SubQuestionKind =
-  | 'choice' // 单选：阅读小题 / 完形每空 / 小标题
-  | 'gapfill' // 7选5：共享选项池，每空选一
-  | 'reorder' // 排序：打乱段落，排成正确顺序
-  | 'freeform' // 主观题（翻译/写作整题），无标准选项，自评
+  | 'choice' // Single choice: reading sub-questions / each cloze blank / subheadings
+  | 'gapfill' // 7-choose-5: shared option pool, choose one for each blank
+  | 'reorder' // Reorder: shuffle paragraphs, arrange into the correct order
+  | 'freeform' // Subjective questions (translation/writing as a whole), no standard options, self-assessed
 
-// ========== 题目 ==========
+// ========== Questions ==========
 
 export interface Option {
   id: string
   text: string
 }
 
-/** 干扰项分析（阅读核心训练点） */
+/* Distractor analysis (core training point for reading) */
 export type DistractorType =
-  | '偷换概念'
-  | '局部正确'
-  | '因果倒置'
-  | '过度推断'
-  | '无中生有'
-  | '张冠李戴'
-  | '相反判断'
-  | '望文生义'
-  | '过度具体化'
-  | '程度错误'
-  | '无关选项'
-  | '字面理解'
+  | "Concept substitution"
+  | "Partially true"
+  | "Reversed causality"
+  | "Over-inference"
+  | "Unsupported claim"
+  | "Misattribution"
+  | "Opposite meaning"
+  | "Literal misreading"
+  | "Over-specific claim"
+  | "Degree error"
+  | "Irrelevant option"
+  | "Surface reading"
 
 export interface DistractorAnalysis {
   optionId: string
   type: DistractorType
-  why: string // 该干扰项如何诱导、对应原文哪处
+  why: string // How this distractor misleads and which part of the passage it corresponds to
 }
 
 export interface SubQuestion {
   id: string
   kind: SubQuestionKind
-  stem?: string // 阅读题干 / 小标题题目标题；完形空格由正文 {{n}} 定位
-  options?: Option[] // choice：本题选项；gapfill 用 optionPoolId 引用共享池
-  optionPoolId?: string // 7选5 共享选项池
-  correctIds: string[] // choice/gapfill: [正确项id]；reorder: 正确顺序的 key 数组
-  fixedFirstId?: string // 排序题已给首段的 key
-  reorderItems?: string[] // 排序题：乱序片段（下标即 key）
-  analysis?: string // 解题思路：正确项如何同义替换原文
+  stem?: string // Reading question stem / subheading question title; cloze blanks are located by {{n}} in the passage
+  options?: Option[] // choice: options for this question; gapfill uses optionPoolId to reference the shared pool
+  optionPoolId?: string // 7-choose-5 shared option pool
+  correctIds: string[] // choice/gapfill: [correct option id]; reorder: array of keys in the correct order
+  fixedFirstId?: string // The key of the first paragraph already given for reorder questions
+  reorderItems?: string[] // Reorder: shuffled segments (index is the key)
+  analysis?: string // Solution approach: how the correct option paraphrases the passage
   distractors?: DistractorAnalysis[]
-  vocabNotes?: string[] // 熟词僻义/生词注释
-  score?: number // 默认 1
+  vocabNotes?: string[] // Notes on uncommon meanings of familiar words / new words
+  score?: number // Default 1
 }
 
-/** 文章逻辑可视化标注（Claim vs Evidence、作者态度） */
+/* Visual annotation of passage logic (Claim vs Evidence, author's attitude) */
 export interface PassageAnnotation {
   id: string
   type: 'claim' | 'evidence' | 'attitude' | 'keyword'
-  text: string // 要高亮的原文片段（渲染时匹配，全部出现处高亮）
-  note: string // 批注
+  text: string // Passage fragments to highlight (matched during rendering, all occurrences highlighted)
+  note: string // Annotation
 }
 
-/** 翻译三步法：1切分 → 2重组 → 3意译 */
+/* Three-step paraphrasing method: 1 segment → 2 reorganize → 3 paraphrase */
 export interface TranslationStep {
   step: 1 | 2 | 3
-  zh: string // 该步骤的参考内容
+  zh: string // Reference content for this step
 }
 
 export interface Question {
   id: string
   type: QuestionType
   source: QuestionSource
-  sourceLabel: string // '模拟题' / '2024真题 Text2'
+  sourceLabel: string // 'Mock exam' / '2024 real exam Text2'
   title: string
   suggestedMinutes?: number
-  passage?: string // 文章/正文（完形空位 {{n}}，7选5 空位 {{n}}）
+  passage?: string // Passage/text (cloze blanks {{n}}, 7-choose-5 blanks {{n}})
   passageAnnotations?: PassageAnnotation[]
-  optionPools?: Record<string, Option[]> // 7选5 共享选项池（optionPoolId → 选项）
+  optionPools?: Record<string, Option[]> // 7-choose-5 shared option pool (optionPoolId → options)
   items: SubQuestion[]
-  // ---- 翻译题 ----
+  // ---- Translation questions ----
   referenceTranslation?: string
   translationSteps?: TranslationStep[]
-  // ---- 写作题 ----
-  figureDescription?: string // 图画描述文字
-  writingPrompt?: string // 写作要求
+  // ---- Writing questions ----
+  figureDescription?: string // Picture description text
+  writingPrompt?: string // Writing requirements
   referenceEssay?: string
-  essayPatternIds?: string[] // 范文用到的句型 id
-  // ---- 通用 ----
-  tips?: string[] // 大题级提示
-  vocabNotes?: string[] // 题级生词/熟词僻义注释（翻译写作题用）
+  essayPatternIds?: string[] // IDs of sentence patterns used in the model essay
+  // ---- General ----
+  tips?: string[] // Question-level prompt
+  vocabNotes?: string[] // Question-level notes on new words / uncommon meanings of familiar words (for translation and writing questions)
   schemaVersion?: number
 }
 
-// ========== 作答记录与练习 Session ==========
+// ========== Answer records and practice Session ==========
 
 export interface AnswerRecord {
   itemId: string
-  answer: string[] // choice/gapfill: [选项id]；reorder: [key数组]；freeform: []
-  uncertain: boolean // "不确定"标记（答对但蒙对 → 可入错题档）
+  answer: string[] // choice/gapfill: [option ids]; reorder: [key array]; freeform: []
+  uncertain: boolean // "Unsure" mark (answered correctly but guessed → can be added to wrong question archive)
   correct: boolean
-  selfScore?: number // 翻译/写作自评 0-10
-  aiComment?: string // AI 评分点评
-  timeSpent: number // 秒
+  selfScore?: number // Translation/writing self-assessment 0-10
+  aiComment?: string // AI scoring comments
+  timeSpent: number // seconds
 }
 
 export interface Session {
@@ -120,7 +118,7 @@ export interface Session {
   isReview?: boolean
 }
 
-// ========== 错题思维档案（三问为核心） ==========
+// ========== Wrong question thinking archive (three questions as the core) ==========
 
 export interface WrongRecord {
   id: string
@@ -131,15 +129,15 @@ export interface WrongRecord {
   wrongCount: number
   wrongAnswer: string[]
   correctAnswer: string[]
-  myThought: string // ① 我当时怎么想的
-  distractorTrap: string // ② 干扰项如何诱导我
-  correctMapping: string // ③ 正确选项如何同义替换
+  myThought: string // ① What I was thinking at the time
+  distractorTrap: string // ② How the distractor misled me
+  correctMapping: string // ③ How the correct option paraphrases
   status: 'active' | 'mastered'
   reviewCount: number
   lastReviewAt?: number
 }
 
-// ========== 进度与词库 ==========
+// ========== Progress and vocabulary ==========
 
 export interface QuestionProgress {
   attempts: number
@@ -154,7 +152,7 @@ export interface VocabItem {
   id: string
   word: string
   partOfSpeech: string
-  meanings: string[] // 常见义 + 僻义
+  meanings: string[] // Common meaning + uncommon meaning
   example: string
   note?: string
   builtin: boolean
@@ -163,14 +161,14 @@ export type VocabStatus = 'unfamiliar' | 'familiar' | 'mastered'
 export type VocabProgress = Record<string, VocabStatus>
 
 export type PatternCategory =
-  | 'introduction' // 引出话题
-  | 'describePicture' // 描述图画
-  | 'thesis' // 点明主旨
-  | 'example' // 举例论证
-  | 'cause' // 因果分析
-  | 'concession' // 让步转折
-  | 'conclusion' // 总结
-  | 'suggestion' // 建议
+  | 'introduction' // Introduce the topic
+  | 'describePicture' // Describe the picture
+  | 'thesis' // State the main idea
+  | 'example' // Give examples for argumentation
+  | 'cause' // Causal analysis
+  | 'concession' // Concession and transition
+  | 'conclusion' // Summary
+  | 'suggestion' // Suggestions
 
 export interface Pattern {
   id: string
@@ -181,10 +179,10 @@ export interface Pattern {
   builtin: boolean
 }
 
-// ========== 设置与导入 ==========
+// ========== Settings and import ==========
 
 export interface Settings {
-  promptThinkingOnWrong: boolean // 交卷后自动弹出三问表单
+  promptThinkingOnWrong: boolean // Automatically pop up the three-question form after submitting
 }
 
 export interface ImportError {

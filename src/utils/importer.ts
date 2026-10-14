@@ -11,20 +11,12 @@ import { uid } from './ids'
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
 const TYPE_MAP: Record<string, Question['type']> = {
-  完形: 'cloze',
-  完形填空: 'cloze',
-  阅读: 'reading',
-  阅读理解: 'reading',
-  新题型: 'matching',
-  排序: 'matching',
-  七选五: 'matching',
-  翻译: 'translation',
-  英译汉: 'translation',
-  写作: 'writing',
-  图画作文: 'writing',
+  cloze: 'cloze', reading: 'reading', matching: 'matching', reorder: 'matching',
+  gapfill: 'matching', '7-of-5': 'matching', '7-choose-5': 'matching',
+  paraphrasing: 'translation', paraphrase: 'translation', translation: 'translation', writing: 'writing',
 }
 
-const DISTRACTOR_TYPES: DistractorType[] = ['偷换概念', '局部正确', '因果倒置', '过度推断', '无中生有', '张冠李戴']
+const DISTRACTOR_TYPES: DistractorType[] = ["Concept substitution", "Partially true", "Reversed causality", "Over-inference", "Unsupported claim", "Misattribution"]
 
 interface PendingItem {
   stem?: string
@@ -35,21 +27,19 @@ interface PendingItem {
   answerLetters: string[]
   analysis?: string
   distractors: { letter: string; type: DistractorType; why: string }[]
-  done?: boolean // 已物化，防止重复入列
+  done?: boolean // Already materialized to prevent duplicate enqueueing
 }
 
-/**
- * 真题粘贴文本解析器（行式协议，宽容输入、明确报错）。
- * 支持：阅读/完形/小标题（choice）、7选5（gapfill）、排序（reorder）、翻译、写作。
- */
+/* * Past exam pasted text parser (line-based protocol, lenient input, explicit errors).
+ * Supports: reading/cloze/subheading (choice), 7-choose-5 (gapfill), reorder, translation, writing. */
 export function parseImport(text: string): ImportResult {
   const errors: ImportResult['errors'] = []
   const questions: Question[] = []
 
-  // 限制导入大小（100KB）
+  // Limit import size (100KB)
   const MAX_SIZE = 100 * 1024
   if (text.length > MAX_SIZE) {
-    errors.push({ line: 0, message: `文本过大（${Math.round(text.length / 1024)}KB），请控制在 100KB 以内。建议分批导入。` })
+    errors.push({ line: 0, message: ` Text too large (${Math.round(text.length / 1024)} KB), please keep it within 100KB. It is recommended to import in batches.` })
     return { questions, errors }
   }
 
@@ -58,14 +48,14 @@ export function parseImport(text: string): ImportResult {
   let q: Question = newQuestion()
   let passages: string[] = []
   let item: PendingItem | null = null
-  /** 当前题尚未定答案的小题（按创建顺序），供 [答案] 分发 */
+  /* Unanswered items in creation order, awaiting answer distribution. */
   let openItems: PendingItem[] = []
   let reorderMode = false
   let pool: Option[] | null = null
   let poolId: string | null = null
   let stepLines: Partial<Record<1 | 2 | 3, string>> = {}
   let writingSection: 'figure' | 'prompt' | 'essay' | null = null
-  /** 7选5：由 [答案] 的字母数延迟创建空位小题，期间 [解析]/[干扰项] 挂到 pending 上共享 */
+  /* Create gap-fill items after reading the answer count; share pending explanations and distractors. */
   let gapPending: { letters: string[]; analyses: string[]; distractors: { letter: string; type: DistractorType; why: string }[] } | null = null
 
   const pushError = (lineNo: number, message: string) => errors.push({ line: lineNo, message })
@@ -77,12 +67,12 @@ export function parseImport(text: string): ImportResult {
     const allOptions = it.kind === 'gapfill' ? pool ?? [] : it.options ?? []
     const correctIds: string[] = []
     if (it.kind === 'reorder') {
-      // 字母 → reorderItems 下标（段落按出现顺序即 A,B,C...）
+      // Map letters to paragraph indices in their original order.
       correctIds.push(
         ...it.answerLetters.map((l) => {
           const idx = LETTERS.indexOf(l.toUpperCase())
           if (idx === -1 || idx >= (it.reorderItems ?? []).length) {
-            pushError(0, `排序题答案字母 ${l} 超出段落范围`)
+            pushError(0, ` Answer letters for reorder questions ${l} Out of paragraph range `)
             return null
           }
           return String(idx)
@@ -92,12 +82,12 @@ export function parseImport(text: string): ImportResult {
       for (const letter of it.answerLetters) {
         const idx = LETTERS.indexOf(letter.toUpperCase())
         if (idx === -1) {
-          pushError(0, `小题「${it.stem ?? ''}」答案字母 ${letter} 无法识别`)
+          pushError(0, ` Sub-question "${it.stem ?? ''}" answer letter ${letter} Unable to recognize `)
           continue
         }
         const opt = allOptions[idx]
         if (opt) correctIds.push(opt.id)
-        else pushError(0, `小题「${it.stem ?? ''}」答案 ${letter} 超出选项范围`)
+        else pushError(0, ` Sub-question "${it.stem ?? ''}" answer ${letter} Out of option range `)
       }
     }
     q.items.push({
@@ -117,18 +107,18 @@ export function parseImport(text: string): ImportResult {
     if (!pending) item = null
   }
 
-  /** 把挂起的 7选5 答案物化成空位小题 */
+  /* Create gap-fill items from pending answers. */
   const materializeGap = () => {
     if (!gapPending) return
     const sharedAnalysis = gapPending.analyses.join('\n') || undefined
     gapPending.letters.forEach((letter, i) => {
       const idx = LETTERS.indexOf(letter.toUpperCase())
       const opt = pool?.[idx]
-      if (!opt) pushError(0, `第 ${i + 1} 个空：答案 ${letter} 超出选项池范围`)
+      if (!opt) pushError(0, ` No. ${i + 1} blanks: answer ${letter} Out of option pool range `)
       q.items.push({
         id: uid('it'),
         kind: 'gapfill',
-        stem: `第 ${i + 1} 空`,
+        stem: ` No. ${i + 1} blank `,
         optionPoolId: poolId ?? undefined,
         correctIds: opt ? [opt.id] : [],
         analysis: sharedAnalysis,
@@ -141,16 +131,16 @@ export function parseImport(text: string): ImportResult {
     })
     const gapCount = new Set(passages.join('\n').match(/\{\{(\d+)\}\}/g) ?? []).size
     if (gapCount > 0 && gapCount !== gapPending.letters.length) {
-      pushError(0, `7选5：正文有 ${gapCount} 个空位，但答案给了 ${gapPending.letters.length} 个，请核对`)
+      pushError(0, `7-choose-5: the passage has ${gapCount} blanks, but the answer provided ${gapPending.letters.length} items, please check `)
     }
     gapPending = null
   }
 
   const finishQuestion = () => {
     materializeGap()
-    // 延迟物化：把所有待定小题一次性入列（此时答案已分发完毕）
+    // Finalize pending items after distributing answers.
     for (const it of openItems) finalizeItem(it)
-    finalizeItem() // 兜底：reorder 等活动小题
+    finalizeItem() // Finalize any remaining active reorder item.
     if (q.items.length === 0 && passages.length === 0 && !q.referenceTranslation && !q.referenceEssay) return
     q.passage = passages.join('\n\n')
     if (poolId && pool) q.optionPools = { [poolId]: pool }
@@ -163,7 +153,7 @@ export function parseImport(text: string): ImportResult {
         (it.kind === 'choice' && (it.options?.length ?? 0) < 2) ||
         (it.kind === 'reorder' && (it.correctIds.length !== it.reorderItems?.length || new Set(it.correctIds).size !== it.correctIds.length)))
       if (!q.items.length || invalid.length) {
-        pushError(0, `「${q.title}」缺少有效小题或标准答案，未入库，请补齐后重新导入`)
+        pushError(0, `「${q.title}" is missing valid sub-questions or standard answers, not saved. Please complete and re-import `)
         return
       }
     }
@@ -188,83 +178,83 @@ export function parseImport(text: string): ImportResult {
     const line = lines[ln].trim()
     if (!line) continue
 
-    // 新题标记（题型/标签/标题都视为新题开始）
-    const typeMatch = /^\[题型\]\s*(.+)$/.exec(line)
+    // Type, source, and title markers begin a new question.
+    const typeMatch = /^\[Type\]\s*(.+)$/.exec(line)
     if (typeMatch) {
-      const t = TYPE_MAP[typeMatch[1].trim()]
+      const t = TYPE_MAP[typeMatch[1].trim().toLowerCase()]
       if (t) {
-        if (q.title.trim() !== '未命名题目' || passages.length || q.items.length) startNew()
+        if (q.title.trim() !== "Untitled question" || passages.length || q.items.length) startNew()
         q.type = t
-      } else pushError(lineNo, `无法识别的题型「${typeMatch[1]}」，可选：完形/阅读/新题型/翻译/写作`)
+      } else pushError(lineNo, ` Unrecognized question type "${typeMatch[1]}", available: cloze/reading/new question type/translation/writing `)
       continue
     }
-    const tagMatch = /^\[标签\]\s*(.+)$/.exec(line)
+    const tagMatch = /^\[Source\]\s*(.+)$/.exec(line)
     if (tagMatch) {
-      if (q.title.trim() !== '未命名题目' || passages.length || q.items.length) startNew()
+      if (q.title.trim() !== "Untitled question" || passages.length || q.items.length) startNew()
       q.sourceLabel = tagMatch[1].trim()
       continue
     }
     const titleMatch = /^#\s*(.+)$/.exec(line)
     if (titleMatch) {
-      if (q.title.trim() !== '未命名题目' || passages.length || q.items.length) startNew()
+      if (q.title.trim() !== "Untitled question" || passages.length || q.items.length) startNew()
       q.title = titleMatch[1].trim()
       continue
     }
 
-    const ansMatch = /^\[答案\]\s*(.+)$/.exec(line)
+    const ansMatch = /^\[Answer\]\s*(.+)$/.exec(line)
     if (ansMatch) {
-      // 提取行内所有 A-G 字母（兼容 "1-5 BCADA 6-10 DBCAD" 的真题答案行）
+      // Extract A-G letters, including grouped answer lists such as "1-5 BCADA 6-10 DBCAD".
       const letters = (ansMatch[1].match(/[A-Ga-g]/g) ?? []).map((l) => l.toUpperCase())
       if (letters.length === 0) {
-        pushError(lineNo, '[答案] 行没有识别出 A-G 字母')
+        pushError(lineNo, "[Answer] line did not recognize A-G letters")
         continue
       }
       if (reorderMode) {
         if (!item) item = { kind: 'reorder', answerLetters: [], distractors: [], reorderItems: [] }
         item.answerLetters = letters
       } else if (poolId && pool && openItems.length === 0) {
-        // 7选5：答案字母数 = 空位数，先物化旧的，再挂起新的
+        // The gap-fill answer count determines the blank count.
         materializeGap()
         gapPending = { letters, analyses: [], distractors: [] }
       } else {
-        // 普通小题：按创建顺序分发给尚未定答案的小题（支持逐题一行，也支持末尾块式答案）
+        // Distribute answers to pending items in creation order.
         const free = openItems.filter((it) => it.answerLetters.length === 0)
         if (letters.length === free.length && free.length > 0) {
           free.forEach((it, i) => {
             it.answerLetters = [letters[i]]
           })
         } else {
-          pushError(lineNo, `答案字母数（${letters.length}）与待定小题数（${free.length}）不一致，请逐题核对`)
+          pushError(lineNo, ` Number of answer letters (${letters.length}) does not match the number of pending sub-questions (${free.length}), please check each question `)
         }
       }
       continue
     }
-    const analysisMatch = /^\[解析\]\s*(.+)$/.exec(line)
+    const analysisMatch = /^\[Explanation\]\s*(.+)$/.exec(line)
     if (analysisMatch) {
       if (item) item.analysis = (item.analysis ? item.analysis + '\n' : '') + analysisMatch[1].trim()
       else if (gapPending) gapPending.analyses.push(analysisMatch[1].trim())
-      else pushError(lineNo, '[解析] 前缺少小题')
+      else pushError(lineNo, "[Explanation] is missing sub-questions before it")
       continue
     }
-    const distractorMatch = /^\[干扰项\]\s*([A-Ga-g])[\s，,、]*([一-鿿]+)?[：:]\s*(.*)$/.exec(line)
+    const distractorMatch = /^\[Distractor\]\s*([A-Ga-g])[\s,]*([^:]+)?[:：]\s*(.*)$/i.exec(line)
     if (distractorMatch) {
       const typeText = distractorMatch[2]
-      let type: DistractorType = '偷换概念'
+      let type: DistractorType = "Concept substitution"
       if (typeText) {
-        const found = DISTRACTOR_TYPES.find((t) => typeText.includes(t))
+        const found = DISTRACTOR_TYPES.find((t) => typeText.toLowerCase().includes(t.toLowerCase()))
         if (found) type = found
-        else pushError(lineNo, `干扰项类型「${typeText}」不在列表内（偷换概念/局部正确/因果倒置/过度推断/无中生有/张冠李戴），按「偷换概念」处理`)
+        else pushError(lineNo, ` Distractor type "${typeText}" is not in the list (Concept substitution/Partially true/Reversed causality/Over-inference/Unsupported claim/Misattribution), treated as "Concept substitution"`)
       }
       if (item) {
         item.distractors.push({ letter: distractorMatch[1], type, why: distractorMatch[3].trim() })
       } else if (gapPending) {
         gapPending.distractors.push({ letter: distractorMatch[1], type, why: distractorMatch[3].trim() })
       } else {
-        pushError(lineNo, '[干扰项] 前缺少小题')
+        pushError(lineNo, "[Distractor] Missing question number before it")
       }
       continue
     }
-    const poolMatch = /^\[选项池\]\s*(.+)$/.exec(line)
+    const poolMatch = /^\[Option Pool\]\s*(.+)$/.exec(line)
     if (poolMatch) {
       pool = poolMatch[1].split('|').map((s) => s.trim()).filter(Boolean).map((s) => {
         const m = /^[A-Ga-g][.、)]\s*(.*)$/.exec(s)
@@ -273,26 +263,26 @@ export function parseImport(text: string): ImportResult {
       poolId = uid('pool')
       continue
     }
-    if (/^\[排序\]/.test(line)) {
+    if (/^\[Reorder\]/.test(line)) {
       reorderMode = true
       continue
     }
-    // 分隔线（--- / ===）：忽略
+    // Ignore separators.
     if (/^[-=_]{3,}$/.test(line)) continue
-    const refMatch = /^\[参考译文\]\s*(.*)$/.exec(line)
+    const refMatch = /^\[(?:Reference Paraphrase|Reference Translation)\]\s*(.*)$/.exec(line)
     if (refMatch) {
       q.referenceTranslation = (q.referenceTranslation ? q.referenceTranslation + '\n' : '') + refMatch[1].trim()
       continue
     }
-    const stepMatch = /^\[步骤(\d)\]\s*(.*)$/.exec(line)
+    const stepMatch = /^\[Step(\d)\]\s*(.*)$/.exec(line)
     if (stepMatch) {
       const s = parseInt(stepMatch[1], 10) as 1 | 2 | 3
       stepLines[s] = (stepLines[s] ? stepLines[s] + '\n' : '') + stepMatch[2].trim()
       continue
     }
-    const secMatch = /^\[(图画描述|写作要求|参考范文)\]\s*(.*)$/.exec(line)
+    const secMatch = /^\[(Picture|Prompt|Reference Essay)\]\s*(.*)$/.exec(line)
     if (secMatch) {
-      const key = secMatch[1] === '图画描述' ? 'figure' : secMatch[1] === '写作要求' ? 'prompt' : 'essay'
+      const key = secMatch[1] === "Picture description" ? 'figure' : secMatch[1] === "Writing requirements" ? 'prompt' : 'essay'
       writingSection = key
       if (secMatch[2].trim()) {
         if (key === 'figure') q.figureDescription = (q.figureDescription ?? '') + secMatch[2].trim()
@@ -309,14 +299,14 @@ export function parseImport(text: string): ImportResult {
       continue
     }
 
-    // 排序模式：收集段落
+    // Collect paragraphs in reorder mode.
     if (reorderMode) {
       if (!item) item = { kind: 'reorder', answerLetters: [], distractors: [], reorderItems: [] }
       item.reorderItems!.push(lines[ln])
       continue
     }
 
-    // 完形单行：1. A. xxx B. xxx C. xxx D. xxx
+    // Single-line cloze options.
     if (/^\d+[.、)]\s+[A-Ga-g][.、)]/.test(line) && /[A-Ga-g][.、)]/.test(line.replace(/^\d+[.、)]\s+[A-Ga-g][.、)]/, ''))) {
       item = null
       const stemMatch = /^(\d+)[.、)]/.exec(line)
@@ -327,21 +317,21 @@ export function parseImport(text: string): ImportResult {
         const m = /^([A-Ga-g])[.、)]\s*(.*)$/.exec(seg.trim())
         if (m) opts.push({ id: uid('opt'), text: m[2].trim() })
       }
-      item = { kind: 'choice', answerLetters: [], distractors: [], options: opts, stem: `第 ${stemMatch![1]} 空` }
+      item = { kind: 'choice', answerLetters: [], distractors: [], options: opts, stem: ` No. ${stemMatch![1]} blank ` }
       openItems.push(item)
       continue
     }
 
-    // 小题题干（上一个小题挂起等待答案分发，不再提前物化）
+    // Keep the preceding item pending until answers are distributed.
     const stemMatch = /^(\d+)[.、)]\s*(.*)$/.exec(line)
     if (stemMatch) {
       item = { kind: 'choice', answerLetters: [], distractors: [] }
-      item.stem = stemMatch[2].trim() || `第 ${stemMatch[1]} 题`
+      item.stem = stemMatch[2].trim() || ` No. ${stemMatch[1]} Question `
       openItems.push(item)
       continue
     }
 
-    // 选项行（A. xxx 或 A、xxx）
+    // Option line.
     const optMatch = /^([A-Ga-g])[.、)]\s*(.*)$/.exec(line)
     if (optMatch) {
       if (item && item.kind !== 'reorder') {
@@ -349,17 +339,17 @@ export function parseImport(text: string): ImportResult {
         item.options.push({ id: uid('opt'), text: optMatch[2].trim() })
         continue
       }
-      pushError(lineNo, '选项行前缺少小题（选项需跟在 1. 题干 之后）')
+      pushError(lineNo, "Missing question number before option line (options must follow 1. Question stem)")
       continue
     }
 
-    // 普通文本：文章段落
+    // Plain text belongs to the passage.
     passages.push(lines[ln])
   }
 
   finishQuestion()
-  if (questions.length === 1 && questions[0].title === '未命名题目') {
-    questions[0].title = questions[0].sourceLabel === '导入题' ? '导入题' : questions[0].sourceLabel
+  if (questions.length === 1 && questions[0].title === "Untitled question") {
+    questions[0].title = questions[0].sourceLabel === "Imported questions" ? "Imported questions" : questions[0].sourceLabel
   }
   return { questions, errors }
 }
@@ -369,8 +359,8 @@ function newQuestion(): Question {
     id: uid('imp'),
     type: 'reading',
     source: 'imported',
-    sourceLabel: '导入题',
-    title: '未命名题目',
+    sourceLabel: "Imported questions",
+    title: "Untitled question",
     items: [],
   }
 }

@@ -18,7 +18,7 @@ function findMarks(text: string, annotations: PassageAnnotation[]): Mark[] {
     }
   }
   marks.sort((a, b) => a.start - b.start)
-  // 合并重叠（保留先出现的）
+  // Merge overlaps (keep the one that appears first)
   const merged: Mark[] = []
   for (const m of marks) {
     const last = merged[merged.length - 1]
@@ -34,7 +34,7 @@ interface Props {
   renderGap?: (n: number) => ReactNode
 }
 
-/** 正文渲染：段落化 + 标注高亮 + {{n}} 占位替换 */
+/* Body text rendering: paragraphing + annotation highlighting + {{n}} placeholder replacement */
 export function PassageRenderer({ text, annotations = [], renderGap }: Props) {
   const paragraphs = text.split(/\n\s*\n/)
   return (
@@ -58,10 +58,10 @@ function renderSegments(
   let key = 0
 
   while (pos < text.length) {
-    // 下一个 mark
+    // Next mark
     let nextMark = markIdx < marks.length && marks[markIdx].start >= pos ? marks[markIdx] : undefined
 
-    // 下一个 {{n}} 占位符（在整个文本中搜索，不限于开头）
+    // Next {{n}} placeholder (search the entire text, not limited to the beginning)
     let gapPos = -1
     let gapNum = 0
     if (renderGap) {
@@ -72,13 +72,13 @@ function renderSegments(
       }
     }
 
-    // 没有更多 mark 也没有更多 gap → 输出剩余文本结束
+    // No more marks and no more gaps → output the remaining text and end
     if (!nextMark && gapPos === -1) {
       out.push(text.slice(pos))
       break
     }
 
-    // mark 在 gap 之前 → 先处理 mark
+    // mark comes before gap → handle mark first
     if (nextMark && (gapPos === -1 || nextMark.start < gapPos)) {
       if (nextMark.start > pos) out.push(text.slice(pos, nextMark.start))
       out.push(
@@ -89,7 +89,7 @@ function renderSegments(
       pos = nextMark.end
       markIdx++
     } else {
-      // 处理 gap（{{n}} 占位符）
+      // Render numbered gap placeholders.
       if (gapPos > pos) out.push(text.slice(pos, gapPos))
       out.push(<span key={key++} className="gap-slot">{renderGap!(gapNum)}</span>)
       pos = gapPos + `{{${gapNum}}}`.length

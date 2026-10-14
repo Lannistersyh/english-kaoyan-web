@@ -1,4 +1,4 @@
-/** 生成唯一 id（带前缀便于排查） */
+/* Generate unique id (with prefix for easier troubleshooting) */
 export function uid(prefix = ''): string {
   const rand = crypto.randomUUID
     ? crypto.randomUUID().slice(0, 8)

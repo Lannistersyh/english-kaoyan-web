@@ -1,13 +1,11 @@
 import type { Question } from '../types'
 
-/**
- * 科学哲学 · 控制论 · 信息论 · 历史与哲学
- * 20 篇深度阅读材料（Borges 风格：短小、精确、充满哲学张力）
- */
+/* * Philosophy of science · Cybernetics · Information theory · History and philosophy
+ * 20 in-depth reading materials (Borges style: short, precise, full of philosophical tension) */
 
 export const sciencePhilosophyArticles: Question[] = [
   // ════════════════════════════════════════════════════════
-  // 1. 博尔赫斯式的地图
+  // 1. The Borges-style map
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-1',
@@ -26,10 +24,10 @@ This paradox has practical consequences. Climate models, however sophisticated, 
 
 The philosopher Alfred Korzybski coined the phrase "the map is not the territory" in 1931. Borges gave it narrative form. The lesson endures: the most dangerous map is the one we forget is a map.`,
     passageAnnotations: [
-      { id: 'sp1-a1', type: 'claim', text: 'a perfect map is not merely useless but dangerous', note: '核心论点：完美地图不仅无用而且危险' },
-      { id: 'sp1-a2', type: 'evidence', text: 'The 2008 financial crisis was, in part, a crisis of mistaken cartography', note: '历史证据：2008 金融危机是地图被误认为领土的后果' },
-      { id: 'sp1-a3', type: 'keyword', text: 'the map is not the territory', note: '关键概念：Korzybski 的名言 — 地图不等于领土' },
-      { id: 'sp1-a4', type: 'attitude', text: 'The most dangerous map is the one we forget is a map', note: '作者态度：最危险的地图是我们忘记它是地图的那张' },
+      { id: 'sp1-a1', type: 'claim', text: 'a perfect map is not merely useless but dangerous', note: "Core argument: a perfect map is not only useless but dangerous" },
+      { id: 'sp1-a2', type: 'evidence', text: 'The 2008 financial crisis was, in part, a crisis of mistaken cartography', note: "Historical evidence: the 2008 financial crisis was a consequence of mistaking the map for the territory" },
+      { id: 'sp1-a3', type: 'keyword', text: 'the map is not the territory', note: "Key concept: Korzybski's famous saying — the map is not the territory" },
+      { id: 'sp1-a4', type: 'attitude', text: 'The most dangerous map is the one we forget is a map', note: "Author's attitude: the most dangerous map is the one we forget is a map" },
     ],
     items: [
       {
@@ -41,12 +39,12 @@ The philosopher Alfred Korzybski coined the phrase "the map is not the territory
           { id: 'D', text: 'predict future events with certainty' },
         ],
         correctIds: ['B'],
-        analysis: '第三段明确指出 "the purpose of a map is to compress reality, to strip away irrelevant detail so that the relevant patterns become visible"，对应 B。',
+        analysis: "The third paragraph explicitly states 'the purpose of a map is to compress reality, to strip away irrelevant detail so that the relevant patterns become visible,' corresponding to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '1:1 地图恰恰是文章批判的对象，replicating reality 不是地图的目的' },
-          { optionId: 'D', type: '过度推断', why: '文章说 models 输出是 "informed guesses" 而非 certainties' },
+          { optionId: 'A', type: "Concept substitution", why: "A 1:1 map is precisely what the article criticizes; replicating reality is not the purpose of a map." },
+          { optionId: 'D', type: "Over-inference", why: "The article says model outputs are 'informed guesses,' not certainties." },
         ],
-        vocabNotes: ['cartography n. 制图学', 'abstraction n. 抽象化'],
+        vocabNotes: ["cartography n. the study or practice of making maps", "abstraction n. the act of abstracting"],
         score: 2,
       },
       {
@@ -58,11 +56,11 @@ The philosopher Alfred Korzybski coined the phrase "the map is not the territory
           { id: 'D', text: 'the failure of cartography in modern society' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "risk models...were treated not as maps but as the terrain itself" — 危机的例子说明将模型等同于现实的危险。',
+        analysis: "The fourth paragraph: 'risk models...were treated not as maps but as the terrain itself' — the crisis example illustrates the danger of equating models with reality.",
         distractors: [
-          { optionId: 'C', type: '张冠李戴', why: 'climate models 在本段作为另一个例子出现，不是金融危机的论点' },
+          { optionId: 'C', type: "Misattribution", why: "Climate models appear in this paragraph as another example, not as the argument about the financial crisis." },
         ],
-        vocabNotes: ['proliferating adj. 迅速增加的', 'lossy adj. 有损的（压缩学术语）'],
+        vocabNotes: ["proliferating adj. rapidly increasing", "lossy adj. involving loss (a compression term)"],
         score: 2,
       },
       {
@@ -74,20 +72,20 @@ The philosopher Alfred Korzybski coined the phrase "the map is not the territory
           { id: 'D', text: 'indifference' },
         ],
         correctIds: ['C'],
-        analysis: '作者承认 digital twins 的 "seduction"（吸引力），但随即用 Borges 的寓言警告其危险性。这种态度是"谨慎欣赏 + 哲学警告"。',
+        analysis: "The author acknowledges the 'seduction' of digital twins but immediately warns of their danger with Borges's fable. This attitude is 'cautious appreciation + philosophical warning.'",
         distractors: [
-          { optionId: 'A', type: '局部正确', why: '作者确实提到了技术的吸引力，但整体论调是警告性的' },
+          { optionId: 'A', type: "Partially true", why: "The author does mention the appeal of the technology, but the overall tone is cautionary." },
         ],
-        vocabNotes: ['seduction n. 诱惑、吸引力', 'colossus n. 巨像、庞然大物'],
+        vocabNotes: ["seduction n. temptation, attraction", "colossus n. a giant statue, a huge thing"],
         score: 2,
       },
     ],
-    tips: ['注意 Borges 寓言与现代技术（digital twins）的类比结构', '理解 "map vs territory" 这一对哲学概念的贯穿全文作用'],
-    vocabNotes: ['cartography n. 制图学', 'paradox n. 悖论', 'proliferating adj. 迅速增加的', 'abstraction n. 抽象化', 'lossy adj. 有损的'],
+    tips: ["Note the analogical structure between Borges's fable and modern technology (digital twins).", "Understand how the philosophical pair 'map vs territory' runs through the whole text."],
+    vocabNotes: ["cartography n. the study or practice of making maps", "paradox n. a self-contradictory statement or situation", "proliferating adj. rapidly increasing", "abstraction n. the act of abstracting", "lossy adj. involving loss"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 2. 控制论：控制的科学
+  // 2. Cybernetics: the science of control
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-2',
@@ -104,10 +102,10 @@ This framework transformed engineering. Servomechanisms, autopilots, and industr
 
 The irony is that cybernetics, the science of control, ultimately revealed the limits of control. Complex systems — ecosystems, economies, human minds — do not behave like thermostats. They adapt, resist, and occasionally collapse in ways no feedback loop can predict. Wiener died in 1964, but his warning has only grown more urgent in the age of algorithmic governance, where the temptation to treat society as a controllable machine remains as powerful — and as dangerous — as ever.`,
     passageAnnotations: [
-      { id: 'sp2-a1', type: 'claim', text: 'control is not about power but about information', note: '核心论点：控制的本质是信息而非权力' },
-      { id: 'sp2-a2', type: 'evidence', text: 'a steam engine governor does not "know" physics; it merely senses', note: '证据：恒温器类比 — 控制不需要"理解"，只需要反馈' },
-      { id: 'sp2-a3', type: 'attitude', text: 'the science of control ultimately revealed the limits of control', note: '作者态度：控制论最终揭示了控制的局限' },
-      { id: 'sp2-a4', type: 'keyword', text: 'feedback', note: '关键概念：反馈 — 控制论的核心机制' },
+      { id: 'sp2-a1', type: 'claim', text: 'control is not about power but about information', note: "Core argument: The essence of control is information, not power." },
+      { id: 'sp2-a2', type: 'evidence', text: 'a steam engine governor does not "know" physics; it merely senses', note: "Evidence: The thermostat analogy — control does not require \"understanding\", only feedback." },
+      { id: 'sp2-a3', type: 'attitude', text: 'the science of control ultimately revealed the limits of control', note: "Author's attitude: Cybernetics ultimately revealed the limits of control." },
+      { id: 'sp2-a4', type: 'keyword', text: 'feedback', note: "Key concept: Feedback — the core mechanism of cybernetics." },
     ],
     items: [
       {
@@ -119,12 +117,12 @@ The irony is that cybernetics, the science of control, ultimately revealed the l
           { id: 'D', text: 'They all process digital information' },
         ],
         correctIds: ['B'],
-        analysis: '第一段末句 "All were systems that used feedback — information about the gap between desired and actual states — to correct their behaviour" 直接对应 B。',
+        analysis: "The last sentence of the first paragraph, \"All were systems that used feedback — information about the gap between desired and actual states — to correct their behaviour\", directly corresponds to B.",
         distractors: [
-          { optionId: 'C', type: '偷换概念', why: '文章明确否定 centralised command — "not a commander issuing orders"' },
-          { optionId: 'D', type: '无中生有', why: '1948 年的 cybernetics 不涉及 digital information' },
+          { optionId: 'C', type: "Concept substitution", why: "The article explicitly denies centralised command — \"not a commander issuing orders\"." },
+          { optionId: 'D', type: "Unsupported claim", why: "The cybernetics of 1948 did not involve digital information." },
         ],
-        vocabNotes: ['feedback n. 反馈', 'servomechanism n. 伺服机构'],
+        vocabNotes: ["feedback n. feedback", "servomechanism n. servomechanism"],
         score: 2,
       },
       {
@@ -136,11 +134,11 @@ The irony is that cybernetics, the science of control, ultimately revealed the l
           { id: 'D', text: 'the need for better engineering education' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 Wiener 警告 "a society obsessed with control and efficiency would treat its citizens as components" — 控制论思维应用于人类社会的危险。',
+        analysis: "In the third paragraph, Wiener warns that \"a society obsessed with control and efficiency would treat its citizens as components\" — the danger of applying cybernetic thinking to human society.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '作者不是在庆祝技术进步，而是在警告其后果' },
+          { optionId: 'A', type: "Over-inference", why: "The author is not celebrating technological progress, but warning about its consequences." },
         ],
-        vocabNotes: ['quantification n. 量化', 'algorithmic governance 算法治理'],
+        vocabNotes: ["quantification n. quantification", "algorithmic governance algorithmic governance"],
         score: 2,
       },
       {
@@ -152,20 +150,20 @@ The irony is that cybernetics, the science of control, ultimately revealed the l
           { id: 'D', text: 'thermostats turned out to be more complex than brains' },
         ],
         correctIds: ['C'],
-        analysis: '末段首句 "cybernetics, the science of control, ultimately revealed the limits of control" — 控制论自身揭示了控制的极限，这就是 irony。',
+        analysis: "The first sentence of the last paragraph, \"cybernetics, the science of control, ultimately revealed the limits of control\" — cybernetics itself revealed the limits of control, and this is the irony.",
         distractors: [
-          { optionId: 'D', type: '无中生有', why: '文章从未比较恒温器和大脑的复杂度' },
+          { optionId: 'D', type: "Unsupported claim", why: "The article never compares the complexity of a thermostat and a brain." },
         ],
-        vocabNotes: ['vasodilation n. 血管舒张', 'distributed adj. 分布式的'],
+        vocabNotes: ["vasodilation n. vasodilation", "distributed adj. distributed"],
         score: 2,
       },
     ],
-    tips: ['注意全文的论证结构：理论提出 → 工程应用 → 社会警告 → 悖论揭示', 'feedback 是贯穿全文的核心概念，注意它在不同语境中的含义'],
-    vocabNotes: ['cybernetics n. 控制论', 'feedback n. 反馈', 'servomechanism n. 伺服机构', 'vasodilation n. 血管舒张', 'quantification n. 量化'],
+    tips: ["Note the argument structure throughout the text: theory proposed → engineering application → social warning → paradox revealed.", "Feedback is the core concept running through the whole text; note its meaning in different contexts."],
+    vocabNotes: ["cybernetics n. cybernetics", "feedback n. feedback", "servomechanism n. servomechanism", "vasodilation n. vasodilation", "quantification n. quantification"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 3. 熵与时间之箭
+  // 3. Entropy and the arrow of time
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-3',
@@ -184,10 +182,10 @@ This has unsettling implications. If entropy always increases, the universe is h
 
 Yet there is a profound puzzle here. If the fundamental laws are time-symmetric, why did the universe begin in a state of extraordinarily low entropy? This is the "Past Hypothesis" — the observation that the Big Bang was a moment of almost miraculous order. No one knows why. The arrow of time, it seems, is not written into the laws of physics but into the initial conditions of the universe.`,
     passageAnnotations: [
-      { id: 'sp3-a1', type: 'claim', text: 'time has a direction because of entropy, not because the laws of physics are asymmetric', note: '核心论点：时间方向来自熵，而非物理定律的不对称' },
-      { id: 'sp3-a2', type: 'evidence', text: 'Newton\'s mechanics, Maxwell\'s electromagnetism — are perfectly time-symmetric', note: '证据：经典物理定律本身是时间对称的' },
-      { id: 'sp3-a3', type: 'keyword', text: 'Past Hypothesis', note: '关键概念：过去假说 — 大爆炸为何是低熵状态' },
-      { id: 'sp3-a4', type: 'attitude', text: 'No one knows why', note: '作者态度：坦诚承认未解之谜' },
+      { id: 'sp3-a1', type: 'claim', text: 'time has a direction because of entropy, not because the laws of physics are asymmetric', note: "Core argument: The direction of time comes from entropy, not from an asymmetry in physical laws." },
+      { id: 'sp3-a2', type: 'evidence', text: 'Newton\'s mechanics, Maxwell\'s electromagnetism — are perfectly time-symmetric', note: "Evidence: The laws of classical physics themselves are time-symmetric." },
+      { id: 'sp3-a3', type: 'keyword', text: 'Past Hypothesis', note: "Key concept: The Past Hypothesis — why the Big Bang was a low-entropy state." },
+      { id: 'sp3-a4', type: 'attitude', text: 'No one knows why', note: "Author's attitude: Frankly acknowledging unsolved mysteries." },
     ],
     items: [
       {
@@ -199,12 +197,12 @@ Yet there is a profound puzzle here. If the fundamental laws are time-symmetric,
           { id: 'D', text: 'the limitations of Newtonian mechanics' },
         ],
         correctIds: ['B'],
-        analysis: '第一段用茶杯下坠引出核心悖论：物理定律是时间对称的，但现实时间有方向。对应 B。',
+        analysis: "The first paragraph uses a falling teacup to introduce the core paradox: physical laws are time-symmetric, but real time has a direction. This corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '文章未涉及量子力学与经典物理的对比' },
-          { optionId: 'C', type: '过度推断', why: '茶杯破碎只是引子，不是讨论重点' },
+          { optionId: 'A', type: "Unsupported claim", why: "The article does not involve a comparison between quantum mechanics and classical physics." },
+          { optionId: 'C', type: "Over-inference", why: "The shattered teacup is only an introduction, not the focus of discussion." },
         ],
-        vocabNotes: ['time-symmetric adj. 时间对称的', 'thermodynamic adj. 热力学的'],
+        vocabNotes: ["time-symmetric adj. time-symmetric", "thermodynamic adj. thermodynamic"],
         score: 2,
       },
       {
@@ -216,11 +214,11 @@ Yet there is a profound puzzle here. If the fundamental laws are time-symmetric,
           { id: 'D', text: 'they both require computational power to calculate' },
         ],
         correctIds: ['B'],
-        analysis: '第三段末 "both describe the tendency of systems to move from ordered states to disordered ones" 直接对应 B。',
+        analysis: "The end of the third paragraph, \"both describe the tendency of systems to move from ordered states to disordered ones\", directly corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: 'Shannon 借用了 Clausius 的术语，但两人不是同一人' },
+          { optionId: 'A', type: "Concept substitution", why: "Shannon borrowed Clausius's terminology, but the two are not the same person." },
         ],
-        vocabNotes: ['dispersal n. 分散、扩散', 'microscopic adj. 微观的'],
+        vocabNotes: ["dispersal n. dispersal, diffusion", "microscopic adj. microscopic"],
         score: 2,
       },
       {
@@ -232,20 +230,20 @@ Yet there is a profound puzzle here. If the fundamental laws are time-symmetric,
           { id: 'D', text: 'the prediction that the universe will end in heat death' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "the Past Hypothesis — the observation that the Big Bang was a moment of almost miraculous order" 直接定义。',
+        analysis: "The last paragraph, \"the Past Hypothesis — the observation that the Big Bang was a moment of almost miraculous order\", directly defines it.",
         distractors: [
-          { optionId: 'D', type: '张冠李戴', why: 'heat death 是宇宙的终态，Past Hypothesis 讨论的是宇宙的初始状态' },
+          { optionId: 'D', type: "Misattribution", why: "Heat death is the final state of the universe; the Past Hypothesis discusses the initial state of the universe." },
         ],
-        vocabNotes: ['hypothesis n. 假说', 'initial conditions 初始条件'],
+        vocabNotes: ["hypothesis n. hypothesis", "initial conditions initial conditions"],
         score: 2,
       },
     ],
-    tips: ['注意全文的时间框架：1865 Clausius → 1948 Shannon → 大爆炸', '理解 "时间对称的定律" vs "时间有方向的现实" 这一核心张力'],
-    vocabNotes: ['entropy n. 熵', 'thermodynamics n. 热力学', 'dispersal n. 分散', 'exquisite adj. 精致的', 'miraculous adj. 奇迹般的'],
+    tips: ["Note the timeline throughout the text: 1865 Clausius → 1948 Shannon → the Big Bang.", "Understand the core tension between \"time-symmetric laws\" and \"a reality in which time has a direction\"."],
+    vocabNotes: ["entropy n. entropy", "thermodynamics n. thermodynamics", "dispersal n. dispersal", "exquisite adj. exquisite", "miraculous adj. miraculous"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 4. 哥德尔：数学为何不能自证完备
+  // 4. Gödel: why mathematics cannot prove its own completeness
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-4',
@@ -264,10 +262,10 @@ For mathematicians, the result was initially traumatic. David Hilbert, who had h
 
 In a sense, Godel liberated mathematics from the illusion of completeness. Like the Borges map that must always remain smaller than the territory, any mathematical system must leave some truths uncharted. The wilderness beyond the map is not a failure but an invitation.`,
     passageAnnotations: [
-      { id: 'sp4-a1', type: 'claim', text: 'in any formal system powerful enough to describe basic arithmetic, there will always be true statements that cannot be proved', note: '哥德尔不完备定理的核心陈述' },
-      { id: 'sp4-a2', type: 'evidence', text: 'This statement cannot be proved within this system', note: '自指构造：哥德尔证明的关键技巧' },
-      { id: 'sp4-a3', type: 'keyword', text: 'self-reference', note: '关键概念：自指 — 哥德尔证明的核心机制' },
-      { id: 'sp4-a4', type: 'attitude', text: 'Godel liberated mathematics from the illusion of completeness', note: '作者态度：不完备性不是绝望，而是解放' },
+      { id: 'sp4-a1', type: 'claim', text: 'in any formal system powerful enough to describe basic arithmetic, there will always be true statements that cannot be proved', note: "The core statement of Gödel's incompleteness theorems." },
+      { id: 'sp4-a2', type: 'evidence', text: 'This statement cannot be proved within this system', note: "Self-referential construction: the key technique in Gödel's proof." },
+      { id: 'sp4-a3', type: 'keyword', text: 'self-reference', note: "Key concept: Self-reference — the core mechanism of Gödel's proof." },
+      { id: 'sp4-a4', type: 'attitude', text: 'Godel liberated mathematics from the illusion of completeness', note: "Author's attitude: Incompleteness is not despair, but liberation." },
     ],
     items: [
       {
@@ -279,12 +277,12 @@ In a sense, Godel liberated mathematics from the illusion of completeness. Like 
           { id: 'D', text: 'requires infinite time to verify' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "a mathematical statement that essentially says: This statement cannot be proved within this system" — 自指性的不可证明陈述。',
+        analysis: "The second paragraph, \"a mathematical statement that essentially says: This statement cannot be proved within this system\" — a self-referential unprovable statement.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '哥德尔定理不涉及计算复杂度' },
-          { optionId: 'C', type: '偷换概念', why: '不是与算术公理矛盾，而是系统无法证明自身的一致性' },
+          { optionId: 'A', type: "Unsupported claim", why: "Gödel's theorem does not involve computational complexity." },
+          { optionId: 'C', type: "Concept substitution", why: "It is not a contradiction with arithmetic axioms, but rather that the system cannot prove its own consistency." },
         ],
-        vocabNotes: ['self-reference n. 自指', 'inconsistent adj. 不一致的'],
+        vocabNotes: ["self-reference n. self-reference", "inconsistent adj. inconsistent"],
         score: 2,
       },
       {
@@ -296,11 +294,11 @@ In a sense, Godel liberated mathematics from the illusion of completeness. Like 
           { id: 'D', text: 'formal systems are superior to informal reasoning' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "Turing later showed a computational analogue: there are problems that no algorithm can solve" — Turing 将不完备性转化为计算不可解性。',
+        analysis: "The third paragraph, \"Turing later showed a computational analogue: there are problems that no algorithm can solve\" — Turing transformed incompleteness into computational unsolvability.",
         distractors: [
-          { optionId: 'C', type: '偷换概念', why: '文章说的恰恰相反：有些问题算法永远无法解决' },
+          { optionId: 'C', type: "Concept substitution", why: "The article says precisely the opposite: some problems can never be solved by algorithms." },
         ],
-        vocabNotes: ['analogue n. 类似物', 'algorithm n. 算法'],
+        vocabNotes: ["analogue n. analogue", "algorithm n. algorithm"],
         score: 2,
       },
       {
@@ -312,20 +310,20 @@ In a sense, Godel liberated mathematics from the illusion of completeness. Like 
           { id: 'D', text: 'the need for better formal systems' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "any mathematical system must leave some truths uncharted" — 正如地图必须比领土小，数学系统也必然有遗漏。',
+        analysis: "The last paragraph, \"any mathematical system must leave some truths uncharted\" — just as a map must be smaller than the territory, a mathematical system must necessarily have omissions.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: 'Borges 地图的类比不是关于"大型项目的不切实际"，而是关于"表示系统的固有局限"' },
+          { optionId: 'A', type: "Over-inference", why: "Borges's map analogy is not about \"the impracticality of large projects\", but about \"the inherent limitations of representational systems\"." },
         ],
-        vocabNotes: ['liberated v. 解放', 'uncharted adj. 未标注的、未知的'],
+        vocabNotes: ["liberated v. liberated", "uncharted adj. uncharted, unknown"],
         score: 2,
       },
     ],
-    tips: ['理解自指（self-reference）是全文的关键机制', '注意哥德尔 → 图灵的论证扩展：从数学到计算'],
-    vocabNotes: ['incompleteness n. 不完备性', 'axiom n. 公理', 'self-reference n. 自指', 'algorithm n. 算法', 'uncharted adj. 未知的'],
+    tips: ["Understanding self-reference is the key mechanism of the whole text.", "Note the extension of the argument from Gödel to Turing: from mathematics to computation."],
+    vocabNotes: ["incompleteness n. incompleteness", "axiom n. axiom", "self-reference n. self-reference", "algorithm n. algorithm", "uncharted adj. unknown"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 5. 库恩：科学革命的结构
+  // 5. Kuhn: the structure of scientific revolutions
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-5',
@@ -344,10 +342,10 @@ The philosopher Karl Popper objected that Kuhn's account made science seem irrat
 
 What makes Kuhn's insight enduring is its universality. Paradigm shifts occur not only in physics and biology but in economics, psychology, and even everyday reasoning. We all operate within paradigms — frameworks so familiar that we forget they are frameworks at all.`,
     passageAnnotations: [
-      { id: 'sp5-a1', type: 'claim', text: 'science does not progress by accumulation but by revolution', note: '核心论点：科学不是渐进积累而是革命性范式转换' },
-      { id: 'sp5-a2', type: 'evidence', text: 'Copernicus replaced Ptolemy. Einstein replaced Newton', note: '历史证据：科学革命的实例' },
-      { id: 'sp5-a3', type: 'keyword', text: 'paradigm shift', note: '关键概念：范式转换' },
-      { id: 'sp5-a4', type: 'attitude', text: 'We all operate within paradigms — frameworks so familiar that we forget they are frameworks at all', note: '作者态度：范式无处不在，但我们往往意识不到' },
+      { id: 'sp5-a1', type: 'claim', text: 'science does not progress by accumulation but by revolution', note: "Core argument: Science is not gradual accumulation but revolutionary paradigm shifts." },
+      { id: 'sp5-a2', type: 'evidence', text: 'Copernicus replaced Ptolemy. Einstein replaced Newton', note: "Historical evidence: Examples of scientific revolutions." },
+      { id: 'sp5-a3', type: 'keyword', text: 'paradigm shift', note: "Key concept: Paradigm shift." },
+      { id: 'sp5-a4', type: 'attitude', text: 'We all operate within paradigms — frameworks so familiar that we forget they are frameworks at all', note: "Author's attitude: Paradigms are everywhere, but we often fail to notice them." },
     ],
     items: [
       {
@@ -359,11 +357,11 @@ What makes Kuhn's insight enduring is its universality. Paradigm shifts occur no
           { id: 'D', text: 'the rejection of all previous theories' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Normal science...operates within an existing paradigm, solving puzzles that the paradigm defines" 直接对应 B。',
+        analysis: "The second paragraph, \"Normal science...operates within an existing paradigm, solving puzzles that the paradigm defines\", directly corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: 'revolutionary discoveries 是 paradigm shift 的特征，不是 normal science 的' },
+          { optionId: 'A', type: "Concept substitution", why: "Revolutionary discoveries are a feature of paradigm shifts, not of normal science." },
         ],
-        vocabNotes: ['paradigm n. 范式', 'anomaly n. 异常现象'],
+        vocabNotes: ["paradigm n. paradigm", "anomaly n. anomaly"],
         score: 2,
       },
       {
@@ -375,11 +373,11 @@ What makes Kuhn's insight enduring is its universality. Paradigm shifts occur no
           { id: 'D', text: 'it rejected the concept of scientific progress' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 Popper "objected that Kuhn\'s account made science seem irrational — a matter of fashion and sociology rather than logic and evidence" 直接对应 B。',
+        analysis: "The fourth paragraph, Popper \"objected that Kuhn's account made science seem irrational — a matter of fashion and sociology rather than logic and evidence\", directly corresponds to B.",
         distractors: [
-          { optionId: 'C', type: '过度推断', why: 'Kuhn 从未声称所有范式同样有效' },
+          { optionId: 'C', type: "Over-inference", why: "Kuhn never claimed that all paradigms are equally valid." },
         ],
-        vocabNotes: ['irrational adj. 非理性的', 'adherent n. 信徒、追随者'],
+        vocabNotes: ["irrational adj. irrational", "adherent n. adherent, follower"],
         score: 2,
       },
       {
@@ -391,20 +389,20 @@ What makes Kuhn's insight enduring is its universality. Paradigm shifts occur no
           { id: 'D', text: 'it explains why science always progresses' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "Paradigm shifts occur not only in physics and biology but in economics, psychology, and even everyday reasoning" — 范式存在于日常思维中。',
+        analysis: "The last paragraph, \"Paradigm shifts occur not only in physics and biology but in economics, psychology, and even everyday reasoning\" — paradigms exist in everyday thinking.",
         distractors: [
-          { optionId: 'D', type: '偷换概念', why: 'Kuhn 的观点恰恰是科学不一定总是"进步"的，而是范式转换' },
+          { optionId: 'D', type: "Concept substitution", why: "Kuhn's view is precisely that science does not always \"progress\", but rather undergoes paradigm shifts." },
         ],
-        vocabNotes: ['defect v. 叛变、投靠', 'critical mass 临界质量'],
+        vocabNotes: ["defect v. defect, switch allegiance", "critical mass critical mass"],
         score: 2,
       },
     ],
-    tips: ['注意 Kuhn vs Popper 的哲学辩论结构', '理解 "paradigm" 不仅是理论，而是整个世界观'],
-    vocabNotes: ['paradigm n. 范式', 'anomaly n. 异常', 'revolution n. 革命', 'adherent n. 追随者', 'arbitrary adj. 任意的'],
+    tips: ["Note the structure of the philosophical debate between Kuhn and Popper.", "Understand that \"paradigm\" is not just a theory, but an entire worldview."],
+    vocabNotes: ["paradigm n. paradigm", "anomaly n. anomaly", "revolution n. revolution", "adherent n. follower", "arbitrary adj. arbitrary"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 6. 海森堡：观测改变被观测者
+  // 6. Heisenberg: observation changes the observed
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-6',
@@ -423,10 +421,10 @@ The philosophical consequences are profound. Classical science assumed that the 
 
 Yet physicists have learned to work with uncertainty rather than against it. Quantum mechanics, built on the uncertainty principle, is the most precisely tested theory in the history of science. The universe, it seems, is not a clock but a casino — and the house always wins.`,
     passageAnnotations: [
-      { id: 'sp6-a1', type: 'claim', text: 'This is not a limitation of instruments — it is a feature of reality', note: '核心论点：不确定性是现实的特征而非观测的局限' },
-      { id: 'sp6-a2', type: 'evidence', text: 'To observe an electron, you must bounce something off it', note: '物理解释：观测必然干扰被观测对象' },
-      { id: 'sp6-a3', type: 'keyword', text: 'Laplacean determinism', note: '关键概念：拉普拉斯决定论 — 经典物理的决定论理想' },
-      { id: 'sp6-a4', type: 'attitude', text: 'the universe is not a clock but a casino', note: '作者态度：宇宙不是钟表而是赌场' },
+      { id: 'sp6-a1', type: 'claim', text: 'This is not a limitation of instruments — it is a feature of reality', note: "Core argument: Uncertainty is a feature of reality, not a limitation of observation." },
+      { id: 'sp6-a2', type: 'evidence', text: 'To observe an electron, you must bounce something off it', note: "Physical explanation: Observation necessarily disturbs the observed object." },
+      { id: 'sp6-a3', type: 'keyword', text: 'Laplacean determinism', note: "Key concept: Laplacean determinism — the classical physical ideal of determinism." },
+      { id: 'sp6-a4', type: 'attitude', text: 'the universe is not a clock but a casino', note: "Author's attitude: The universe is not a clock but a casino." },
     ],
     items: [
       {
@@ -438,12 +436,12 @@ Yet physicists have learned to work with uncertainty rather than against it. Qua
           { id: 'D', text: 'why photons have mass' },
         ],
         correctIds: ['B'],
-        analysis: '第二段用台球类比说明 "The collision tells you where the ball was, but it also knocks it to a new position" — 观测必然干扰被观测对象。',
+        analysis: "The second paragraph uses the billiard ball analogy to explain \"The collision tells you where the ball was, but it also knocks it to a new position\" — observation necessarily disturbs the observed object.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '文章未讨论波粒二象性' },
-          { optionId: 'C', type: '过度推断', why: '类比是为了解释不确定性原理，不是为了比较物理理论' },
+          { optionId: 'A', type: "Unsupported claim", why: "The article does not discuss wave-particle duality." },
+          { optionId: 'C', type: "Over-inference", why: "The analogy is meant to explain the uncertainty principle, not to compare physical theories." },
         ],
-        vocabNotes: ['momentum n. 动量', 'photon n. 光子'],
+        vocabNotes: ["momentum n. momentum", "photon n. photon"],
         score: 2,
       },
       {
@@ -455,11 +453,11 @@ Yet physicists have learned to work with uncertainty rather than against it. Qua
           { id: 'D', text: 'it only affects the position measurement' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "It does not say that we cannot know everything...It says that certain pairs of properties do not simultaneously possess precise values" — 不确定性是关于现实本身，而非关于我们认知的局限。',
+        analysis: "The third paragraph, \"It does not say that we cannot know everything...It says that certain pairs of properties do not simultaneously possess precise values\" — uncertainty is about reality itself, not about the limits of our knowledge.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '文章未说它仅限于亚原子粒子' },
+          { optionId: 'A', type: "Concept substitution", why: "The article does not say it is limited to subatomic particles." },
         ],
-        vocabNotes: ['indeterminate adj. 不确定的', 'Laplacean determinism 拉普拉斯决定论'],
+        vocabNotes: ["indeterminate adj. indeterminate", "Laplacean determinism Laplacean determinism"],
         score: 2,
       },
       {
@@ -471,20 +469,20 @@ Yet physicists have learned to work with uncertainty rather than against it. Qua
           { id: 'D', text: 'physicists should abandon the pursuit of knowledge' },
         ],
         correctIds: ['C'],
-        analysis: '钟表隐喻决定论（可精确预测），赌场隐喻内在随机性。末段 "Uncertainty is woven into the fabric of reality" 对应 C。',
+        analysis: "The clock metaphor implies determinism (precise predictability), while the casino metaphor implies intrinsic randomness. The last paragraph, \"Uncertainty is woven into the fabric of reality\", corresponds to C.",
         distractors: [
-          { optionId: 'A', type: '字面理解', why: 'casino 是隐喻，不是说物理学基于赌博' },
+          { optionId: 'A', type: "Surface reading", why: "Casino is a metaphor; it does not mean physics is based on gambling." },
         ],
-        vocabNotes: ['clockwork mechanism 钟表机制', 'casino n. 赌场'],
+        vocabNotes: ["clockwork mechanism clockwork mechanism", "casino n. casino"],
         score: 2,
       },
     ],
-    tips: ['理解 billiard ball 类比的物理含义：观测行为本身的干扰', '注意作者纠正常见误解的论证方式'],
-    vocabNotes: ['uncertainty n. 不确定性', 'momentum n. 动量', 'photon n. 光子', 'determinism n. 决定论', 'indeterminate adj. 不确定的'],
+    tips: ["Understand the physical meaning of the billiard ball analogy: the disturbance caused by the act of observation itself.", "Note the author's argumentative method of correcting common misunderstandings."],
+    vocabNotes: ["uncertainty n. uncertainty", "momentum n. momentum", "photon n. photon", "determinism n. determinism", "indeterminate adj. indeterminate"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 7. 图灵：机器能思考吗？
+  // 7. Turing: can machines think?
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-7',
@@ -503,10 +501,10 @@ What makes Turing's paper remarkable is not its answer but its framing. By repla
 
 The deepest question Turing raised may be this: if a machine's behaviour is indistinguishable from thinking, does it matter whether it "really" thinks?`,
     passageAnnotations: [
-      { id: 'sp7-a1', type: 'claim', text: 'Turing replaced the metaphysical question with an operational one', note: '核心论点：图灵将形而上学问题转化为工程问题' },
-      { id: 'sp7-a2', type: 'evidence', text: 'John Searle\'s famous "Chinese Room" thought experiment', note: '反面证据：Searle 的中文房间论证' },
-      { id: 'sp7-a3', type: 'keyword', text: 'imitation game', note: '关键概念：模仿游戏 — 图灵测试的原名' },
-      { id: 'sp7-a4', type: 'attitude', text: 'the line between imitation and understanding has never been blurrier', note: '作者态度：模仿与理解的界限从未如此模糊' },
+      { id: 'sp7-a1', type: 'claim', text: 'Turing replaced the metaphysical question with an operational one', note: "Core argument: Turing transformed a metaphysical question into an engineering problem." },
+      { id: 'sp7-a2', type: 'evidence', text: 'John Searle\'s famous "Chinese Room" thought experiment', note: "Counter-evidence: Searle's Chinese Room argument" },
+      { id: 'sp7-a3', type: 'keyword', text: 'imitation game', note: "Key concept: imitation game — the original name of the Turing Test" },
+      { id: 'sp7-a4', type: 'attitude', text: 'the line between imitation and understanding has never been blurrier', note: "Author's attitude: the boundary between imitation and understanding has never been so blurred" },
     ],
     items: [
       {
@@ -518,11 +516,11 @@ The deepest question Turing raised may be this: if a machine's behaviour is indi
           { id: 'D', text: 'build a conscious machine' },
         ],
         correctIds: ['B'],
-        analysis: '第一段 "Rather than grappling with...defining thinking, Turing proposed a practical test" — 用行为测试替代定义性问题。',
+        analysis: "Paragraph 1 \"Rather than grappling with...defining thinking, Turing proposed a practical test\" — replacing the definitional problem with a behavioral test.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '图灵恰恰回避了精确定义 thinking 的问题' },
+          { optionId: 'A', type: "Concept substitution", why: "Turing precisely avoided the problem of defining thinking exactly" },
         ],
-        vocabNotes: ['interrogator n. 审问者、提问者', 'imitation n. 模仿'],
+        vocabNotes: ["interrogator n. questioner, one who asks questions", "imitation n. imitation"],
         score: 2,
       },
       {
@@ -534,11 +532,11 @@ The deepest question Turing raised may be this: if a machine's behaviour is indi
           { id: 'D', text: 'Chinese is too complex for machines to process' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "The room produces perfect Chinese responses, but no comprehension exists inside" — 正确输出不等于理解。',
+        analysis: "Paragraph 2 \"The room produces perfect Chinese responses, but no comprehension exists inside\" — correct output does not equal understanding.",
         distractors: [
-          { optionId: 'C', type: '无中生有', why: 'Searle 讨论的是理解问题，不是测试难度' },
+          { optionId: 'C', type: "Unsupported claim", why: "Searle is discussing the problem of understanding, not the difficulty of the test" },
         ],
-        vocabNotes: ['conflation n. 混淆', 'comprehension n. 理解'],
+        vocabNotes: ["conflation n. the act of confusing two things", "comprehension n. understanding"],
         score: 2,
       },
       {
@@ -550,20 +548,20 @@ The deepest question Turing raised may be this: if a machine's behaviour is indi
           { id: 'D', text: 'why humans are superior to machines' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "if a machine\'s behaviour is indistinguishable from thinking, does it matter whether it really thinks?" — 行为等价是否等于思考。',
+        analysis: "Final paragraph \"if a machine's behaviour is indistinguishable from thinking, does it matter whether it really thinks?\" — whether behavioral equivalence equals thinking.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '图灵的问题不是"如何建造有意识的机器"，而是"行为是否足以定义思考"' },
+          { optionId: 'A', type: "Over-inference", why: "Turing's question is not \"how to build a conscious machine\" but \"whether behavior is sufficient to define thinking\"" },
         ],
-        vocabNotes: ['indistinguishable adj. 无法区分的', 'benchmark n. 基准'],
+        vocabNotes: ["indistinguishable adj. impossible to tell apart", "benchmark n. a standard for comparison"],
         score: 2,
       },
     ],
-    tips: ['理解 Turing vs Searle 的哲学辩论结构', '注意作者对图灵测试的评价：从哲学思想实验到工程基准'],
-    vocabNotes: ['imitation n. 模仿', 'comprehension n. 理解', 'metaphysical adj. 形而上学的', 'operational adj. 操作性的', 'indistinguishable adj. 无法区分的'],
+    tips: ["Understand the structure of the philosophical debate between Turing and Searle", "Note the author's evaluation of the Turing Test: from philosophical thought experiment to engineering benchmark"],
+    vocabNotes: ["imitation n. imitation", "comprehension n. understanding", "metaphysical adj. relating to metaphysics", "operational adj. relating to operation", "indistinguishable adj. impossible to tell apart"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 8. 贝特森：信息即差异
+  // 8. Bateson: information is difference
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-8',
@@ -582,10 +580,10 @@ This insight has profound implications for biology. An organism does not "receiv
 
 Bateson's definition also illuminates the problem of meaning in artificial intelligence. A large language model processes text — differences in token sequences — but does the output make a difference to the model itself? If the model's behaviour is determined entirely by its weights and the input, with no capacity for genuine response, then perhaps it processes information without ever encountering meaning.`,
     passageAnnotations: [
-      { id: 'sp8-a1', type: 'claim', text: 'Information is a difference that makes a difference', note: '贝特森对信息的经典定义' },
-      { id: 'sp8-a2', type: 'evidence', text: 'a random noise pattern and Shakespeare\'s sonnets carry the same amount of Shannon information', note: 'Shannon 信息论的局限：不区分有意义与无意义的信息' },
-      { id: 'sp8-a3', type: 'keyword', text: 'a difference that makes a difference', note: '贝特森的核心概念' },
-      { id: 'sp8-a4', type: 'attitude', text: 'perhaps it processes information without ever encountering meaning', note: '作者态度：对 AI 的意义问题保持开放性' },
+      { id: 'sp8-a1', type: 'claim', text: 'Information is a difference that makes a difference', note: "Bateson's classic definition of information" },
+      { id: 'sp8-a2', type: 'evidence', text: 'a random noise pattern and Shakespeare\'s sonnets carry the same amount of Shannon information', note: "Limitation of Shannon's information theory: it does not distinguish meaningful from meaningless information" },
+      { id: 'sp8-a3', type: 'keyword', text: 'a difference that makes a difference', note: "Bateson's core concept" },
+      { id: 'sp8-a4', type: 'attitude', text: 'perhaps it processes information without ever encountering meaning', note: "Author's attitude: maintaining openness to the question of meaning in AI" },
     ],
     items: [
       {
@@ -597,12 +595,12 @@ Bateson's definition also illuminates the problem of meaning in artificial intel
           { id: 'D', text: 'rejects the concept of uncertainty entirely' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Bateson\'s formulation adds a crucial qualification: information must make a difference — it must change the behaviour of the receiving system" 直接对应 B。',
+        analysis: "Paragraph 2 \"Bateson's formulation adds a crucial qualification: information must make a difference — it must change the behaviour of the receiving system\" directly corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: 'Bateson 的定义不如 Shannon 的数学精确，而是更概念化' },
-          { optionId: 'C', type: '过度推断', why: 'Bateson 用恒温器为例说明信息不限于生物体' },
+          { optionId: 'A', type: "Concept substitution", why: "Bateson's definition is less mathematically precise than Shannon's, but more conceptual" },
+          { optionId: 'C', type: "Over-inference", why: "Bateson uses a thermostat as an example to show that information is not limited to living organisms" },
         ],
-        vocabNotes: ['formulation n. 表述、公式化', 'qualification n. 限定条件'],
+        vocabNotes: ["formulation n. expression, the act of formulating", "qualification n. a limiting condition"],
         score: 2,
       },
       {
@@ -614,11 +612,11 @@ Bateson's definition also illuminates the problem of meaning in artificial intel
           { id: 'D', text: 'all animals perceive the same reality' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "the organism\'s nervous system is structured to detect certain differences" — 青蛙眼睛只看到移动的点，说明生物只检测与其生存相关的差异。',
+        analysis: "Paragraph 4 \"the organism's nervous system is structured to detect certain differences\" — a frog's eye only sees moving dots, showing that organisms only detect differences relevant to their survival.",
         distractors: [
-          { optionId: 'D', type: '偷换概念', why: '文章强调不同物种感知不同的世界，而非相同的现实' },
+          { optionId: 'D', type: "Concept substitution", why: "The article emphasizes that different species perceive different worlds, not the same reality" },
         ],
-        vocabNotes: ['differentially adv. 差异性地', 'gradient n. 梯度'],
+        vocabNotes: ["differentially adv. in a differential manner", "gradient n. a gradient"],
         score: 2,
       },
       {
@@ -630,20 +628,20 @@ Bateson's definition also illuminates the problem of meaning in artificial intel
           { id: 'D', text: 'whether AI can be creative' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "does the output make a difference to the model itself?" — AI 是否真正"接收"信息，还是只是模式匹配。',
+        analysis: "Final paragraph \"does the output make a difference to the model itself?\" — whether AI truly \"receives\" information or merely pattern-matches.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '信息处理量不是贝特森关心的问题' },
+          { optionId: 'A', type: "Over-inference", why: "The amount of information processed is not Bateson's concern" },
         ],
-        vocabNotes: ['token n. 词元（AI 术语）', 'capacity n. 能力'],
+        vocabNotes: ["token n. token (AI term)", "capacity n. ability"],
         score: 2,
       },
     ],
-    tips: ['理解贝特森定义的三层含义：差异 → 对接收系统有影响 → 关系性', '注意青蛙/蝙蝠例子对"信息是关系"的佐证'],
-    vocabNotes: ['cybernetician n. 控制论学者', 'formulation n. 表述', 'differential adj. 差异的', 'gradient n. 梯度', 'token n. 词元'],
+    tips: ["Understand the three layers of Bateson's definition: difference → makes a difference to the receiving system → relational", "Note how the frog/bat examples support \"information is relational\""],
+    vocabNotes: ["cybernetician n. a scholar of cybernetics", "formulation n. expression", "differential adj. relating to difference", "gradient n. a gradient", "token n. token"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 9. 博弈论：策略困境的数学
+  // 9. Game theory: the mathematics of strategic dilemmas
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-9',
@@ -662,10 +660,10 @@ This pattern pervades modern life. Climate negotiations are a multi-player Priso
 
 Nash won the Nobel Prize in 1994 for his work, but his personal story — marked by schizophrenia, institutionalisation, and eventual recovery — adds a poignant dimension. The man who mathematically formalised rationality spent decades unable to distinguish between reason and delusion. His equilibrium concept, meanwhile, has been applied to everything from evolutionary biology to auction design, proving that the mathematics of strategic interaction is as universal as it is counterintuitive.`,
     passageAnnotations: [
-      { id: 'sp9-a1', type: 'claim', text: 'individual rationality leads to collective disaster', note: '核心论点：个体理性导致集体灾难 — 博弈论的悖论' },
-      { id: 'sp9-a2', type: 'evidence', text: 'Climate negotiations are a multi-player Prisoner\'s Dilemma', note: '现实证据：气候谈判是多方囚徒困境' },
-      { id: 'sp9-a3', type: 'keyword', text: 'Nash equilibrium', note: '关键概念：纳什均衡' },
-      { id: 'sp9-a4', type: 'attitude', text: 'the man who mathematically formalised rationality spent decades unable to distinguish reason from delusion', note: '作者态度：Nash 的个人悲剧与理论的反讽' },
+      { id: 'sp9-a1', type: 'claim', text: 'individual rationality leads to collective disaster', note: "Core argument: individual rationality leads to collective disaster — the paradox of game theory" },
+      { id: 'sp9-a2', type: 'evidence', text: 'Climate negotiations are a multi-player Prisoner\'s Dilemma', note: "Real-world evidence: climate negotiations are a multi-party prisoner's dilemma" },
+      { id: 'sp9-a3', type: 'keyword', text: 'Nash equilibrium', note: "Key concept: Nash equilibrium" },
+      { id: 'sp9-a4', type: 'attitude', text: 'the man who mathematically formalised rationality spent decades unable to distinguish reason from delusion', note: "Author's attitude: the irony of Nash's personal tragedy and his theory" },
     ],
     items: [
       {
@@ -677,12 +675,12 @@ Nash won the Nobel Prize in 1994 for his work, but his personal story — marked
           { id: 'D', text: 'the strategy that minimises risk' },
         ],
         correctIds: ['B'],
-        analysis: '第一段 "a set of strategies where no player can improve their outcome by unilaterally changing their own" 直接定义纳什均衡。',
+        analysis: "Paragraph 1 \"a set of strategies where no player can improve their outcome by unilaterally changing their own\" directly defines Nash equilibrium.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '纳什均衡不一定最大化总福利（囚徒困境中双方背叛是均衡但不是最优）' },
-          { optionId: 'C', type: '偷换概念', why: '囚徒困境中双方都不偏好均衡结果' },
+          { optionId: 'A', type: "Concept substitution", why: "Nash equilibrium does not necessarily maximize total welfare (in the prisoner's dilemma, mutual defection is an equilibrium but not optimal)" },
+          { optionId: 'C', type: "Concept substitution", why: "In the prisoner's dilemma, neither party prefers the equilibrium outcome" },
         ],
-        vocabNotes: ['equilibrium n. 均衡', 'unilaterally adv. 单方面地'],
+        vocabNotes: ["equilibrium n. equilibrium", "unilaterally adv. on one's own, without others"],
         score: 2,
       },
       {
@@ -694,11 +692,11 @@ Nash won the Nobel Prize in 1994 for his work, but his personal story — marked
           { id: 'D', text: 'game theory cannot be applied to real-world situations' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "Individual rationality leads to collective disaster" — 个体理性选择导致集体次优结果。',
+        analysis: "Paragraph 3 \"Individual rationality leads to collective disaster\" — individually rational choices lead to collectively suboptimal outcomes.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '合作是更好的结果，但不是"理性"选择（理性导致互相背叛）' },
+          { optionId: 'A', type: "Concept substitution", why: "Cooperation is the better outcome, but not the \"rational\" choice (rationality leads to mutual betrayal)" },
         ],
-        vocabNotes: ['betray v. 背叛', 'paradoxically adv. 矛盾地'],
+        vocabNotes: ["betray v. to betray", "paradoxically adv. in a contradictory manner"],
         score: 2,
       },
       {
@@ -710,20 +708,20 @@ Nash won the Nobel Prize in 1994 for his work, but his personal story — marked
           { id: 'D', text: 'argue for better mental health funding' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "The man who mathematically formalised rationality spent decades unable to distinguish reason from delusion" — Nash 的个人悲剧与理论的反讽。',
+        analysis: "Final paragraph \"The man who mathematically formalised rationality spent decades unable to distinguish reason from delusion\" — the irony of Nash's personal tragedy and his theory.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '作者明确肯定 Nash 获诺贝尔奖的贡献' },
+          { optionId: 'A', type: "Unsupported claim", why: "The author explicitly affirms Nash's Nobel Prize-winning contribution" },
         ],
-        vocabNotes: ['schizophrenia n. 精神分裂症', 'poignant adj. 令人感慨的'],
+        vocabNotes: ["schizophrenia n. schizophrenia", "poignant adj. evoking a keen sense of sadness"],
         score: 2,
       },
     ],
-    tips: ['理解囚徒困境的核心悖论：个体最优 ≠ 集体最优', '注意 Nash 个人经历与博弈论的反讽性对比'],
-    vocabNotes: ['equilibrium n. 均衡', 'unilaterally adv. 单方面地', 'paradoxically adv. 矛盾地', 'poignant adj. 令人感慨的', 'counterintuitive adj. 反直觉的'],
+    tips: ["Understand the core paradox of the prisoner's dilemma: individual optimum ≠ collective optimum", "Note the ironic contrast between Nash's personal experience and game theory"],
+    vocabNotes: ["equilibrium n. equilibrium", "unilaterally adv. on one's own, without others", "paradoxically adv. in a contradictory manner", "poignant adj. evoking a keen sense of sadness", "counterintuitive adj. contrary to intuition"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 10. 薛定谔：生命是什么？
+  // 10. Schrödinger: what is life?
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-10',
@@ -744,10 +742,10 @@ Schrödinger also predicted that the gene must be an "aperiodic crystal" — a m
 
 "What is Life?" remains one of the most influential popular science books ever written. Its central insight — that life is a process of importing order to combat entropy — has become a cornerstone of biophysics.`,
     passageAnnotations: [
-      { id: 'sp10-a1', type: 'claim', text: 'living systems are not closed but open: they continuously import order from their environment', note: '核心论点：生命通过输入有序能量来对抗熵增' },
-      { id: 'sp10-a2', type: 'evidence', text: 'Francis Crick explicitly credited Schrödinger with inspiring his move from physics to biology', note: '历史证据：薛定谔启发了 DNA 的发现者' },
-      { id: 'sp10-a3', type: 'keyword', text: 'aperiodic crystal', note: '关键概念：非周期晶体 — 薛定谔对基因结构的预测' },
-      { id: 'sp10-a4', type: 'attitude', text: 'life is a process of importing order to combat entropy', note: '作者态度：生命是输入有序以对抗熵的过程' },
+      { id: 'sp10-a1', type: 'claim', text: 'living systems are not closed but open: they continuously import order from their environment', note: "Core argument: life counteracts entropy increase by importing ordered energy" },
+      { id: 'sp10-a2', type: 'evidence', text: 'Francis Crick explicitly credited Schrödinger with inspiring his move from physics to biology', note: "Historical evidence: Schrödinger inspired the discoverers of DNA" },
+      { id: 'sp10-a3', type: 'keyword', text: 'aperiodic crystal', note: "Key concept: aperiodic crystal — Schrödinger's prediction of gene structure" },
+      { id: 'sp10-a4', type: 'attitude', text: 'life is a process of importing order to combat entropy', note: "Author's attitude: life is a process of importing order to counteract entropy" },
     ],
     items: [
       {
@@ -759,11 +757,11 @@ Schrödinger also predicted that the gene must be an "aperiodic crystal" — a m
           { id: 'D', text: 'they operate outside the laws of physics' },
         ],
         correctIds: ['C'],
-        analysis: '第三段 "Living systems...are not closed but open: they continuously import order from their environment and export disorder" 直接对应 C。',
+        analysis: "Paragraph 3 \"Living systems...are not closed but open: they continuously import order from their environment and export disorder\" directly corresponds to C.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '薛定谔明确说生命不是违反热力学第二定律，而是通过输入有序能量来局部减熵' },
+          { optionId: 'A', type: "Concept substitution", why: "Schrödinger explicitly says life does not violate the second law of thermodynamics, but locally reduces entropy by importing ordered energy" },
         ],
-        vocabNotes: ['negentropy n. 负熵', 'eddy n. 涡流'],
+        vocabNotes: ["negentropy n. negative entropy", "eddy n. a whirlpool"],
         score: 2,
       },
       {
@@ -775,11 +773,11 @@ Schrödinger also predicted that the gene must be an "aperiodic crystal" — a m
           { id: 'D', text: 'a liquid solution' },
         ],
         correctIds: ['B'],
-        analysis: '第五段 "the gene must be an aperiodic crystal — a molecule with a non-repeating structure that carries information" 直接对应 B。',
+        analysis: "Paragraph 5 \"the gene must be an aperiodic crystal — a molecule with a non-repeating structure that carries information\" directly corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '是 aperiodic（非周期的）而非 simple repeating（简单重复的）' },
+          { optionId: 'A', type: "Concept substitution", why: "It is aperiodic, not simple repeating" },
         ],
-        vocabNotes: ['aperiodic adj. 非周期的', 'fidelity n. 忠实度'],
+        vocabNotes: ["aperiodic adj. not periodic", "fidelity n. faithfulness"],
         score: 2,
       },
       {
@@ -791,20 +789,20 @@ Schrödinger also predicted that the gene must be an "aperiodic crystal" — a m
           { id: 'D', text: 'popular science books are unreliable sources' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 Crick 和 Watson 的例子说明跨学科思维（物理→生物）推动了 DNA 的发现。',
+        analysis: "Paragraph 4 The example of Crick and Watson shows that interdisciplinary thinking (physics → biology) drove the discovery of DNA.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '文章不是在比较物理和生物的重要性' },
+          { optionId: 'A', type: "Over-inference", why: "The article is not comparing the importance of physics and biology" },
         ],
-        vocabNotes: ['electrifying adj. 令人振奋的', 'interdisciplinary adj. 跨学科的'],
+        vocabNotes: ["electrifying adj. thrilling, exciting", "interdisciplinary adj. involving multiple disciplines"],
         score: 2,
       },
     ],
-    tips: ['理解薛定谔的核心类比：生命 = 对抗熵增的局部有序系统', '注意 aperiodic crystal 概念对 DNA 发现的预见性'],
-    vocabNotes: ['entropy n. 熵', 'negentropy n. 负熵', 'aperiodic adj. 非周期的', 'fidelity n. 忠实度', 'electrifying adj. 令人振奋的'],
+    tips: ["Understand Schrödinger's core analogy: life = a locally ordered system that counteracts entropy increase", "Note the predictive power of the aperiodic crystal concept for the discovery of DNA"],
+    vocabNotes: ["entropy n. entropy", "negentropy n. negative entropy", "aperiodic adj. not periodic", "fidelity n. faithfulness", "electrifying adj. thrilling, exciting"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 11. 波普尔：不能被证伪的就不是科学
+  // 11. Popper: if it cannot be falsified, it is not science
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-11',
@@ -823,10 +821,10 @@ The implications extend beyond philosophy. In medicine, randomised controlled tr
 
 Popper's most unsettling conclusion is that scientific knowledge is always provisional. We never prove a theory true; we merely fail to prove it false — so far. Every scientific truth carries an invisible asterisk: "pending refutation."`,
     passageAnnotations: [
-      { id: 'sp11-a1', type: 'claim', text: 'A theory is scientific not if it can be confirmed but if it can be refuted', note: '核心论点：科学理论的标准是可证伪性而非可验证性' },
-      { id: 'sp11-a2', type: 'evidence', text: 'Einstein\'s general relativity...made specific, risky predictions', note: '正面证据：爱因斯坦理论的可证伪性' },
-      { id: 'sp11-a3', type: 'keyword', text: 'falsification', note: '关键概念：证伪 — 波普尔的核心标准' },
-      { id: 'sp11-a4', type: 'attitude', text: 'Every scientific truth carries an invisible asterisk: pending refutation', note: '作者态度：所有科学真理都附带"待证伪"的隐形星号' },
+      { id: 'sp11-a1', type: 'claim', text: 'A theory is scientific not if it can be confirmed but if it can be refuted', note: "Core argument: the criterion for a scientific theory is falsifiability, not verifiability" },
+      { id: 'sp11-a2', type: 'evidence', text: 'Einstein\'s general relativity...made specific, risky predictions', note: "Positive evidence: the falsifiability of Einstein's theory" },
+      { id: 'sp11-a3', type: 'keyword', text: 'falsification', note: "Key concept: falsification — Popper's core criterion" },
+      { id: 'sp11-a4', type: 'attitude', text: 'Every scientific truth carries an invisible asterisk: pending refutation', note: "Author's attitude: all scientific truths carry an invisible asterisk of \"yet to be falsified\"" },
     ],
     items: [
       {
@@ -838,11 +836,11 @@ Popper's most unsettling conclusion is that scientific knowledge is always provi
           { id: 'D', text: 'it contradicted Einstein\'s theory' },
         ],
         correctIds: ['B'],
-        analysis: '第一段 "Psychoanalysis...could explain any human behaviour...and neither could ever be disproved" — 无法被证伪。',
+        analysis: "Paragraph 1 \"Psychoanalysis...could explain any human behaviour...and neither could ever be disproved\" — it cannot be falsified.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '精神分析确实基于观察，问题是它能解释一切，没有任何观察能否定它' },
+          { optionId: 'A', type: "Concept substitution", why: "Psychoanalysis is indeed based on observation; the problem is that it can explain everything, and no observation can refute it" },
         ],
-        vocabNotes: ['sublimation n. 升华（心理学术语）', 'demarcation n. 划界'],
+        vocabNotes: ["sublimation n. sublimation (psychological term)", "demarcation n. demarcation"],
         score: 2,
       },
       {
@@ -854,11 +852,11 @@ Popper's most unsettling conclusion is that scientific knowledge is always provi
           { id: 'D', text: 'Popper\'s criterion is too lenient' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "Scientists do not abandon theories at the first failed prediction. They adjust auxiliary hypotheses" — 真实科学实践不遵循严格证伪。',
+        analysis: "Paragraph 3 \"Scientists do not abandon theories at the first failed prediction. They adjust auxiliary hypotheses\" — real scientific practice does not follow strict falsification.",
         distractors: [
-          { optionId: 'D', type: '偷换概念', why: '批评不是说波普尔的标准太宽松，而是说太严格（不符合实际科学实践）' },
+          { optionId: 'D', type: "Concept substitution", why: "The criticism is not that Popper's criterion is too loose, but that it is too strict (it does not match actual scientific practice)" },
         ],
-        vocabNotes: ['auxiliary adj. 辅助的', 'heuristic n. 启发式方法'],
+        vocabNotes: ["auxiliary adj. supplementary", "heuristic n. a heuristic method"],
         score: 2,
       },
       {
@@ -870,20 +868,20 @@ Popper's most unsettling conclusion is that scientific knowledge is always provi
           { id: 'D', text: 'all theories will eventually be disproven' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "We never prove a theory true; we merely fail to prove it false — so far" — 科学知识始终是暂时性的。',
+        analysis: "Final paragraph \"We never prove a theory true; we merely fail to prove it false — so far\" — scientific knowledge is always provisional.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '暂时性不等于不可靠，只是说有被证伪的可能' },
+          { optionId: 'A', type: "Over-inference", why: "Provisional does not mean unreliable; it only means there is a possibility of being falsified" },
         ],
-        vocabNotes: ['provisional adj. 暂时的', 'refutation n. 反驳、证伪'],
+        vocabNotes: ["provisional adj. temporary", "refutation n. refutation, falsification"],
         score: 2,
       },
     ],
-    tips: ['理解波普尔的核心区分：可证伪 vs 不可证伪', '注意作者从逻辑 → 历史 → 日常应用的论证扩展'],
-    vocabNotes: ['falsification n. 证伪', 'demarcation n. 划界', 'heuristic n. 启发式', 'provisional adj. 暂时的', 'refutation n. 反驳'],
+    tips: ["Understand Popper's core distinction: falsifiable vs unfalsifiable", "Note the author's argument expands from logic → history → everyday application"],
+    vocabNotes: ["falsification n. falsification", "demarcation n. demarcation", "heuristic n. heuristic", "provisional adj. temporary", "refutation n. refutation"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 12. 麦克卢汉：媒介即讯息
+  // 12. McLuhan: the medium is the message
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-12',
@@ -902,10 +900,10 @@ McLuhan also coined the term "global village" — the idea that electronic media
 
 McLuhan's ideas, once dismissed as academic provocation, have become essential vocabulary for understanding the digital age.`,
     passageAnnotations: [
-      { id: 'sp12-a1', type: 'claim', text: 'the medium through which information travels shapes human consciousness more profoundly than the information itself', note: '核心论点：媒介对人类意识的影响比信息本身更深' },
-      { id: 'sp12-a2', type: 'evidence', text: 'The printing press did not merely deliver books; it created the habit of linear, sequential thinking', note: '证据：印刷术创造了线性思维习惯' },
-      { id: 'sp12-a3', type: 'keyword', text: 'global village', note: '关键概念：地球村 — 麦克卢汉对互联网时代的预言' },
-      { id: 'sp12-a4', type: 'attitude', text: 'this village would not be a peaceful utopia but a place of intense tribal conflict', note: '作者态度：地球村不是乌托邦，而是部落冲突之地' },
+      { id: 'sp12-a1', type: 'claim', text: 'the medium through which information travels shapes human consciousness more profoundly than the information itself', note: "Core argument: the medium's influence on human consciousness is deeper than the information itself" },
+      { id: 'sp12-a2', type: 'evidence', text: 'The printing press did not merely deliver books; it created the habit of linear, sequential thinking', note: "Evidence: printing created linear habits of thought" },
+      { id: 'sp12-a3', type: 'keyword', text: 'global village', note: "Key concept: global village — McLuhan's prophecy of the internet age" },
+      { id: 'sp12-a4', type: 'attitude', text: 'this village would not be a peaceful utopia but a place of intense tribal conflict', note: "Author's attitude: the global village is not a utopia, but a place of tribal conflict" },
     ],
     items: [
       {
@@ -917,11 +915,11 @@ McLuhan's ideas, once dismissed as academic provocation, have become essential v
           { id: 'D', text: 'its high-definition image quality' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Television...restructured attention spans, political discourse, and the boundary between public and private life" — 媒介的影响在于重塑人类行为模式。',
+        analysis: "Paragraph 2 \"Television...restructured attention spans, political discourse, and the boundary between public and private life\" — the medium's influence lies in reshaping patterns of human behavior.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '这正是麦克卢汉反对的观点 — 内容不是最重要的' },
+          { optionId: 'A', type: "Concept substitution", why: "This is exactly the view McLuhan opposed — content is not the most important thing" },
         ],
-        vocabNotes: ['discourse n. 话语、论述', 'linear adj. 线性的'],
+        vocabNotes: ["discourse n. discourse, discussion", "linear adj. linear"],
         score: 2,
       },
       {
@@ -933,11 +931,11 @@ McLuhan's ideas, once dismissed as academic provocation, have become essential v
           { id: 'D', text: 'eliminate the need for physical travel' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "instant communication revives the emotional intensity of pre-literate oral culture" — 距离缩短但冲突加剧。',
+        analysis: "Final paragraph \"instant communication revives the emotional intensity of pre-literate oral culture\" — distance shrinks but conflict intensifies.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '麦克卢汉明确说地球村"不是和平乌托邦"' },
+          { optionId: 'A', type: "Opposite meaning", why: "McLuhan explicitly says the global village is \"not a peaceful utopia\"" },
         ],
-        vocabNotes: ['tribal adj. 部落的', 'utopia n. 乌托邦'],
+        vocabNotes: ["tribal adj. relating to a tribe", "utopia n. an ideal society"],
         score: 2,
       },
       {
@@ -949,20 +947,20 @@ McLuhan's ideas, once dismissed as academic provocation, have become essential v
           { id: 'D', text: 'the cost of the technology' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "Cool media...leave gaps that the audience must actively fill" — 冷媒介需要更多参与。',
+        analysis: "Paragraph 3 \"Cool media...leave gaps that the audience must actively fill\" — cool media require more participation.",
         distractors: [
-          { optionId: 'A', type: '望文生义', why: 'hot/cool 是隐喻，不是实际温度' },
+          { optionId: 'A', type: "Literal misreading", why: "hot/cool is a metaphor, not actual temperature" },
         ],
-        vocabNotes: ['participation n. 参与', 'paradoxically adv. 矛盾地'],
+        vocabNotes: ["participation n. involvement", "paradoxically adv. in a contradictory manner"],
         score: 2,
       },
     ],
-    tips: ['理解麦克卢汉的核心隐喻：媒介 ≠ 容器，而是塑造力量', '注意 hot/cool media 的定义与直觉相反'],
-    vocabNotes: ['medium n. 媒介', 'discourse n. 话语', 'tribal adj. 部落的', 'utopia n. 乌托邦', 'participation n. 参与'],
+    tips: ["Understand McLuhan's core metaphor: media ≠ container, but shaping force", "Note that the definition of hot/cool media is counterintuitive"],
+    vocabNotes: ["medium n. medium", "discourse n. discourse", "tribal adj. relating to a tribe", "utopia n. an ideal society", "participation n. involvement"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 13. 福柯：全景监狱
+  // 13. Foucault: the panopticon
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-13',
@@ -981,10 +979,10 @@ The implications for the digital age are immediate. We carry Panopticons in our 
 
 Foucault's insight was that the most effective power is the kind you don't notice — the kind you enforce upon yourself.`,
     passageAnnotations: [
-      { id: 'sp13-a1', type: 'claim', text: 'the Panopticon represented a fundamental shift in how power operates', note: '核心论点：全景监狱代表了权力运作方式的根本转变' },
-      { id: 'sp13-a2', type: 'evidence', text: 'The public execution gave way to the prison, where punishment became invisible, administrative, and continuous', note: '证据：从公开处刑到隐形监狱的转变' },
-      { id: 'sp13-a3', type: 'keyword', text: 'disciplinary power', note: '关键概念：规训权力 — 通过内化监视运作' },
-      { id: 'sp13-a4', type: 'attitude', text: 'the most effective power is the kind you don\'t notice — the kind you enforce upon yourself', note: '作者态度：最有效的权力是你对自己施加的权力' },
+      { id: 'sp13-a1', type: 'claim', text: 'the Panopticon represented a fundamental shift in how power operates', note: "Core argument: the panopticon represents a fundamental shift in how power operates" },
+      { id: 'sp13-a2', type: 'evidence', text: 'The public execution gave way to the prison, where punishment became invisible, administrative, and continuous', note: "Evidence: the shift from public execution to invisible prison" },
+      { id: 'sp13-a3', type: 'keyword', text: 'disciplinary power', note: "Key concept: disciplinary power — operates through internalized surveillance" },
+      { id: 'sp13-a4', type: 'attitude', text: 'the most effective power is the kind you don\'t notice — the kind you enforce upon yourself', note: "Author's attitude: the most effective power is the power you exert over yourself" },
     ],
     items: [
       {
@@ -996,11 +994,11 @@ Foucault's insight was that the most effective power is the kind you don't notic
           { id: 'D', text: 'prisoners were physically restrained' },
         ],
         correctIds: ['C'],
-        analysis: '第一段 "surveillance became self-enforcing — prisoners, uncertain of the watcher\'s gaze, would regulate their own behaviour" — 不确定性使监视自动生效。',
+        analysis: "Paragraph 1 \"surveillance became self-enforcing — prisoners, uncertain of the watcher's gaze, would regulate their own behaviour\" — uncertainty makes surveillance self-enforcing.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '设计重点是囚犯被中央塔监视，不是囚犯互相监视' },
+          { optionId: 'A', type: "Unsupported claim", why: "The design emphasis is that prisoners are watched by the central tower, not that prisoners watch each other" },
         ],
-        vocabNotes: ['enforce v. 执行', 'inmate n. 囚犯'],
+        vocabNotes: ["enforce v. to enforce", "inmate n. prisoner"],
         score: 2,
       },
       {
@@ -1012,11 +1010,11 @@ Foucault's insight was that the most effective power is the kind you don't notic
           { id: 'D', text: 'is only exercised in prisons' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Modern power...is disciplinary: it operates through internalised surveillance, routine examination, and the constant possibility of being watched" — 规训权力通过内化运作。',
+        analysis: "Paragraph 2 \"Modern power...is disciplinary: it operates through internalised surveillance, routine examination, and the constant possibility of being watched\" — disciplinary power operates through internalization.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '这是前现代权力的特征，不是现代权力的' },
+          { optionId: 'A', type: "Opposite meaning", why: "This is a feature of pre-modern power, not modern power" },
         ],
-        vocabNotes: ['disciplinary adj. 规训的', 'sovereign adj. 主权的', 'normalise v. 常态化'],
+        vocabNotes: ["disciplinary adj. disciplinary", "sovereign adj. sovereign", "normalise v. to normalize"],
         score: 2,
       },
       {
@@ -1028,20 +1026,20 @@ Foucault's insight was that the most effective power is the kind you don't notic
           { id: 'D', text: 'it prevents people from expressing opinions' },
         ],
         correctIds: ['C'],
-        analysis: '第四段 "we curate our behaviour for an imagined audience of followers, performing normalcy without anyone needing to watch from a tower" — 用户为假想观众自我审查。',
+        analysis: "Paragraph 4 \"we curate our behaviour for an imagined audience of followers, performing normalcy without anyone needing to watch from a tower\" — users self-censor for an imagined audience.",
         distractors: [
-          { optionId: 'A', type: '过度具体化', why: '社交媒体的全景监狱逻辑是心理的，不是物理摄像头' },
+          { optionId: 'A', type: "Over-specific claim", why: "The panopticon logic of social media is psychological, not physical cameras" },
         ],
-        vocabNotes: ['curate v. 策划', 'algorithmic adj. 算法的'],
+        vocabNotes: ["curate v. to curate", "algorithmic adj. algorithmic"],
         score: 2,
       },
     ],
-    tips: ['理解福柯的核心区分：前现代权力 = 展示，现代权力 = 内化监视', '注意全景监狱逻辑在数字时代的延伸'],
-    vocabNotes: ['panopticon n. 全景监狱', 'disciplinary adj. 规训的', 'surveillance n. 监视', 'normalise v. 常态化', 'internalise v. 内化'],
+    tips: ["Understand Foucault's core distinction: pre-modern power = display, modern power = internalized surveillance", "Note the extension of panopticon logic into the digital age"],
+    vocabNotes: ["panopticon n. panopticon", "disciplinary adj. disciplinary", "surveillance n. surveillance", "normalise v. to normalize", "internalise v. to internalize"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 14. 海德格尔：技术之问
+  // 14. Heidegger: the question concerning technology
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-14',
@@ -1060,10 +1058,10 @@ Heidegger's most provocative claim is that technology is not merely a human acti
 
 Heidegger's essay remains a touchstone for philosophers of technology, who continue to debate whether his insights offer genuine alternatives or merely poetic resistance to inevitable progress.`,
     passageAnnotations: [
-      { id: 'sp14-a1', type: 'claim', text: 'Modern technology enframes the world as standing reserve — resources to be ordered, optimised, and exploited', note: '核心论点：现代技术将世界框定为待命资源' },
-      { id: 'sp14-a2', type: 'evidence', text: 'A windmill works with the wind; a hydroelectric dam transforms the Rhine into a standing reserve', note: '对比证据：风车 vs 水电大坝' },
-      { id: 'sp14-a3', type: 'keyword', text: 'enframing', note: '关键概念：座架/框定 — 海德格尔对现代技术本质的描述' },
-      { id: 'sp14-a4', type: 'attitude', text: 'the essence of technology is nothing technological', note: '作者态度：技术的本质不是技术性的' },
+      { id: 'sp14-a1', type: 'claim', text: 'Modern technology enframes the world as standing reserve — resources to be ordered, optimised, and exploited', note: "Core argument: modern technology frames the world as standing reserve" },
+      { id: 'sp14-a2', type: 'evidence', text: 'A windmill works with the wind; a hydroelectric dam transforms the Rhine into a standing reserve', note: "Comparative evidence: windmill vs hydroelectric dam" },
+      { id: 'sp14-a3', type: 'keyword', text: 'enframing', note: "Key concept: enframing — Heidegger's description of the essence of modern technology" },
+      { id: 'sp14-a4', type: 'attitude', text: 'the essence of technology is nothing technological', note: "Author's attitude: the essence of technology is not technological" },
     ],
     items: [
       {
@@ -1075,11 +1073,11 @@ Heidegger's essay remains a touchstone for philosophers of technology, who conti
           { id: 'D', text: 'the environmental damage caused by dams' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "the river ceases to be a river and becomes a power source...is not merely technical but ontological" — 技术改变了事物的存在状态。',
+        analysis: "Paragraph 2 \"the river ceases to be a river and becomes a power source...is not merely technical but ontological\" — technology changes the mode of being of things.",
         distractors: [
-          { optionId: 'D', type: '过度具体化', why: '海德格尔关心的不是环境问题，而是存在论问题' },
+          { optionId: 'D', type: "Over-specific claim", why: "Heidegger is concerned not with environmental issues but with ontological issues" },
         ],
-        vocabNotes: ['ontological adj. 存在论的', 'harness v. 利用'],
+        vocabNotes: ["ontological adj. ontological", "harness v. to harness"],
         score: 2,
       },
       {
@@ -1091,11 +1089,11 @@ Heidegger's essay remains a touchstone for philosophers of technology, who conti
           { id: 'D', text: 'the legal framework governing technology' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "It is a way of seeing that reduces everything to calculable, optimisable resources" — 座架是一种将一切化约为可计算资源的看待方式。',
+        analysis: "Paragraph 4 \"It is a way of seeing that reduces everything to calculable, optimisable resources\" — enframing is a way of seeing that reduces everything to calculable resources.",
         distractors: [
-          { optionId: 'A', type: '望文生义', why: 'enframing 不是物理框架，是存在论层面的框定' },
+          { optionId: 'A', type: "Literal misreading", why: "enframing is not a physical frame, but an ontological framing" },
         ],
-        vocabNotes: ['standing reserve n. 待命资源', 'releasement n. 泰然任之'],
+        vocabNotes: ["standing reserve n. standing reserve", "releasement n. releasement"],
         score: 2,
       },
       {
@@ -1107,20 +1105,20 @@ Heidegger's essay remains a touchstone for philosophers of technology, who conti
           { id: 'D', text: 'to return to pre-industrial society' },
         ],
         correctIds: ['C'],
-        analysis: '第四段 "The antidote...is not to reject technology but to cultivate a different relationship with Being — through art, through wonder" — 不是拒绝技术，而是改变关系。',
+        analysis: "Paragraph 4 \"The antidote...is not to reject technology but to cultivate a different relationship with Being — through art, through wonder\" — not to reject technology, but to change the relationship.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '海德格尔明确说"不是拒绝技术"' },
+          { optionId: 'A', type: "Opposite meaning", why: "Heidegger explicitly says \"not to reject technology\"" },
         ],
-        vocabNotes: ['antidote n. 解药', 'touchstone n. 试金石'],
+        vocabNotes: ["antidote n. antidote", "touchstone n. touchstone"],
         score: 2,
       },
     ],
-    tips: ['理解海德格尔的核心区分：古代技术 = 合作，现代技术 = 框定', '注意 "enframing" 不是物理框架，而是存在论层面的框定'],
-    vocabNotes: ['ontological adj. 存在论的', 'enframing n. 座架/框定', 'standing reserve n. 待命资源', 'releasement n. 泰然任之', 'touchstone n. 试金石'],
+    tips: ["Understand Heidegger's core distinction: ancient technology = cooperation, modern technology = enframing", "Note that \"enframing\" is not a physical frame, but an ontological framing"],
+    vocabNotes: ["ontological adj. ontological", "enframing n. enframing", "standing reserve n. standing reserve", "releasement n. releasement", "touchstone n. touchstone"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 15. 汉娜·阿伦特：平庸之恶
+  // 15. Hannah Arendt: the banality of evil
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-15',
@@ -1139,10 +1137,10 @@ Arendt drew on her earlier work on totalitarianism, which argued that modern bur
 
 Arendt's concept remains urgently relevant. In an age of algorithmic decision-making, corporate bureaucracy, and political polarisation, her warning is clear: evil does not always look evil. Sometimes it looks like efficiency, like compliance, like just doing what you're told.`,
     passageAnnotations: [
-      { id: 'sp15-a1', type: 'claim', text: 'the most terrible evil does not require terrible people. It requires ordinary people who stop thinking', note: '核心论点：最大的恶不需要可怕的人，只需要停止思考的普通人' },
-      { id: 'sp15-a2', type: 'evidence', text: 'Eichmann was not a sadist or a fanatic. He was a careerist — a man who followed orders', note: '证据：艾希曼不是变态，只是官僚' },
-      { id: 'sp15-a3', type: 'keyword', text: 'banality of evil', note: '关键概念：平庸之恶 — 阿伦特的核心贡献' },
-      { id: 'sp15-a4', type: 'attitude', text: 'evil does not always look evil. Sometimes it looks like efficiency, like compliance', note: '作者态度：恶不一定看起来像恶，有时看起来像效率和服从' },
+      { id: 'sp15-a1', type: 'claim', text: 'the most terrible evil does not require terrible people. It requires ordinary people who stop thinking', note: "Core argument: the greatest evil does not require terrible people, only ordinary people who stop thinking" },
+      { id: 'sp15-a2', type: 'evidence', text: 'Eichmann was not a sadist or a fanatic. He was a careerist — a man who followed orders', note: "Evidence: Eichmann was not a pervert, just a bureaucrat" },
+      { id: 'sp15-a3', type: 'keyword', text: 'banality of evil', note: "Key concept: the banality of evil — Arendt's core contribution" },
+      { id: 'sp15-a4', type: 'attitude', text: 'evil does not always look evil. Sometimes it looks like efficiency, like compliance', note: "Author's attitude: evil does not necessarily look like evil; sometimes it looks like efficiency and obedience" },
     ],
     items: [
       {
@@ -1154,11 +1152,11 @@ Arendt's concept remains urgently relevant. In an age of algorithmic decision-ma
           { id: 'D', text: 'Eichmann was more intelligent than expected' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Eichmann was not a sadist or a fanatic. He was a careerist...terribly and terrifyingly normal" — 令阿伦特震惊的是他的普通。',
+        analysis: "Paragraph 2 \"Eichmann was not a sadist or a fanatic. He was a careerist...terribly and terrifyingly normal\" — what shocked Arendt was his ordinariness.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '阿伦特震惊的不是缺乏悔意，而是缺乏恶意' },
+          { optionId: 'A', type: "Unsupported claim", why: "What shocked Arendt was not the lack of remorse, but the lack of malice" },
         ],
-        vocabNotes: ['banality n. 平庸', 'careerist n. 野心家、追名逐利者'],
+        vocabNotes: ["banality n. banality", "careerist n. careerist"],
         score: 2,
       },
       {
@@ -1170,11 +1168,11 @@ Arendt's concept remains urgently relevant. In an age of algorithmic decision-ma
           { id: 'D', text: 'the Holocaust was not as evil as people think' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "the most terrible evil does not require terrible people. It requires ordinary people who stop thinking" — 平庸之恶的核心含义。',
+        analysis: "Paragraph 3 \"the most terrible evil does not require terrible people. It requires ordinary people who stop thinking\" — the core meaning of the banality of evil.",
         distractors: [
-          { optionId: 'D', type: '过度推断', why: '阿伦特不是在淡化大屠杀，而是在分析其发生条件' },
+          { optionId: 'D', type: "Over-inference", why: "Arendt is not downplaying the Holocaust, but analyzing the conditions under which it occurred" },
         ],
-        vocabNotes: ['cliché n. 陈词滥调', 'bureaucratic adj. 官僚的'],
+        vocabNotes: ["cliché n. cliché", "bureaucratic adj. bureaucratic"],
         score: 2,
       },
       {
@@ -1186,20 +1184,20 @@ Arendt's concept remains urgently relevant. In an age of algorithmic decision-ma
           { id: 'D', text: 'was invented by the Nazi regime' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "modern bureaucracy creates conditions in which responsibility is diffused across an entire system" — 官僚体制分散了责任。',
+        analysis: "Paragraph 4 \"modern bureaucracy creates conditions in which responsibility is diffused across an entire system\" — bureaucracy diffuses responsibility.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '阿伦特的观点恰恰相反 — 明确的命令链并不能防止恶' },
+          { optionId: 'A', type: "Opposite meaning", why: "Arendt's view is the opposite — a clear chain of command does not prevent evil" },
         ],
-        vocabNotes: ['diffuse v. 分散', 'totalitarianism n. 极权主义'],
+        vocabNotes: ["diffuse v. to diffuse", "totalitarianism n. totalitarianism"],
         score: 2,
       },
     ],
-    tips: ['理解阿伦特的核心区分：恶不需要恶意，只需要不思考', '注意 "平庸之恶" 不是在为艾希曼开脱，而是在分析恶的发生条件'],
-    vocabNotes: ['banality n. 平庸', 'careerist n. 野心家', 'cliché n. 陈词滥调', 'diffuse v. 分散', 'totalitarianism n. 极权主义'],
+    tips: ["Understand Arendt's core distinction: evil does not require malice, only thoughtlessness", "Note that \"the banality of evil\" is not excusing Eichmann, but analyzing the conditions under which evil occurs"],
+    vocabNotes: ["banality n. banality", "careerist n. careerist", "cliché n. cliché", "diffuse v. to diffuse", "totalitarianism n. totalitarianism"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 16. 瓦尔特·本雅明：机械复制时代的艺术
+  // 16. Walter Benjamin: the work of art in the age of mechanical reproduction
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-16',
@@ -1218,10 +1216,10 @@ Benjamin saw this transformation as politically ambiguous. On one hand, the dest
 
 On the other hand, mechanical reproduction made art available for political manipulation. Fascism, Benjamin noted, aestheticised politics — turning war and violence into spectacle. Communism, he countered, should politicise art — turning aesthetic experience into a tool for social transformation. Benjamin's essay, written as fascism swept Europe, remains a warning about the political uses of mass culture.`,
     passageAnnotations: [
-      { id: 'sp16-a1', type: 'claim', text: 'Mechanical reproduction destroys the aura...What is lost is not the image itself but the ritual and authority that surrounded the original', note: '核心论点：机械复制摧毁的不是图像，而是原作的仪式和权威' },
-      { id: 'sp16-a2', type: 'evidence', text: 'A photograph of the Mona Lisa can be reproduced millions of times...The image becomes ubiquitous', note: '证据：蒙娜丽莎照片的无限复制' },
-      { id: 'sp16-a3', type: 'keyword', text: 'aura', note: '关键概念：灵韵 — 本雅明对原作独特性的描述' },
-      { id: 'sp16-a4', type: 'attitude', text: 'Fascism aestheticised politics...Communism should politicise art', note: '作者态度：法西斯主义将政治审美化，共产主义应将艺术政治化' },
+      { id: 'sp16-a1', type: 'claim', text: 'Mechanical reproduction destroys the aura...What is lost is not the image itself but the ritual and authority that surrounded the original', note: "Core argument: mechanical reproduction destroys not the image, but the ritual and authority of the original" },
+      { id: 'sp16-a2', type: 'evidence', text: 'A photograph of the Mona Lisa can be reproduced millions of times...The image becomes ubiquitous', note: "Evidence: the infinite reproduction of photographs of the Mona Lisa" },
+      { id: 'sp16-a3', type: 'keyword', text: 'aura', note: "Key concept: aura — Benjamin's description of the uniqueness of the original" },
+      { id: 'sp16-a4', type: 'attitude', text: 'Fascism aestheticised politics...Communism should politicise art', note: "Author's attitude: fascism aestheticizes politics; communism should politicize art" },
     ],
     items: [
       {
@@ -1233,11 +1231,11 @@ On the other hand, mechanical reproduction made art available for political mani
           { id: 'D', text: 'the emotional response of the viewer' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "a sense of distance, authority, and presence that surrounded the original like an invisible halo" — 灵韵是原作的权威感和距离感。',
+        analysis: "Paragraph 2 \"a sense of distance, authority, and presence that surrounded the original like an invisible halo\" — aura is the original's sense of authority and distance.",
         distractors: [
-          { optionId: 'A', type: '望文生义', why: 'aura 不是物理光线，是精神层面的' },
+          { optionId: 'A', type: "Literal misreading", why: "aura is not physical light, but a spiritual dimension" },
         ],
-        vocabNotes: ['aura n. 灵韵', 'ubiquitous adj. 无处不在的'],
+        vocabNotes: ["aura n. aura", "ubiquitous adj. ubiquitous"],
         score: 2,
       },
       {
@@ -1249,11 +1247,11 @@ On the other hand, mechanical reproduction made art available for political mani
           { id: 'D', text: 'it was only available to the wealthy' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "the destruction of aura was democratising" + 末段 "mechanical reproduction made art available for political manipulation" — 既有民主化也有操纵。',
+        analysis: "Paragraph 4 \"the destruction of aura was democratising\" + final paragraph \"mechanical reproduction made art available for political manipulation\" — both democratization and manipulation.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '复制使艺术更便宜、更普及，不是更昂贵' },
+          { optionId: 'A', type: "Opposite meaning", why: "Reproduction makes art cheaper and more widespread, not more expensive" },
         ],
-        vocabNotes: ['aestheticise v. 审美化', 'distraction n. 分散注意力'],
+        vocabNotes: ["aestheticise v. to aestheticize", "distraction n. distraction"],
         score: 2,
       },
       {
@@ -1265,20 +1263,20 @@ On the other hand, mechanical reproduction made art available for political mani
           { id: 'D', text: 'the need to preserve all original artworks' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "Fascism...aestheticised politics — turning war and violence into spectacle" + "written as fascism swept Europe" — 对法西斯利用大众文化的警告。',
+        analysis: "Final paragraph \"Fascism...aestheticised politics — turning war and violence into spectacle\" + \"written as fascism swept Europe\" — a warning about fascism's use of mass culture.",
         distractors: [
-          { optionId: 'D', type: '过度推断', why: '本雅明不是在呼吁保护原作，而是在分析复制的政治影响' },
+          { optionId: 'D', type: "Over-inference", why: "Benjamin is not calling for the protection of the original, but analyzing the political impact of reproduction" },
         ],
-        vocabNotes: ['manipulation n. 操纵', 'spectacle n. 奇观'],
+        vocabNotes: ["manipulation n. manipulation", "spectacle n. spectacle"],
         score: 2,
       },
     ],
-    tips: ['理解本雅明的核心区分：灵韵（原作）vs 复制（去仪式化）', '注意 "政治模糊性" — 同一技术既可民主化也可被操纵'],
-    vocabNotes: ['aura n. 灵韵', 'ubiquitous adj. 无处不在的', 'aestheticise v. 审美化', 'spectacle n. 奇观', 'manipulation n. 操纵'],
+    tips: ["Understand Benjamin's core distinction: aura (original) vs reproduction (de-ritualization)", "Note \"political ambiguity\" — the same technology can both democratize and be manipulated"],
+    vocabNotes: ["aura n. aura", "ubiquitous adj. ubiquitous", "aestheticise v. to aestheticize", "spectacle n. spectacle", "manipulation n. manipulation"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 17. 庄周梦蝶：心灵哲学
+  // 17. Zhuangzi dreams of a butterfly: philosophy of mind
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-17',
@@ -1297,10 +1295,10 @@ Western philosophers have struggled with the same puzzle. Daniel Dennett has arg
 
 Zhuangzi's genius was to present these insights not as abstract arguments but as a story — a story that, like a dream, slips through your fingers the moment you try to grasp it.`,
     passageAnnotations: [
-      { id: 'sp17-a1', type: 'claim', text: 'He didn\'t know if he was Zhuangzi who had dreamt he was a butterfly, or a butterfly dreaming he was Zhuangzi', note: '核心论点：自我与他者的边界不稳定' },
-      { id: 'sp17-a2', type: 'evidence', text: 'Descartes would ask a similar question in 1641...but Zhuangzi goes further', note: '对比证据：笛卡尔与庄子的相似与超越' },
-      { id: 'sp17-a3', type: 'keyword', text: 'personal identity', note: '关键概念：个人同一性 — 自我的本质是什么' },
-      { id: 'sp17-a4', type: 'attitude', text: 'the self is not a thing but a process — not a butterfly or a philosopher, but the dreaming itself', note: '作者态度：自我不是实体，而是过程' },
+      { id: 'sp17-a1', type: 'claim', text: 'He didn\'t know if he was Zhuangzi who had dreamt he was a butterfly, or a butterfly dreaming he was Zhuangzi', note: "Core argument: the boundary between self and other is unstable" },
+      { id: 'sp17-a2', type: 'evidence', text: 'Descartes would ask a similar question in 1641...but Zhuangzi goes further', note: "Comparative evidence: the similarities and transcendence of Descartes and Zhuangzi" },
+      { id: 'sp17-a3', type: 'keyword', text: 'personal identity', note: "Key concept: personal identity — what is the essence of the self" },
+      { id: 'sp17-a4', type: 'attitude', text: 'the self is not a thing but a process — not a butterfly or a philosopher, but the dreaming itself', note: "Author's attitude: the self is not a substance, but a process" },
     ],
     items: [
       {
@@ -1312,11 +1310,11 @@ Zhuangzi's genius was to present these insights not as abstract arguments but as
           { id: 'D', text: 'exactly the same time' },
         ],
         correctIds: ['C'],
-        analysis: '第二段 "anticipates questions that Western philosophy would not seriously address for two millennia" — 庄子比西方早两千年。',
+        analysis: "Paragraph 2 \"anticipates questions that Western philosophy would not seriously address for two millennia\" — Zhuangzi was two thousand years ahead of the West.",
         distractors: [
-          { optionId: 'B', type: '程度错误', why: '不是几百年，是两千年' },
+          { optionId: 'B', type: "Degree error", why: "Not a few hundred years, but two thousand years" },
         ],
-        vocabNotes: ['anticipate v. 预见', 'millennia n. 千年（复数）'],
+        vocabNotes: ["anticipate v. to anticipate", "millennia n. millennia (plural)"],
         score: 2,
       },
       {
@@ -1328,11 +1326,11 @@ Zhuangzi's genius was to present these insights not as abstract arguments but as
           { id: 'D', text: 'Zhuangzi lived in a different country' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "Descartes concluded that he could be certain of his own existence; Zhuangzi offers no such certainty" — 庄子甚至没有得出"我思故我在"的确定性。',
+        analysis: "Paragraph 2 \"Descartes concluded that he could be certain of his own existence; Zhuangzi offers no such certainty\" — Zhuangzi did not even arrive at the certainty of \"I think, therefore I am.\"",
         distractors: [
-          { optionId: 'A', type: '无关选项', why: '写作技巧不是哲学深度的衡量标准' },
+          { optionId: 'A', type: "Irrelevant option", why: "Writing technique is not a measure of philosophical depth" },
         ],
-        vocabNotes: ['cogito ergo sum 我思故我在（拉丁语）'],
+        vocabNotes: ["cogito ergo sum I think, therefore I am (Latin)"],
         score: 2,
       },
       {
@@ -1344,20 +1342,20 @@ Zhuangzi's genius was to present these insights not as abstract arguments but as
           { id: 'D', text: 'being the first philosopher to discuss dreams' },
         ],
         correctIds: ['B'],
-        analysis: '末段 "Zhuangzi\'s genius was to present these insights not as abstract arguments but as a story" — 用故事而非抽象论证表达哲学洞见。',
+        analysis: "Final paragraph \"Zhuangzi's genius was to present these insights not as abstract arguments but as a story\" — expressing philosophical insight through story rather than abstract argument.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '庄子恰恰不是用逻辑论证，而是用寓言' },
+          { optionId: 'A', type: "Opposite meaning", why: "Zhuangzi precisely does not use logical argument, but parable" },
         ],
-        vocabNotes: ['anatta n. 无我（佛教术语）', 'transparent adj. 透明的'],
+        vocabNotes: ["anatta n. anatta (Buddhist term)", "transparent adj. transparent"],
         score: 2,
       },
     ],
-    tips: ['理解庄子与笛卡尔的核心差异：笛卡尔找到了确定性，庄子没有', '注意 "自我不是实体，而是过程" 这一现代心灵哲学的核心观点'],
-    vocabNotes: ['anticipate v. 预见', 'millennia n. 千年', 'anatta n. 无我', 'cogito ergo sum 我思故我在', 'transparent adj. 透明的'],
+    tips: ["Understand the core difference between Zhuangzi and Descartes: Descartes found certainty, Zhuangzi did not", "Note the core view of modern philosophy of mind that \"the self is not a substance, but a process\""],
+    vocabNotes: ["anticipate v. to anticipate", "millennia n. millennia", "anatta n. anatta", "cogito ergo sum I think, therefore I am", "transparent adj. transparent"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 18. 忒修斯之船：什么使你成为你？
+  // 18. The Ship of Theseus: what makes you you?
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-18',
@@ -1376,10 +1374,10 @@ The philosopher John Locke proposed that personal identity is rooted in consciou
 
 Derek Parfit, perhaps the most important philosopher of personal identity in the twentieth century, argued that the question itself is confused. There is no deep fact about whether you are "the same person" — there is only psychological continuity and connectedness, which come in degrees. Identity, Parfit concluded, is not what matters. What matters is survival — the continuation of your experiences, values, and relationships, even if the "you" that carries them is not, in any metaphysically robust sense, the same entity.`,
     passageAnnotations: [
-      { id: 'sp18-a1', type: 'claim', text: 'Identity, Parfit concluded, is not what matters. What matters is survival — the continuation of your experiences, values, and relationships', note: '核心论点：同一性不重要，重要的是延续性' },
-      { id: 'sp18-a2', type: 'evidence', text: 'nearly every cell in your body has been replaced', note: '物理证据：人体细胞几乎全部替换' },
-      { id: 'sp18-a3', type: 'keyword', text: 'Ship of Theseus', note: '关键概念：忒修斯之船 — 最古老的思想实验之一' },
-      { id: 'sp18-a4', type: 'attitude', text: 'the question itself is confused. There is no deep fact about whether you are the same person', note: '作者态度：问题本身是混乱的，没有关于同一性的深层事实' },
+      { id: 'sp18-a1', type: 'claim', text: 'Identity, Parfit concluded, is not what matters. What matters is survival — the continuation of your experiences, values, and relationships', note: "Core argument: identity does not matter; what matters is continuity" },
+      { id: 'sp18-a2', type: 'evidence', text: 'nearly every cell in your body has been replaced', note: "Physical evidence: almost all human body cells are replaced" },
+      { id: 'sp18-a3', type: 'keyword', text: 'Ship of Theseus', note: "Key concept: the Ship of Theseus — one of the oldest thought experiments" },
+      { id: 'sp18-a4', type: 'attitude', text: 'the question itself is confused. There is no deep fact about whether you are the same person', note: "Author's attitude: the question itself is confused; there is no deep fact about identity" },
     ],
     items: [
       {
@@ -1391,11 +1389,11 @@ Derek Parfit, perhaps the most important philosopher of personal identity in the
           { id: 'D', text: 'how to build ships from old materials' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "it exposes a fundamental problem with our concept of identity" — 忒修斯之船揭示了同一性如何在物质变化中持续的问题。',
+        analysis: "Paragraph 2 \"it exposes a fundamental problem with our concept of identity\" — the Ship of Theseus reveals the problem of how identity persists through material change.",
         distractors: [
-          { optionId: 'A', type: '望文生义', why: '不是关于文物保护，是关于同一性哲学' },
+          { optionId: 'A', type: "Literal misreading", why: "It is not about cultural relic preservation, it is about the philosophy of identity." },
         ],
-        vocabNotes: ['plank n. 木板', 'persist v. 持续存在'],
+        vocabNotes: ["plank n. a plank", "persist v. to continue to exist"],
         score: 2,
       },
       {
@@ -1407,11 +1405,11 @@ Derek Parfit, perhaps the most important philosopher of personal identity in the
           { id: 'D', text: 'memory cannot be scientifically measured' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "if you develop amnesia and forget your childhood entirely, do you cease to be the same person?" — 遗忘似乎会摧毁同一性。',
+        analysis: "Paragraph 4 \"if you develop amnesia and forget your childhood entirely, do you cease to be the same person?\" — forgetting seems to destroy identity.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '文章提到虚假记忆说明记忆并不总是准确的' },
+          { optionId: 'A', type: "Opposite meaning", why: "The article mentions false memories to show that memory is not always accurate." },
         ],
-        vocabNotes: ['amnesia n. 失忆症', 'psychological adj. 心理的'],
+        vocabNotes: ["amnesia n. amnesia", "psychological adj. psychological"],
         score: 2,
       },
       {
@@ -1423,20 +1421,20 @@ Derek Parfit, perhaps the most important philosopher of personal identity in the
           { id: 'D', text: 'being remembered by others' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "There is only psychological continuity and connectedness, which come in degrees" — 心理连续性和连接性，不是严格同一性。',
+        analysis: "Final paragraph \"There is only psychological continuity and connectedness, which come in degrees\" — psychological continuity and connectedness, not strict identity.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '帕菲特明确否认物理身体是同一性的基础' },
+          { optionId: 'A', type: "Concept substitution", why: "Parfit explicitly denies that the physical body is the basis of identity." },
         ],
-        vocabNotes: ['metaphysically adv. 形而上学地', 'continuity n. 连续性'],
+        vocabNotes: ["metaphysically adv. metaphysically", "continuity n. continuity"],
         score: 2,
       },
     ],
-    tips: ['理解帕菲特的核心区分：同一性（identity）vs 延续性（survival）', '注意思想实验的两层困境：替换的船 vs 重组的船'],
-    vocabNotes: ['plank n. 木板', 'persist v. 持续存在', 'amnesia n. 失忆症', 'continuity n. 连续性', 'metaphysically adv. 形而上学地'],
+    tips: ["Understand Parfit's core distinction: identity vs survival.", "Note the two-layer dilemma of the thought experiment: the replaced ship vs the reassembled ship."],
+    vocabNotes: ["plank n. a plank", "persist v. to continue to exist", "amnesia n. amnesia", "continuity n. continuity", "metaphysically adv. metaphysically"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 19. 贝叶斯：不确定性推理
+  // 19. Bayes: reasoning under uncertainty
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-19',
@@ -1457,10 +1455,10 @@ Bayesian reasoning also explains why conspiracy theories are so persistent. When
 
 Bayes' theorem was largely ignored for two centuries. Today, it powers spam filters, search engines, medical diagnostics, and machine learning — a formula ahead of its time.`,
     passageAnnotations: [
-      { id: 'sp19-a1', type: 'claim', text: 'Bayesian reasoning is not purely objective; it starts with a subjective estimate and revises it', note: '核心论点：贝叶斯推理从主观先验开始，然后修正' },
-      { id: 'sp19-a2', type: 'evidence', text: 'If the disease affects only one in ten thousand people, Bayes\' theorem shows the actual probability is less than 1%', note: '数学证据：罕见病检测的真实阳性率远低于直觉' },
-      { id: 'sp19-a3', type: 'keyword', text: 'prior', note: '关键概念：先验概率 — 看到证据之前的主观估计' },
-      { id: 'sp19-a4', type: 'attitude', text: 'the stronger your prior, the less evidence matters', note: '作者态度：先验越强，证据越不重要（既是优势也是陷阱）' },
+      { id: 'sp19-a1', type: 'claim', text: 'Bayesian reasoning is not purely objective; it starts with a subjective estimate and revises it', note: "Core argument: Bayesian reasoning starts from subjective priors and then updates." },
+      { id: 'sp19-a2', type: 'evidence', text: 'If the disease affects only one in ten thousand people, Bayes\' theorem shows the actual probability is less than 1%', note: "Mathematical evidence: the true positive rate of a rare disease test is far lower than intuition suggests." },
+      { id: 'sp19-a3', type: 'keyword', text: 'prior', note: "Key concept: prior probability — a subjective estimate before seeing evidence." },
+      { id: 'sp19-a4', type: 'attitude', text: 'the stronger your prior, the less evidence matters', note: "Author's attitude: the stronger the prior, the less important the evidence (both an advantage and a trap)." },
     ],
     items: [
       {
@@ -1472,11 +1470,11 @@ Bayes' theorem was largely ignored for two centuries. Today, it powers spam filt
           { id: 'D', text: 'all medical tests are unreliable' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "how should we update our beliefs when we encounter new evidence" + 公式 P(H|E) = P(E|H) × P(H) / P(E) — 核心是根据先验和新证据更新信念。',
+        analysis: "Paragraph 2 \"how should we update our beliefs when we encounter new evidence\" + formula P(H|E) = P(E|H) × P(H) / P(E) — the core is updating beliefs based on priors and new evidence.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '贝叶斯推理恰恰承认概率是主观的（先验）' },
+          { optionId: 'A', type: "Opposite meaning", why: "Bayesian reasoning precisely acknowledges that probability is subjective (the prior)." },
         ],
-        vocabNotes: ['prior n. 先验', 'posterior n. 后验'],
+        vocabNotes: ["prior n. prior", "posterior n. posterior"],
         score: 2,
       },
       {
@@ -1488,11 +1486,11 @@ Bayes' theorem was largely ignored for two centuries. Today, it powers spam filt
           { id: 'D', text: 'because the patient is lying about symptoms' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "if the disease affects only one in ten thousand people" — 基础率（先验）极低导致真实阳性率远低于测试准确率。',
+        analysis: "Paragraph 4 \"if the disease affects only one in ten thousand people\" — an extremely low base rate (prior) causes the true positive rate to be far lower than the test accuracy.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '测试准确率确实是 99%，问题在于基础率' },
+          { optionId: 'A', type: "Unsupported claim", why: "The test accuracy is indeed 99%; the problem lies in the base rate." },
         ],
-        vocabNotes: ['base rate n. 基础率', 'diagnostics n. 诊断学'],
+        vocabNotes: ["base rate n. base rate", "diagnostics n. diagnostics"],
         score: 2,
       },
       {
@@ -1504,20 +1502,20 @@ Bayes' theorem was largely ignored for two centuries. Today, it powers spam filt
           { id: 'D', text: 'Bayesian reasoning does not apply to social phenomena' },
         ],
         correctIds: ['B'],
-        analysis: '第五段 "When someone is deeply committed to a hypothesis (extremely high prior), no amount of evidence can shift their belief significantly" — 极强先验使证据几乎无关。',
+        analysis: "Paragraph 5 \"When someone is deeply committed to a hypothesis (extremely high prior), no amount of evidence can shift their belief significantly\" — an extremely strong prior makes evidence almost irrelevant.",
         distractors: [
-          { optionId: 'A', type: '无关选项', why: '文章不是在批评阴谋论者的智力' },
+          { optionId: 'A', type: "Irrelevant option", why: "The article is not criticizing the intelligence of conspiracy theorists." },
         ],
-        vocabNotes: ['reinterpret v. 重新解释', 'counter-evidence n. 反证'],
+        vocabNotes: ["reinterpret v. to reinterpret", "counter-evidence n. counter-evidence"],
         score: 2,
       },
     ],
-    tips: ['理解贝叶斯公式的核心：P(H|E) = P(E|H) × P(H) / P(E)', '注意先验的双重性：既是理性的起点，也可能是偏见的来源'],
-    vocabNotes: ['prior n. 先验', 'posterior n. 后验', 'base rate n. 基础率', 'diagnostics n. 诊断学', 'reinterpret v. 重新解释'],
+    tips: ["Understand the core of the Bayesian formula: P(H|E) = P(E|H) × P(H) / P(E).", "Note the dual nature of the prior: it is both the starting point of rationality and a possible source of bias."],
+    vocabNotes: ["prior n. prior", "posterior n. posterior", "base rate n. base rate", "diagnostics n. diagnostics", "reinterpret v. to reinterpret"],
   },
 
   // ════════════════════════════════════════════════════════
-  // 20. 塔勒布：黑天鹅
+  // 20. Taleb: the black swan
   // ════════════════════════════════════════════════════════
   {
     id: 'sp-20',
@@ -1538,10 +1536,10 @@ Taleb's practical advice is to build systems that are "antifragile" — not mere
 
 "The Black Swan" is ultimately a book about epistemic humility — the recognition that we know less than we think, and that the most important events are precisely those we cannot predict.`,
     passageAnnotations: [
-      { id: 'sp20-a1', type: 'claim', text: 'history is dominated by rare, unpredictable events that we rationalise only after they occur', note: '核心论点：历史由罕见的、不可预测的事件主导' },
-      { id: 'sp20-a2', type: 'evidence', text: 'The fall of the Berlin Wall, the rise of the internet, the 2008 financial crisis — all were black swans', note: '证据：柏林墙倒塌、互联网兴起、2008 金融危机' },
-      { id: 'sp20-a3', type: 'keyword', text: 'black swan', note: '关键概念：黑天鹅 — 极端、不可预测、事后被合理化' },
-      { id: 'sp20-a4', type: 'attitude', text: 'the most important events are precisely those we cannot predict', note: '作者态度：最重要的事件恰恰是我们无法预测的' },
+      { id: 'sp20-a1', type: 'claim', text: 'history is dominated by rare, unpredictable events that we rationalise only after they occur', note: "Core argument: history is dominated by rare, unpredictable events." },
+      { id: 'sp20-a2', type: 'evidence', text: 'The fall of the Berlin Wall, the rise of the internet, the 2008 financial crisis — all were black swans', note: "Evidence: the fall of the Berlin Wall, the rise of the Internet, the 2008 financial crisis." },
+      { id: 'sp20-a3', type: 'keyword', text: 'black swan', note: "Key concept: black swan — extreme, unpredictable, and rationalized after the fact." },
+      { id: 'sp20-a4', type: 'attitude', text: 'the most important events are precisely those we cannot predict', note: "Author's attitude: the most important events are precisely the ones we cannot predict." },
     ],
     items: [
       {
@@ -1553,11 +1551,11 @@ Taleb's practical advice is to build systems that are "antifragile" — not mere
           { id: 'D', text: 'only occurs in financial markets' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "events that were extreme outliers, carried massive impact, and were retrospectively explained as inevitable" — 黑天鹅三特征。',
+        analysis: "Paragraph 2 \"events that were extreme outliers, carried massive impact, and were retrospectively explained as inevitable\" — the three characteristics of a black swan.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '黑天鹅恰恰是不可预测的' },
+          { optionId: 'A', type: "Opposite meaning", why: "Black swans are precisely unpredictable." },
         ],
-        vocabNotes: ['outlier n. 离群值', 'retrospectively adv. 回顾性地'],
+        vocabNotes: ["outlier n. outlier", "retrospectively adv. retrospectively"],
         score: 2,
       },
       {
@@ -1569,11 +1567,11 @@ Taleb's practical advice is to build systems that are "antifragile" — not mere
           { id: 'D', text: 'extremistan is a real country' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "Height, weight, and blood pressure all follow bell curves. But wealth, book sales...belong to extremistan" — 两个世界遵循不同分布。',
+        analysis: "Paragraph 4 \"Height, weight, and blood pressure all follow bell curves. But wealth, book sales...belong to extremistan\" — the two worlds follow different distributions.",
         distractors: [
-          { optionId: 'A', type: '相反判断', why: '塔勒布明确说钟形曲线在极端斯坦"不仅不准确而且危险"' },
+          { optionId: 'A', type: "Opposite meaning", why: "Taleb explicitly says that the bell curve in extremistan is \"not only inaccurate but dangerous.\"" },
         ],
-        vocabNotes: ['Gaussian adj. 高斯的', 'distribution n. 分布'],
+        vocabNotes: ["Gaussian adj. Gaussian", "distribution n. distribution"],
         score: 2,
       },
       {
@@ -1585,15 +1583,15 @@ Taleb's practical advice is to build systems that are "antifragile" — not mere
           { id: 'D', text: 'avoids all forms of stress' },
         ],
         correctIds: ['C'],
-        analysis: '第五段 "an antifragile system improves...The human immune system, evolution, and the scientific method are all antifragile: they benefit from disorder" — 反脆弱系统从混乱中获益。',
+        analysis: "Paragraph 5 \"an antifragile system improves...The human immune system, evolution, and the scientific method are all antifragile: they benefit from disorder\" — antifragile systems benefit from disorder.",
         distractors: [
-          { optionId: 'B', type: '偷换概念', why: 'robust（稳健）才是不受影响，antifragile 是因压力而变强' },
+          { optionId: 'B', type: "Concept substitution", why: "robust means unaffected, while antifragile means growing stronger under pressure." },
         ],
-        vocabNotes: ['antifragile adj. 反脆弱的', 'epistemic adj. 认识论的'],
+        vocabNotes: ["antifragile adj. antifragile", "epistemic adj. epistemic"],
         score: 2,
       },
     ],
-    tips: ['理解塔勒布的三层区分：fragile → robust → antifragile', '注意 mediocristan vs extremistan 的核心差异'],
-    vocabNotes: ['outlier n. 离群值', 'retrospectively adv. 回顾性地', 'antifragile adj. 反脆弱的', 'epistemic adj. 认识论的', 'narrative fallacy n. 叙事谬误'],
+    tips: ["Understand Taleb's three-level distinction: fragile → robust → antifragile.", "Note the core difference between mediocristan and extremistan."],
+    vocabNotes: ["outlier n. outlier", "retrospectively adv. retrospectively", "antifragile adj. antifragile", "epistemic adj. epistemic", "narrative fallacy n. narrative fallacy"],
   },
 ]

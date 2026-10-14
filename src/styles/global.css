@@ -1,7 +1,25 @@
-/* ===== 主题变量（PubMed / NCBI 风格） =====
-   色板与规格取自 pubmed.ncbi.nlm.nih.gov 实测（2026-10-13）：
-   主蓝 #20558a（NCBI 横幅、主按钮）；正文 #212121；次级 #5b616b；
-   边框 #aeb0b5；浅灰带 #f1f1f1；全站直角、无阴影、扁平分区。 */
+@font-face {
+  font-family: 'Source Sans Pro Web';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/source-sans-pro-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Sans Pro Web';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/source-sans-pro-bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Sans Pro Web';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/source-sans-pro-italic.woff2') format('woff2');
+}
+/* PubMed palette and typography. */
 :root {
   --c-primary: #20558a;
   --c-primary-dark: #17456f;
@@ -13,7 +31,7 @@
   --c-divider: #d4d4d4;
   --c-text: #212121;
   --c-text-secondary: #5b616b;
-  --c-link: #2b6cb0;
+  --c-link: #0071bc;
   --c-success: #1a8f5c;
   --c-success-light: #e6f5ee;
   --c-danger: #c0392b;
@@ -27,9 +45,9 @@
   --radius: 0px;
   --shadow: none;
   --shadow-lg: none;
-  --font-stack: "system-ui", -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --font-serif: Merriweather, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-stack: 'Source Sans Pro Web', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  --font-article: Cambria, 'Cambria Math', Charter, 'Times New Roman', Times, stixgeneral, serif;
+  --font-article-ui: 'Source Sans Pro Web', 'Helvetica Neue', Bahnschrift, Roboto, 'Noto Sans', sans-serif;
 }
 
 * {
@@ -42,6 +60,10 @@ body,
   height: 100%;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--font-stack);
@@ -49,6 +71,8 @@ body {
   background: var(--c-bg);
   font-size: 16px;
   line-height: 1.6;
+  font-kerning: normal;
+  font-feature-settings: 'kern' 1;
 }
 
 h1,
@@ -57,7 +81,7 @@ h3,
 h4 {
   margin: 0 0 0.5em;
   font-weight: 700;
-  font-family: var(--font-serif);
+  font-family: var(--font-stack);
   line-height: 1.4;
 }
 
@@ -73,16 +97,14 @@ p {
   margin: 0.4em 0;
 }
 
-/* ===== 布局：PubMed 完整页面骨架 =====
-   政府横幅 → NCBI 蓝头 → 灰色搜索带 → 白色动作栏 → 内容 → 页脚
-   规格实测自 pubmed.ncbi.nlm.nih.gov（2026-10-13） */
+/* Page layout: banner, header, search, navigation, content, footer. */
 .pm-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* 政府横幅 */
+/* Workspace banner */
 .gov-banner {
   background: #f5f5f5;
   border-bottom: 1px solid #d4d4d4;
@@ -115,7 +137,14 @@ p {
   cursor: pointer;
 }
 
-/* NCBI 深蓝头 */
+.gov-banner__details {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  font-size: 14px;
+}
+
+/* Dark blue header */
 .ncbi-header {
   background: var(--c-primary);
   color: #fff;
@@ -198,7 +227,7 @@ p {
   white-space: nowrap;
 }
 
-/* 灰色搜索带 */
+/* Search band */
 .search-band {
   background: var(--c-band);
   border-bottom: 1px solid var(--c-divider);
@@ -315,7 +344,21 @@ p {
   text-decoration: underline;
 }
 
-/* 白色动作栏（含分区导航） */
+.text-link {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--c-link);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.text-link:hover { text-decoration: underline; }
+.text-link:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 3px; }
+
+/* Action bar and navigation */
 .action-bar {
   background: #fff;
   border-bottom: 1px solid var(--c-divider);
@@ -368,7 +411,7 @@ p {
   align-items: center;
 }
 
-/* 内容列 */
+/* Content column */
 .layout__content {
   flex: 1;
   width: 100%;
@@ -377,7 +420,7 @@ p {
   padding: 24px 20px 60px;
 }
 
-/* 页脚 */
+/* Footer */
 .pm-footer {
   background: var(--c-band);
   border-top: 1px solid var(--c-divider);
@@ -407,7 +450,7 @@ p {
 }
 
 .page-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-stack);
   font-size: 26px;
   font-weight: 700;
   margin-bottom: 4px;
@@ -419,23 +462,38 @@ p {
   margin-bottom: 20px;
 }
 
-/* ===== PubMed 文章页（作答视图） ===== */
+/* PMC article typography: article_style-B67IZFds.css, verified 2026-10-14. */
 .pm-article {
   display: flex;
+  max-width: 960px;
   gap: 40px;
   align-items: flex-start;
+  font-family: var(--font-stack);
+  letter-spacing: normal;
+  word-spacing: normal;
 }
 
 .pm-article__main {
   flex: 1;
   min-width: 0;
   max-width: 730px;
+  --c-text: #1b1b1b;
+  color: var(--c-text);
+  font-size-adjust: 0.465;
+  overflow-wrap: break-word;
+}
+
+.pm-article__main *,
+.pm-article__main *::before,
+.pm-article__main *::after {
+  font-size-adjust: inherit;
 }
 
 .pm-cit {
-  font-size: 16px;
-  color: var(--c-text-secondary);
-  line-height: 24px;
+  font-family: var(--font-article-ui);
+  font-size: 12.2970006737pt;
+  color: var(--c-text);
+  line-height: 22.5pt;
 }
 
 .pm-cit__chevron {
@@ -446,19 +504,21 @@ p {
 }
 
 .pm-title {
-  font-family: var(--font-serif);
-  font-size: 26px;
+  font-family: var(--font-article-ui);
+  font-size: 18.1462008437pt;
   font-weight: 700;
-  line-height: 36.4px;
+  line-height: 22.5pt;
+  letter-spacing: normal;
   color: var(--c-text);
-  margin: 0 0 16px;
+  margin: 22.5pt 0 11.25pt;
 }
 
 .pm-authors {
-  font-size: 16px;
-  color: var(--c-text-secondary);
-  line-height: 24px;
-  margin-bottom: 4px;
+  font-family: var(--font-article-ui);
+  font-size: 12.2970006737pt;
+  color: var(--c-text);
+  line-height: 22.5pt;
+  margin-bottom: 0;
 }
 
 .pm-authors b {
@@ -467,32 +527,37 @@ p {
 }
 
 .pm-section {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  padding-bottom: 20px;
+  margin-top: 22.5pt;
 }
 
 .pm-section__title {
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 700;
+  font-family: var(--font-article-ui);
+  font-size: 17.006748682pt;
+  font-weight: 400;
+  line-height: 22.5pt;
+  letter-spacing: normal;
   color: var(--c-text);
-  margin: 36px 0 12px;
+  border-bottom: 1px solid hsl(209, 31%, 69%);
+  margin: 0 0 -1px;
 }
 
 .pm-section__content {
+  margin-top: 22.5pt;
+  font-family: var(--font-article-ui);
   font-size: 16px;
   color: var(--c-text);
-  line-height: 1.7;
+  line-height: 1.5;
 }
 
 .pm-ids {
-  margin-top: 28px;
-  font-size: 14px;
-  color: var(--c-text-secondary);
-  line-height: 1.8;
+  margin-top: 22.5pt;
+  font-family: var(--font-article-ui);
+  font-size: 12.2970006737pt;
+  color: var(--c-text);
+  line-height: 22.5pt;
 }
 
-/* 右侧工具栏 */
+/* Reading sidebar */
 .pm-aside {
   width: 190px;
   flex-shrink: 0;
@@ -501,11 +566,13 @@ p {
 }
 
 .pm-aside__label {
-  font-size: 12px;
+  font-family: var(--font-stack);
+  font-size: 0.93rem;
   font-weight: 700;
+  line-height: 1.3;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--c-text-secondary);
+  letter-spacing: normal;
+  color: #1b1b1b;
   margin-bottom: 8px;
 }
 
@@ -524,7 +591,8 @@ p {
   color: #fff;
   border: none;
   border-radius: 0;
-  font-size: 14px;
+  font-size: 1.06rem;
+  line-height: 1.5;
   font-family: var(--font-stack);
   text-align: left;
   cursor: pointer;
@@ -546,7 +614,8 @@ p {
 
 .pm-aside__link {
   display: block;
-  font-size: 13px;
+  font-size: 0.93rem;
+  line-height: 1.1;
   color: var(--c-link);
   padding: 4px 0;
   cursor: pointer;
@@ -560,7 +629,7 @@ p {
   text-decoration: underline;
 }
 
-/* ===== PubMed 检索结果列表 ===== */
+/* Search results */
 .pm-results-head {
   font-size: 14px;
   color: var(--c-text-secondary);
@@ -686,7 +755,7 @@ p {
   max-width: 130px;
 }
 
-/* ===== 通用组件样式（PubMed 规格） ===== */
+/* Shared components */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -759,6 +828,17 @@ p {
   box-shadow: none;
 }
 
+.card__header {
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card__title {
+  margin: 0;
+  font-family: var(--font-stack);
+  font-size: 16px;
+}
+
 .tag {
   display: inline-block;
   padding: 1px 8px;
@@ -808,7 +888,7 @@ p {
   transition: width 0.3s;
 }
 
-/* ===== 表单 ===== */
+/* Forms */
 .input,
 .textarea,
 .select {
@@ -848,7 +928,7 @@ p {
   color: var(--c-text);
 }
 
-/* ===== 弹窗 ===== */
+/* Dialogs */
 .modal-mask {
   position: fixed;
   inset: 0;
@@ -885,7 +965,7 @@ p {
   margin-top: 18px;
 }
 
-/* ===== 作答区 ===== */
+/* Answer area */
 .option {
   display: flex;
   align-items: flex-start;
@@ -933,7 +1013,7 @@ p {
   color: var(--c-danger);
 }
 
-/* 阅读文章 */
+/* Reading passage */
 .passage {
   background: var(--c-surface);
   border: 1px solid var(--c-divider);
@@ -948,10 +1028,40 @@ p {
   text-align: justify;
 }
 
+.pm-article .passage {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-article);
+  font-size: 14pt;
+  font-weight: 400;
+  font-size-adjust: 0.465;
+  line-height: 22.5pt;
+  letter-spacing: normal;
+  word-spacing: normal;
+  hyphens: manual;
+  overflow-wrap: break-word;
+  color: var(--c-text);
+}
+.pm-article .passage p {
+  margin: 22.5pt 0 0;
+  line-height: inherit;
+  text-align: left;
+}
+.pm-article .passage p:first-child { margin-top: 0; }
+
 .passage mark {
   padding: 0 3px;
   border-radius: 4px;
   background: transparent;
+}
+
+.pm-article .passage mark {
+  padding: 0;
+  border-radius: 0;
+  font: inherit;
+  font-size-adjust: inherit;
+  color: inherit;
 }
 
 .passage mark.hl-claim {
@@ -997,7 +1107,7 @@ p {
   background: var(--c-surface);
 }
 
-/* 结构笔记 */
+/* Structure notes */
 .notes-panel {
   margin-top: 14px;
   border-top: 1px dashed var(--c-border);
@@ -1045,7 +1155,7 @@ p {
   background: var(--c-keyword);
 }
 
-/* 排序题 */
+/* Reorder questions */
 .reorder-pool {
   display: flex;
   flex-direction: column;
@@ -1102,7 +1212,7 @@ p {
   color: var(--c-danger);
 }
 
-/* 解析卡 */
+/* Explanation cards */
 .explanation {
   margin-top: 10px;
   padding: 12px 14px;
@@ -1132,7 +1242,7 @@ p {
   margin-right: 8px;
 }
 
-/* 闪卡 */
+/* Flashcards */
 .flashcard {
   perspective: 1000px;
   cursor: pointer;
@@ -1195,7 +1305,7 @@ p {
   text-align: center;
 }
 
-/* 错题档案 */
+/* Review records */
 .wrong-badge {
   display: inline-flex;
   width: 20px;
@@ -1209,7 +1319,7 @@ p {
   flex-shrink: 0;
 }
 
-/* 空状态 */
+/* Empty states */
 .empty {
   text-align: center;
   padding: 48px 20px;
@@ -1221,7 +1331,9 @@ p {
   margin-bottom: 8px;
 }
 
-/* 工具条 */
+.empty__title { font-weight: 600; }
+
+/* Toolbar */
 .toolbar {
   display: flex;
   align-items: center;
@@ -1234,7 +1346,7 @@ p {
   flex: 1;
 }
 
-/* 统计卡片 */
+/* Statistics */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1297,7 +1409,7 @@ p {
   line-height: 1.9;
 }
 
-/* 表格/列表 */
+/* Tables and lists */
 .item-list {
   display: flex;
   flex-direction: column;
@@ -1336,7 +1448,7 @@ p {
   color: var(--c-text-secondary);
 }
 
-/* 段落折叠 */
+/* Collapsible paragraphs */
 .collapse {
   border: 1px solid var(--c-divider);
   border-radius: 0;
@@ -1362,7 +1474,7 @@ p {
   font-size: 14px;
 }
 
-/* 分步器（翻译三步法） */
+/* Three-step paraphrasing */
 .step-card {
   border: 1px solid var(--c-divider);
   border-radius: 0;
@@ -1392,7 +1504,140 @@ p {
   display: block;
 }
 
-/* 辅助 */
+/* Helpers */
+.study-page {
+  font-family: var(--font-stack);
+  font-size: 1.06rem;
+  line-height: 1.5;
+  color: #1b1b1b;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.study-page :is(h1, h2, h3, h4) { font-family: var(--font-stack); }
+.study-page .page-title { font-size: 26px; line-height: 1.3; margin-bottom: 8px; }
+.study-page .page-sub { font-size: 1.06rem; line-height: 1.5; max-width: 730px; margin: 0 0 24px; }
+.study-page :is(.muted, .small, .item-row__meta) { font-size: 0.93rem; line-height: 1.5; }
+.study-page :is(.btn, .input, .select, .textarea) { font-size: 1.06rem; line-height: 1.5; }
+.study-page .btn { min-height: 40px; padding: 7px 16px; max-width: 100%; }
+.study-page .form-label { font-size: 0.93rem; font-weight: 700; }
+.study-page .card--section { border: 0; padding: 0; margin-bottom: 30px; }
+.study-page .card--section > .card__header {
+  border-bottom: 1px solid hsl(209, 31%, 69%);
+  padding-bottom: 6px;
+  margin-bottom: 24px;
+  align-items: baseline;
+}
+.study-page .card__title,
+.study-section-title {
+  font-family: var(--font-stack);
+  font-weight: 400;
+  font-size: 22.6757px;
+  line-height: 30px;
+}
+.study-section-title { border-bottom: 1px solid hsl(209, 31%, 69%); margin: 30px 0 20px; padding-bottom: 6px; }
+.study-page .study-section { margin-top: 30px; }
+.study-page .advice-list { font-size: 1.06rem; line-height: 1.5; padding-left: 24px; }
+.study-page .advice-list li + li { margin-top: 8px; }
+.study-page .empty { text-align: left; padding: 24px; border-left: 4px solid var(--c-primary); background: var(--c-band); }
+.study-page .empty__icon { display: none; }
+.study-page .empty__title { font-weight: 400; font-size: 22px; }
+.study-page .tag { font-size: 0.93rem; line-height: 1.3; border: 0; padding: 0 6px 0 0; }
+
+/* English source text and examples use the same prose metrics as the PMC article. */
+.study-prose {
+  font-family: var(--font-article);
+  font-size: 14pt;
+  font-size-adjust: 0.465;
+  font-weight: 400;
+  line-height: 22.5pt;
+  letter-spacing: normal;
+  word-spacing: normal;
+  hyphens: manual;
+  text-align: left;
+  color: #1b1b1b;
+}
+.study-prose * { font-size-adjust: inherit; }
+.study-prose--pre { white-space: pre-wrap; }
+.study-page .study-editor { font-family: var(--font-article); font-size: 14pt; font-size-adjust: 0.465; line-height: 22.5pt; }
+.study-page .passage { padding: 0; border: 0; font-family: var(--font-article); font-size: 14pt; font-size-adjust: 0.465; line-height: 22.5pt; letter-spacing: normal; word-spacing: normal; }
+.study-page .passage p { text-align: left; margin: 22.5pt 0 0; }
+.study-page .passage p:first-child { margin-top: 0; }
+.study-page .passage mark { padding: 0; color: inherit; }
+.study-page .passage * { font-size-adjust: inherit; }
+.study-page .study-import-text { min-height: 320px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.6; }
+.study-page .study-result-heading { margin: 0; font: inherit; border: 0; }
+.study-page .docsum__title { font-size: 20px; line-height: 1.4; font-weight: 400; }
+.study-page :is(.docsum__meta, .docsum__cit, .docsum__snippet) { font-size: 1.06rem; line-height: 1.5; }
+.study-page .docsum__side { font-size: 0.93rem; line-height: 1.5; }
+.study-page .pm-results-head { font-size: 1.06rem; border-bottom: 1px solid var(--c-divider); padding: 0 0 12px; margin-bottom: 18px; }
+.study-page .pm-filter-group__label { display: block; font-size: 0.93rem; letter-spacing: normal; color: #1b1b1b; }
+.study-filter-label .select { margin-top: 8px; text-transform: none; font-weight: 400; }
+.study-filter-note { font-size: 0.93rem; line-height: 1.4; color: var(--c-text-secondary); }
+.study-keywords { font-size: 0.93rem; margin-top: 6px; color: var(--c-text-secondary); }
+.study-completed { color: #4d8055; }
+.study-page .item-list { gap: 0; }
+.study-page .item-row { border: 0; border-bottom: 1px solid var(--c-divider); padding: 16px 0; }
+.study-page .item-row__title { font-size: 20px; font-weight: 400; line-height: 1.4; }
+.study-page .item-row[role=button] .item-row__title { color: var(--c-link); }
+.study-page .item-row__meta { margin-top: 6px; }
+.study-page .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0 0 30px; }
+.study-page .stat-card { border: 0; border-bottom: 1px solid var(--c-divider); background: var(--c-band); padding: 16px; }
+.study-page .stat-card__num { font-size: 30px; font-weight: 400; }
+.study-page .stat-card__label { font-size: 0.93rem; line-height: 1.4; }
+.study-page .target-table { display: table; font-size: 1.06rem; }
+.study-page .target-table th { font-size: 0.93rem; font-weight: 700; background: var(--c-band); color: #1b1b1b; }
+.study-tabs { gap: 0; border-bottom: 1px solid var(--c-divider); margin-bottom: 24px; }
+.study-tabs .btn { border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--c-link); }
+.study-tabs .btn--primary { border-bottom-color: var(--c-primary); color: #1b1b1b; }
+
+/* Vocabulary entries and reusable sentence patterns. */
+.vocabulary-entry {
+  display: block;
+  width: 100%;
+  max-width: 730px;
+  min-height: 260px;
+  border: 0;
+  border-left: 4px solid var(--c-primary);
+  border-bottom: 1px solid var(--c-divider);
+  padding: 24px;
+  background: var(--c-band);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: default;
+}
+.vocabulary-entry > span { display: block; }
+.study-page .study-vocabulary-review { border: 0; padding: 0; }
+.vocabulary-entry .flashcard__word { font-size: 30px; font-weight: 700; line-height: 1.3; color: #1b1b1b; margin: 8px 0; }
+.vocabulary-entry .flashcard__meaning { margin: 8px 0; font-size: 1.06rem; }
+.vocabulary-entry .study-prose { margin: 16px 0; }
+.vocabulary-example { margin-top: 10px; font-style: italic; }
+.study-pattern { border-bottom: 1px solid var(--c-divider); padding: 16px 0; }
+.study-pattern .study-prose { margin: 14px 0; }
+.study-pattern__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.study-pattern__description { font-size: 1.06rem; }
+.study-group { border-bottom: 1px solid var(--c-divider); margin-bottom: 24px; padding-bottom: 18px; }
+.study-group__toggle { border: 0; width: 100%; padding: 16px 0; background: transparent; color: var(--c-link); font: inherit; text-align: left; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; cursor: pointer; }
+.study-group__title { display: block; font-size: 20px; line-height: 1.4; color: var(--c-link); }
+.study-group__metadata { display: block; font-size: 0.93rem; color: var(--c-text-secondary); margin-top: 6px; }
+.study-review-item { border-top: 1px solid var(--c-divider); padding: 20px 0; }
+.study-review-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.study-review-heading h3 { font-size: 20px; font-weight: 400; margin: 0; }
+.study-review-context { border-left: 3px solid var(--c-primary); background: var(--c-band); padding: 16px; margin: 16px 0; }
+.study-review-context .form-label { font-family: var(--font-stack); font-size-adjust: none; }
+.study-review-option { display: flex; gap: 10px; padding: 8px 12px; border: 1px solid transparent; margin: 4px 0; }
+.study-review-option__text { flex: 1; min-width: 0; }
+.study-review-option--correct { border-color: var(--c-success); background: var(--c-success-light); }
+.study-review-option--wrong { border-color: var(--c-danger); background: var(--c-danger-light); }
+.study-review-explanation { margin: 16px 0; }
+.study-review-distractor { padding: 10px 0; border-bottom: 1px solid var(--c-divider); }
+.study-session-heading { margin: 24px 0; }
+.dictionary-toggle { top: 50%; transform: translateY(-50%); }
+.action-bar--study { margin: 0 0 24px; }
+.action-bar--study .action-bar__inner { padding: 8px 0; }
+.study-page .action-bar__actions { flex-wrap: wrap; }
+
 .muted {
   color: var(--c-text-secondary);
   font-size: 13px;
@@ -1435,7 +1680,7 @@ p {
   }
 }
 
-/* 滚动条 */
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -1450,7 +1695,7 @@ p {
   background: transparent;
 }
 
-/* 小屏：搜索带堆叠、动作栏换行。 */
+/* Small-screen stacked search and wrapping navigation. */
 .layout__content { min-width: 0; width: 100%; }
 :focus-visible { outline: 2px solid var(--c-primary); outline-offset: 3px; }
 .target-table { display: block; overflow-x: auto; }
@@ -1463,6 +1708,7 @@ p {
   .ncbi-header__sub { font-size: 10px; }
   .ncbi-header__right { display: none; }
   .search-band__inner { flex-wrap: wrap; padding: 10px 12px 4px; gap: 10px; }
+  .pm-search { flex: 1 1 100%; width: 100%; min-width: 0; }
   .pm-logo__pub, .pm-logo__med { font-size: 24px; }
   .pm-logo__swoosh { width: 12px; height: 12px; border-width: 2px; }
   .search-band__links { padding: 0 12px 8px; }
@@ -1483,4 +1729,16 @@ p {
   .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .modal { padding: 16px; max-height: 90vh; }
   .modal-mask { padding: 10px; }
+  .study-page .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .study-page .target-table { display: block; overflow-x: auto; }
+  .study-page .pm-filters { align-items: flex-start; gap: 12px; }
+  .study-page .pm-filter-group { flex: 1 1 140px; }
+  .study-filter-note { display: none; }
+  .study-page .docsum__side { display: block; flex-basis: 100%; max-width: none; padding-left: 24px; text-align: left; }
+  .study-page .docsum { flex-wrap: wrap; }
+  .study-page .docsum__main { flex-basis: calc(100% - 30px); }
+  .study-page .modal__footer { flex-wrap: wrap; }
+  .vocabulary-entry { padding: 20px; }
+  .study-review-option { flex-wrap: wrap; }
+  .pm-page:has(.study-page) .dictionary-toggle { top: auto; bottom: 16px; transform: none; }
 }

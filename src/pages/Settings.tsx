@@ -52,7 +52,7 @@ export default function Settings() {
     a.download = `ekw-backup-${stamp}.json`
     a.click()
     URL.revokeObjectURL(url)
-    flash('已导出备份文件，建议定期备份到网盘')
+    flash("Backup file exported. It is recommended to back up to cloud storage regularly.")
   }
 
   const doImport = (file: File) => {
@@ -60,10 +60,10 @@ export default function Settings() {
     reader.onload = () => {
       const failed = importAll(String(reader.result ?? ''))
       if (failed.length > 0) {
-        flash(`恢复失败：${failed.join('、')}`)
+        flash(` Restore failed:${failed.join('、')}`)
       } else {
         setUsage(estimateUsage())
-        flash('恢复成功，页面数据已更新')
+        flash("Restore successful. Page data has been updated.")
       }
     }
     reader.readAsText(file, 'utf-8')
@@ -74,7 +74,7 @@ export default function Settings() {
     setUsage(0)
     setConfirmClear2(false)
     setConfirmClear(false)
-    flash('已清空当前账号的全部学习数据')
+    flash("All learning data for the current account has been cleared")
   }
 
   const doSync = async (dir: 'push' | 'pull') => {
@@ -86,7 +86,7 @@ export default function Settings() {
   }
 
   const handleSignOut = async () => {
-    // 退出前推送一次
+    // Upload before signing out.
     if (cloudReady && user) {
       setSyncing(true)
       await pushToCloud()
@@ -97,12 +97,12 @@ export default function Settings() {
   }
 
   return (
-    <div>
-      <h1 className="page-title">设置</h1>
+    <div className="study-page">
+      <h1 className="page-title"> Settings </h1>
       <p className="page-sub">
         {cloudReady && user
-          ? `已登录 ☁️ ${user.email} — 数据自动同步到云端，换设备登录即可恢复`
-          : '数据保存在本机浏览器（localStorage），换电脑或清浏览器前记得备份。'}
+          ? ` Logged in ☁️ ${user.email} — Data automatically syncs to the cloud. Log in on another device to restore it.`
+          : "Data is stored in the local browser (localStorage). Remember to back up before switching computers or clearing the browser."}
       </p>
 
       {status && (
@@ -111,11 +111,12 @@ export default function Settings() {
         </div>
       )}
 
-      {/* ── 云端同步 ── */}
+      {/* Cloud sync */}
       {cloudReady && user && (
-        <Card title="☁️ 云端同步" style={{ marginBottom: 18 }}>
+        <Card title="Cloud sync" style={{ marginBottom: 30 }}>
           <p className="muted" style={{ marginBottom: 12 }}>
-            数据存储于 Supabase PostgreSQL。每台设备登录同一账号即可同步。
+
+             Data is stored in Supabase PostgreSQL. Log in with the same account on each device to sync.
           </p>
           <div className="flex-row" style={{ gap: 10, flexWrap: 'wrap' }}>
             <Button
@@ -123,13 +124,13 @@ export default function Settings() {
               onClick={() => doSync('push')}
               disabled={syncing}
             >
-              ⬆️ {syncing ? '同步中...' : '上传到云端'}
+              ⬆️ {syncing ? "Syncing..." : "Upload to cloud"}
             </Button>
             <Button
               onClick={() => doSync('pull')}
               disabled={syncing}
             >
-              ⬇️ {syncing ? '同步中...' : '从云端恢复'}
+              ⬇️ {syncing ? "Syncing..." : "Restore from cloud"}
             </Button>
           </div>
           {syncStatus && (
@@ -138,32 +139,34 @@ export default function Settings() {
             </div>
           )}
           <div className="muted small" style={{ marginTop: 10 }}>
-            💡 练习提交后会自动上传（静默同步），无需手动操作。原有离线数据保存在离线模式中，可导出备份再恢复到当前账号。跨设备使用时先点「从云端恢复」拉取最新数据。
+
+             💡 After practice is submitted, it will automatically upload (silent sync), no manual action needed. Existing offline data is kept in offline mode; you can export a backup and then restore it to the current account. When using across devices, first click &quot;Restore from cloud&quot; to pull the latest data.
           </div>
         </Card>
       )}
 
-      {/* ── 账号 ── */}
+      {/* Account */}
       {cloudReady && user && (
-        <Card title="🔐 账号" style={{ marginBottom: 18 }}>
+        <Card title="Account" style={{ marginBottom: 30 }}>
           <div className="flex-row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <span>
               <div>{user.email}</div>
-              <div className="muted small">退出前会自动上传最新数据</div>
+              <div className="muted small"> The latest data will be automatically uploaded before logging out </div>
             </span>
             <Button variant="danger" onClick={handleSignOut}>
-              退出登录
+
+               Log out
             </Button>
           </div>
         </Card>
       )}
 
-      {/* ── 行为设置 ── */}
-      <Card title="行为设置" style={{ marginBottom: 18 }}>
+      {/* Practice preferences */}
+      <Card title="Practice preferences" style={{ marginBottom: 30 }}>
         <label className="flex-row" style={{ justifyContent: 'space-between', cursor: 'pointer' }}>
           <span>
-            <b>做错后自动弹出「三问」表单</b>
-            <div className="muted small">关闭后仍可在结果页手动点击填写</div>
+            <b> Automatically pop up the &quot;Three Questions&quot; form after a mistake </b>
+            <div className="muted small"> After turning it off, you can still manually click to fill it in on the results page </div>
           </span>
           <input
             type="checkbox"
@@ -173,12 +176,12 @@ export default function Settings() {
         </label>
       </Card>
 
-      {/* ── 备份 ── */}
-      <Card title="数据备份与恢复" style={{ marginBottom: 18 }}>
+      {/* Backups */}
+      <Card title="Data backup and restore" style={{ marginBottom: 30 }}>
         <div className="flex-row" style={{ gap: 10, flexWrap: 'wrap' }}>
-          <Button variant="primary" onClick={() => doExport()}>⬇️ 导出备份 JSON</Button>
-          {user && <Button onClick={() => doExport(true)}>导出原有离线数据</Button>}
-          <Button onClick={() => fileRef.current?.click()}>⬆️ 从备份恢复</Button>
+          <Button variant="primary" onClick={() => doExport()}>Export backup</Button>
+          {user && <Button onClick={() => doExport(true)}> Export existing offline data </Button>}
+          <Button onClick={() => fileRef.current?.click()}>Restore from backup</Button>
           <input
             ref={fileRef}
             type="file"
@@ -192,47 +195,48 @@ export default function Settings() {
           />
         </div>
         <div className="muted small" style={{ marginTop: 10 }}>
-          当前占用约 {formatBytes(usage)}（浏览器 localStorage 上限约 5MB）。导入会覆盖同名数据。
+
+           Currently using about  {formatBytes(usage)} (browser localStorage limit is about 5MB). Importing will overwrite data with the same name.
         </div>
       </Card>
 
-      {/* ── 危险区 ── */}
-      <Card title="危险区">
+      {/* Reset data */}
+      <Card title="Danger zone">
         <div className="flex-row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <span>
-            <b>清空全部数据</b>
-            <div className="muted small">删除所有进度、错题档案、词库、导入题目与练习记录（内置题目不受影响）</div>
+            <b> Clear all data </b>
+            <div className="muted small"> Delete all progress, mistake archives, vocabulary, imported questions, and practice records (built-in questions are not affected) </div>
           </span>
-          <Button variant="danger" onClick={() => setConfirmClear(true)}>清空数据</Button>
+          <Button variant="danger" onClick={() => setConfirmClear(true)}> Clear data </Button>
         </div>
       </Card>
 
       {confirmClear && (
         <Modal
-          title="确认清空？"
+          title="Confirm clearing?"
           onClose={() => setConfirmClear(false)}
           footer={
             <>
-              <Button onClick={() => setConfirmClear(false)}>取消</Button>
-              <Button variant="danger" onClick={() => setConfirmClear2(true)}>我确认要清空</Button>
+              <Button onClick={() => setConfirmClear(false)}> Cancel </Button>
+              <Button variant="danger" onClick={() => setConfirmClear2(true)}> I confirm I want to clear it </Button>
             </>
           }
         >
-          <p>此操作不可恢复。已导出备份文件了吗？</p>
+          <p> This action cannot be undone. Have you exported a backup file? </p>
         </Modal>
       )}
       {confirmClear2 && (
         <Modal
-          title="最后确认"
+          title="Final confirmation"
           onClose={() => setConfirmClear2(false)}
           footer={
             <>
-              <Button onClick={() => setConfirmClear2(false)}>取消</Button>
-              <Button variant="danger" onClick={doClear}>是的，全部删除</Button>
+              <Button onClick={() => setConfirmClear2(false)}> Cancel </Button>
+              <Button variant="danger" onClick={doClear}> Yes, delete everything </Button>
             </>
           }
         >
-          <p>真的要清空全部学习数据吗？建议先导出备份。</p>
+          <p> Are you sure you want to clear all learning data? It is recommended to export a backup first. </p>
         </Modal>
       )}
     </div>

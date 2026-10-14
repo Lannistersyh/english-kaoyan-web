@@ -1,0 +1,53 @@
+[Type] Reading
+[Source] Practice collection
+# Technology and jobs
+Technology changes jobs, but it also creates new roles.
+1. What is the author's point?
+A. Technology only destroys jobs.
+B. The structure of employment changes.
+[Answer] B
+[Explanation] The passage describes changes in employment.
+[Distractor] A Over-inference: The word only is not supported.
+
+[Type] Cloze
+[Source] Cloze practice
+# Logical links
+The weather was cold. {{1}}, we went outside. We {{2}} our plans.
+1. A. However B. Therefore C. Besides D. Instead
+2. A. adopt B. adapt C. adept D. adjust
+[Answer] A B
+
+[Type] Matching
+[Source] Gap-fill practice
+# A short story
+An introduction. {{1}}
+A conclusion. {{2}}
+[Option Pool] A. First link | B. Another link | C. Last link | D. A detail | E. A contrast | F. An example | G. A question
+[Answer] A C
+[Explanation] Each sentence connects the surrounding ideas.
+
+[Type] Reorder
+[Source] Reorder practice
+# A logical sequence
+[Reorder]
+Introduction.
+Conclusion.
+Supporting example.
+[Answer] A C B
+[Explanation] The example follows the introduction.
+
+[Type] Paraphrasing
+[Source] Paraphrase practice
+# A relative clause
+The environment, which has long been neglected, is receiving more attention.
+[Reference Paraphrase] People are paying more attention to the environment after neglecting it for a long time.
+[Step1] Find the main clause.
+[Step2] Preserve the time relationship.
+[Step3] Use clear wording.
+
+[Type] Writing
+[Source] Writing practice
+# A picture essay
+[Picture] Two people are studying at a desk.
+[Prompt] Write an essay of 160-200 words.
+[Reference Essay] The picture depicts two different approaches to learning.

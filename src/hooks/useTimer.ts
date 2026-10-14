@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-/** 做题计时（开始/暂停/重置），mm:ss 格式化 */
+/* Quiz timer (start/pause/reset), mm:ss formatting */
 export function useTimer(active: boolean) {
   const [seconds, setSeconds] = useState(0)
   const [paused, setPaused] = useState(false)

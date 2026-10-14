@@ -13,6 +13,8 @@ import WrongBook from './pages/WrongBook'
 import Import from './pages/Import'
 import Settings from './pages/Settings'
 import Dictionary from './components/dictionary/Dictionary'
+import { Modal } from './components/ui/Modal'
+import { exportAll } from './utils/storage'
 
 export type ViewName =
   | 'home'
@@ -27,19 +29,19 @@ export type ViewName =
   | 'settings'
 
 const NAV: { view: ViewName; label: string }[] = [
-  { view: 'home', label: '首页' },
-  { view: 'news', label: '外刊' },
-  { view: 'philosophy', label: '科哲' },
-  { view: 'practice', label: '练习' },
-  { view: 'translation', label: '翻译' },
-  { view: 'writing', label: '写作' },
-  { view: 'vocabulary', label: '词汇' },
-  { view: 'wrongbook', label: '错题档案' },
-  { view: 'import', label: '真题导入' },
-  { view: 'settings', label: '设置' },
+  { view: 'home', label: "Home" },
+  { view: 'news', label: "News Reading" },
+  { view: 'philosophy', label: "Science and Philosophy" },
+  { view: 'practice', label: "Practice" },
+  { view: 'translation', label: "Paraphrasing" },
+  { view: 'writing', label: "Writing" },
+  { view: 'vocabulary', label: "Vocabulary" },
+  { view: 'wrongbook', label: "Review Book" },
+  { view: 'import', label: "Import" },
+  { view: 'settings', label: "Settings" },
 ]
 
-/** 分区页面通用 props：全局搜索词与导航回调 */
+/* Common props for section pages: global search term and navigation callbacks */
 export type PageProps = {
   search?: string
   onSearch?: (s: string) => void
@@ -61,12 +63,25 @@ const VIEWS: Record<ViewName, (props: PageProps) => JSX.Element> = {
 
 export default function App() {
   const { user, loading, signOut } = useAuth()
-  const [view, setView] = useState<ViewName>('home')
+  const [view, setView] = useState<ViewName>('practice')
+  const [showLogin, setShowLogin] = useState(false)
 
-  // 全局搜索词：输入后跳到练习列表并过滤
+  // Global search term: after input, jump to the practice list and filter
   const [search, setSearch] = useState('')
+  const [searchRevision, setSearchRevision] = useState(0)
+  const [bannerOpen, setBannerOpen] = useState(false)
+  const [guideOpen, setGuideOpen] = useState(false)
 
-  // 加载中
+  const saveBackup = () => {
+    const url = URL.createObjectURL(new Blob([exportAll()], { type: 'application/json' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `english-study-${new Date().toISOString().slice(0, 10)}.json`
+    link.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  // Loading
   if (loading) {
     return (
       <div style={{
@@ -80,17 +95,16 @@ export default function App() {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
-          <p>加载中...</p>
+          <p> Loading... </p>
         </div>
       </div>
     )
   }
 
-  // 未登录 & 云端已配置 → 显示登录页
+  // Cloud login is optional; the study interface opens immediately.
   const cloudReady = isCloudEnabled()
-  const offlineBypass = window.sessionStorage.getItem('ekw:offline') === '1'
 
-  if (!user && cloudReady && !offlineBypass) {
+  if (!user && cloudReady && showLogin) {
     return <LoginPage />
   }
 
@@ -98,20 +112,22 @@ export default function App() {
 
   return (
     <div className="pm-page">
-      {/* 政府横幅 */}
+      {/* PubMed government banner */}
       <div className="gov-banner">
         <div className="gov-banner__inner">
           <svg className="gov-banner__flag" viewBox="0 0 16 11" aria-hidden="true">
-            <rect width="16" height="11" fill="#B22234" />
+            <rect width="16" height="11" fill="#b22234" />
             {[0, 2, 4, 6, 8, 10].map(y => <rect key={y} y={y + 0.5} width="16" height="1" fill="#fff" />)}
-            <rect width="7" height="5.5" fill="#3C3B6E" />
+            <rect width="7" height="5.5" fill="#3c3b6e" />
+            {[1, 3, 5].map(x => [1, 2.7, 4.4].map(y => <circle key={`${x}-${y}`} cx={x} cy={y} r="0.3" fill="white" />))}
           </svg>
           <span>An official website of the</span>
-          <button className="gov-banner__link" type="button">Here's how you know</button>
+          <button className="gov-banner__link" type="button" aria-expanded={bannerOpen} onClick={() => setBannerOpen(!bannerOpen)}>Here's how you know</button>
         </div>
+        {bannerOpen && <div className="gov-banner__details">This personal study replica uses the PubMed layout. Your practice data and account are managed by this English learning website.</div>}
       </div>
 
-      {/* NCBI 深蓝头 */}
+      {/* NCBI dark blue header */}
       <header className="ncbi-header">
         <div className="ncbi-header__inner">
           <span className="ncbi-logo"><span className="ncbi-logo__mark">»</span>NIH</span>
@@ -126,40 +142,43 @@ export default function App() {
                 <button className="ncbi-login" type="button" onClick={() => signOut()}>Log out</button>
               </>
             ) : (
-              <span className="ncbi-user">{cloudReady && offlineBypass ? 'Offline mode' : ''}</span>
+              <>
+                <span className="ncbi-user">Offline mode</span>
+                {cloudReady && <button className="ncbi-login" type="button" onClick={() => setShowLogin(true)}>Log in</button>}
+              </>
             )}
           </div>
         </div>
       </header>
 
-      {/* 灰色搜索带 */}
+      {/* Gray search bar */}
       <div className="search-band">
         <div className="search-band__inner">
           <div className="pm-logo" onClick={() => setView('home')} role="button" tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter') setView('home') }}>
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView('home') } }}>
             <span className="pm-logo__pub">Pub</span>
             <span className="pm-logo__swoosh" />
             <span className="pm-logo__med">Med</span><sup>®</sup>
           </div>
-          <form className="pm-search" onSubmit={(e) => { e.preventDefault(); setView('practice') }}>
+          <form className="pm-search" onSubmit={(e) => { e.preventDefault(); setSearchRevision(revision => revision + 1); setView('practice') }}>
             <input
               className="pm-search__input"
               type="text"
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              aria-label="搜索题目"
+              aria-label="Search questions"
             />
             <button className="pm-search__btn" type="submit">Search</button>
           </form>
         </div>
         <div className="search-band__links">
-          <span onClick={() => setView('import')} role="button" tabIndex={0}>Advanced</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>User Guide</span>
+          <button type="button" className="text-link" onClick={() => setView('practice')}>Advanced</button>
+          <button type="button" className="text-link" onClick={() => setGuideOpen(true)}>User Guide</button>
         </div>
       </div>
 
-      {/* 白色动作栏 + 分区导航 */}
+      {/* White action bar + section navigation */}
       <div className="action-bar">
         <div className="action-bar__inner">
           <nav className="action-bar__nav">
@@ -175,9 +194,7 @@ export default function App() {
             ))}
           </nav>
           <div className="action-bar__actions">
-            {view !== 'practice' && (
-              <button className="btn" type="button" onClick={() => setView('practice')}>Save</button>
-            )}
+            <button className="btn" type="button" onClick={saveBackup}>Save</button>
             <button className="btn" type="button" onClick={() => setView('wrongbook')}>Send to</button>
             <button className="btn" type="button" onClick={() => setView('settings')}>Display options ⚙</button>
           </div>
@@ -186,20 +203,28 @@ export default function App() {
 
       <Dictionary key={user?.id ?? 'guest'} />
       <main className="layout__content">
-        <Page key={`${user?.id ?? 'guest'}:${view}`} search={search} onSearch={setSearch} onNavigate={setView} />
+        <Page key={`${user?.id ?? 'guest'}:${view}:${view === 'practice' ? searchRevision : ''}`} search={search} onSearch={setSearch} onNavigate={setView} />
       </main>
 
-      {/* 页脚 */}
+      {guideOpen && <Modal title="User Guide" onClose={() => setGuideOpen(false)}>
+        <p>Search the practice library or choose a learning section from the navigation bar.</p>
+        <p>Start a question, submit your answers, and compare them with the English explanations. Mistakes and uncertain answers appear in the Review Book.</p>
+        <p>Use the dictionary button to look up words. Type the same word three times to unlock its English definitions.</p>
+        <p>Save downloads a study backup. Import accepts the English format template. Display options opens your practice and backup settings.</p>
+      </Modal>}
+
+      {/* Footer */}
       <footer className="pm-footer">
         <div className="pm-footer__inner">
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>Support</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>Accessibility</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>NLM</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>NIH</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>HHS</span>
-          <span onClick={() => setView('settings')} role="button" tabIndex={0}>USA.gov</span>
+          <button type="button" className="text-link" onClick={() => setGuideOpen(true)}>Support</button>
+          <button type="button" className="text-link" onClick={() => setGuideOpen(true)}>Accessibility</button>
+          <a href="https://www.nlm.nih.gov/">NLM</a>
+          <a href="https://www.nih.gov/">NIH</a>
+          <a href="https://www.hhs.gov/">HHS</a>
+          <a href="https://www.usa.gov/">USA.gov</a>
           <div className="pm-footer__copy">
-            考研英语精读训练 · Verbal Mastery —— NIH / NLM / NCBI 视觉致敬，仅用于个人学习
+
+             English Study · Personal study replica of the PubMed layout
           </div>
         </div>
       </footer>

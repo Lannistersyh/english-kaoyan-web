@@ -10,81 +10,81 @@ import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Modal } from '../components/ui/Modal'
 
-const TEMPLATE = `[题型] 阅读
-[标签] 2024真题 Text1
-# Text1 · 你的标题
+const TEMPLATE = `[Type] Reading
+[Source] 2024 past exam Text1
+# Text1 · Your title
 
-第一段正文……
+First paragraph body...
 
-第二段正文……
+Second paragraph body...
 
-1. 第一题题干
-A. 选项A
-B. 选项B
-C. 选项C
-D. 选项D
-[答案] B
-[解析] 正确项如何对原文同义替换……
-[干扰项] A 偷换概念：……
-[干扰项] C 过度推断：……
+1. First question stem
+A. Option A
+B. Option B
+C. Option C
+D. Option D
+[Answer] B
+[Explanation] How the correct option paraphrases the original text...
+[Distractor] A Concept substitution: ...
+[Distractor] C Over-inference: ...
 
-2. 第二题题干
-A. 选项A
-B. 选项B
-C. 选项C
-D. 选项D
-[答案] D
-[解析] ……
-[干扰项] A 张冠李戴：……
+2. Second question stem
+A. Option A
+B. Option B
+C. Option C
+D. Option D
+[Answer] D
+[Explanation] ...
+[Distractor] A Misattribution: ...
 
 ---
 
-[题型] 完形
-[标签] 模拟完形
-# 完形练习
+[Type] Cloze
+[Source] Mock cloze
+# Cloze practice
 
-正文第一句，{{1}} 是第一个空，{{2}} 第二个空……
+First sentence of the body, {{1}} is the first blank, {{2}} the second blank...
 
 1. A. word1 B. word2 C. word3 D. word4
 2. A. word1 B. word2 C. word3 D. word4
-[答案] A B
+[Answer] A B
 
 ---
 
-[题型] 新题型
-[标签] 7选5练习
-# 7选5 练习
+[Type] Matching
+[Source] 7-choose-5 practice
+# 7-choose-5 practice
 
-第一段……
+First paragraph...
 
-{{1}} 第二段……
+{{1}} Second paragraph...
 
-{{2}} 第三段……
-[选项池] A. 选项句1 | B. 选项句2 | C. 选项句3 | D. 选项句4 | E. 选项句5 | F. 选项句6 | G. 选项句7
-[答案] A C
-[解析] 共享解析：说明每个空怎么选……（[干扰项] 也可同理写在答案之后）
-
----
-
-[题型] 翻译
-[标签] 翻译练习
-# 翻译长难句
-
-The sentence to be translated, which contains a relative clause, is written here.
-[参考译文] 参考译文……
-[步骤1] 切分结构说明……
-[步骤2] 语序调整说明……
-[步骤3] 意译提示……
+{{2}} Third paragraph...
+[Option Pool] A. Option sentence 1 | B. Option sentence 2 | C. Option sentence 3 | D. Option sentence 4 | E. Option sentence 5 | F. Option sentence 6 | G. Option sentence 7
+[Answer] A C
+[Explanation] Shared explanation: explain how to choose each blank... ([Distractor] can also be written after the answer in the same way)
 
 ---
 
-[题型] 写作
-[标签] 写作练习
-# 图画作文练习
+[Type] Paraphrasing
+[Source] Paraphrasing practice
+# Paraphrasing a complex sentence
 
-[图画描述] 画面内容描述……
-[写作要求] Write an essay of 160-200 words……
-[参考范文] 参考范文……`
+The sentence to be paraphrased, which contains a relative clause, is written here.
+[Reference Paraphrase] Reference paraphrase...
+[Step1] Segmentation structure explanation...
+[Step2] Word order adjustment explanation...
+[Step3] Paraphrasing tips...
+
+---
+
+[Type] Writing
+[Source] Writing practice
+# Picture essay practice
+
+[Picture] Description of the picture content...
+[Prompt] Write an essay of 160-200 words...
+[Reference Essay] Reference essay...`
 
 export default function Import() {
   const [text, setText] = useState('')
@@ -107,32 +107,34 @@ export default function Import() {
   const copyTemplate = async () => {
     try {
       await navigator.clipboard.writeText(TEMPLATE)
-      window.alert('模板已复制，粘贴到下方输入框后修改')
+      window.alert("Template copied, paste it into the input box below and modify it")
     } catch {
-      window.alert('复制失败，请手动选择复制')
+      window.alert("Copy failed, please manually select and copy")
     }
   }
 
   return (
-    <div>
-      <h1 className="page-title">真题导入</h1>
+    <div className="study-page">
+      <h1 className="page-title"> Import </h1>
       <p className="page-sub">
-        把真题文本按格式粘贴进来，自动解析成练习题（真题有版权，不内置，全靠你自己导入）
+
+         Paste past exam text in the format to automatically parse it into practice questions (past exams are copyrighted, not built in, all depends on your own import)
       </p>
 
       <div className="toolbar">
-        <Button variant="primary" onClick={copyTemplate}>📋 复制格式模板</Button>
+        <Button variant="primary" onClick={copyTemplate}>Copy format template</Button>
         <Button variant={managing ? 'primary' : 'default'} onClick={() => setManaging(!managing)}>
-          题目管理（{imported.length} 题）
+
+           Question management ( {imported.length}   questions)
         </Button>
         <span className="toolbar__spacer" />
-        <span className="muted">支持：阅读 / 完形 / 7选5 / 排序 / 翻译 / 写作</span>
+        <span className="muted"> Supports: Reading / Cloze / 7-choose-5 / Reorder / Paraphrasing / Writing </span>
       </div>
 
       {managing ? (
-        <Card title="已导入题目" extra={<span className="muted">导入的题可在此删除；删除后练习列表同步移除</span>}>
+        <Card title="Imported questions" extra={<span className="muted"> Imported questions can be deleted here; after deletion, they are also removed from the practice list </span>}>
           {imported.length === 0 ? (
-            <EmptyState icon="📥" title="暂无导入题目">先粘贴解析一篇真题吧</EmptyState>
+            <EmptyState icon="📥" title="No imported questions yet"> Paste and parse a past exam first </EmptyState>
           ) : (
             <div className="item-list">
               {imported.map((q) => (
@@ -141,10 +143,11 @@ export default function Import() {
                     <div className="item-row__title">
                       {q.title} <Tag variant="plain">{QUESTION_TYPE_LABELS[q.type]}</Tag>
                     </div>
-                    <div className="item-row__meta">{q.sourceLabel} · {q.items.length > 0 ? `${q.items.length} 小题` : '主观题'}</div>
+                    <div className="item-row__meta">{q.sourceLabel} · {q.items.length > 0 ? `${q.items.length} sub-questions ` : "Subjective question"}</div>
                   </div>
                   <Button variant="danger" style={{ padding: '5px 12px' }} onClick={() => setConfirmDelete(q)}>
-                    删除
+
+                     Delete
                   </Button>
                 </div>
               ))}
@@ -154,46 +157,48 @@ export default function Import() {
       ) : (
         <>
           <textarea
-            className="textarea"
-            style={{ minHeight: 320, fontFamily: 'Consolas, monospace', fontSize: 13 }}
-            placeholder={'粘贴真题文本……\n\n不确定格式？点上方「复制格式模板」'}
+            className="textarea study-import-text"
+            aria-label="Question text to import"
+            placeholder={"Paste past exam text...\n\nNot sure about the format? Click \"Copy format template\" above"}
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <div className="toolbar" style={{ marginTop: 12 }}>
             <Button variant="primary" onClick={parse} disabled={!text.trim()}>
-              解析预览
+
+               Parse preview
             </Button>
-            <Button onClick={() => setText('')} disabled={!text}>清空</Button>
+            <Button onClick={() => setText('')} disabled={!text}> Clear </Button>
           </div>
         </>
       )}
 
       {result && (
         <Modal
-          title={`解析结果：${result.questions.length} 道题，${result.errors.length} 个问题`}
+          title={` Parse result:${result.questions.length} questions,${result.errors.length} problems `}
           onClose={() => setResult(null)}
           footer={
             <>
-              <Button onClick={() => setResult(null)}>取消</Button>
+              <Button onClick={() => setResult(null)}> Cancel </Button>
               <Button variant="primary" onClick={confirmImport} disabled={result.questions.length === 0}>
-                确认入库（{result.questions.length} 题）
+
+                 Confirm import ( {result.questions.length}   questions)
               </Button>
             </>
           }
         >
           {result.errors.length > 0 && (
             <div className="card card--flat" style={{ borderColor: 'var(--c-warning)', marginBottom: 12 }}>
-              <b className="small" style={{ color: 'var(--c-warning)' }}>解析问题（无效题目已排除）：</b>
+              <b className="small" style={{ color: 'var(--c-warning)' }}> Parse problems (invalid questions excluded): </b>
               <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 13 }}>
                 {result.errors.map((e, i) => (
-                  <li key={i}>第 {e.line} 行：{e.message}</li>
+                  <li key={i}> No.  {e.line}   Line: {e.message}</li>
                 ))}
               </ul>
             </div>
           )}
           {result.questions.length === 0 ? (
-            <EmptyState icon="⚠️" title="没有解析出题目">请检查格式，或复制模板参考</EmptyState>
+            <EmptyState icon="⚠️" title="No questions parsed"> Please check the format, or copy the template for reference </EmptyState>
           ) : (
             <div className="item-list">
               {result.questions.map((q, i) => (
@@ -204,10 +209,10 @@ export default function Import() {
                     <b>{q.title}</b>
                   </div>
                   <div className="muted small">
-                    {q.items.length > 0 ? `${q.items.length} 小题 · ` : ''}
-                    {q.items.filter((it) => it.correctIds.length > 0).length} 题含答案
-                    {q.referenceTranslation && ' · 含参考译文'}
-                    {q.referenceEssay && ' · 含参考范文'}
+                    {q.items.length > 0 ? `${q.items.length} sub-questions · ` : ''}
+                    {q.items.filter((it) => it.correctIds.length > 0).length}   questions with answers
+                    {q.referenceTranslation && "· Includes reference paraphrase"}
+                    {q.referenceEssay && "· Includes reference essay"}
                   </div>
                   {q.passage && (
                     <div className="small muted" style={{ marginTop: 4 }}>
@@ -223,11 +228,11 @@ export default function Import() {
 
       {confirmDelete && (
         <Modal
-          title="删除题目"
+          title="Delete question"
           onClose={() => setConfirmDelete(null)}
           footer={
             <>
-              <Button onClick={() => setConfirmDelete(null)}>取消</Button>
+              <Button onClick={() => setConfirmDelete(null)}> Cancel </Button>
               <Button
                 variant="danger"
                 onClick={() => {
@@ -235,12 +240,13 @@ export default function Import() {
                   setConfirmDelete(null)
                 }}
               >
-                确认删除
+
+                 Confirm deletion
               </Button>
             </>
           }
         >
-          <p>确定删除「{confirmDelete.title}」吗？相关的错题档案记录将保留但显示「题目已删除」。</p>
+          <p> Are you sure you want to delete &quot; {confirmDelete.title} &quot;? Related mistake archive records will be kept but will show &quot;Question deleted&quot;. </p>
         </Modal>
       )}
     </div>

@@ -21,7 +21,7 @@ interface Props {
   onBack: () => void
 }
 
-/** 判分结果 + 逐题解析 + 主观题自评 */
+/* Scoring results + question-by-question analysis + subjective question self-assessment */
 export function ResultView({
   question,
   graded,
@@ -44,12 +44,12 @@ export function ResultView({
       <div className="card" style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 15 }}>{question.title}</div>
         <div className="stat-card__num" style={{ fontSize: 34, margin: '8px 0' }}>
-          {isSubjective ? '主观题' : `${score} / ${total}`}
+          {isSubjective ? "Subjective question" : `${score} / ${total}`}
         </div>
         <div className="muted">
-          {isSubjective ? '请对照参考内容自评' : `用时 ${formatTime(timeSpent)}`}
+          {isSubjective ? "Please self-assess by comparing with the reference content" : ` Time used ${formatTime(timeSpent)}`}
           {!isSubjective && question.suggestedMinutes && timeSpent > question.suggestedMinutes * 60 && (
-            <span style={{ color: 'var(--c-warning)' }}>　（超过建议用时，考场注意节奏）</span>
+            <span style={{ color: 'var(--c-warning)' }}>　　 (Exceeded suggested time, pay attention to pacing in the exam room) </span>
           )}
         </div>
       </div>
@@ -65,14 +65,15 @@ export function ResultView({
           {uncertainRight.length > 0 && (
             <div className="card" style={{ borderColor: 'var(--c-warning)' }}>
               <div className="flex-row" style={{ marginBottom: 8 }}>
-                <Tag variant="warning">答对但不确定</Tag>
-                <span className="muted">以下题目虽然答对了，但你是蒙的——建议也收进错题档案（假性掌握是 80 分路上的最大陷阱）</span>
+                <Tag variant="warning"> Answered correctly but uncertain </Tag>
+                <span className="muted"> Although the following questions were answered correctly, you guessed—it is recommended to also include them in the wrong-question archive (false mastery is the biggest trap on the road to 80 points) </span>
               </div>
               {uncertainRight.map((g) => (
                 <div key={g.itemId} className="flex-row" style={{ justifyContent: 'space-between', marginTop: 6 }}>
                   <span className="small">{g.item.stem}</span>
                   <Button variant="ghost" onClick={() => onAddToWrongBook(g.itemId)}>
-                    收入错题档案
+
+                     Include in wrong-question archive
                   </Button>
                 </div>
               ))}
@@ -82,25 +83,27 @@ export function ResultView({
           {wrongItems.length > 0 && (
             <div className="card" style={{ borderColor: 'var(--c-danger)' }}>
               <div className="flex-row" style={{ marginBottom: 4 }}>
-                <Tag variant="danger">错题</Tag>
-                <span className="muted">已自动收录进错题档案，点击「填写三问」记录你的错误思路（也可稍后在错题档案中补填）</span>
+                <Tag variant="danger"> Wrong question </Tag>
+                <span className="muted"> Automatically included in the wrong-question archive. Click &quot;Fill in the three questions&quot; to record your mistaken thinking (you can also fill it in later in the wrong-question archive) </span>
               </div>
             </div>
           )}
 
           <div className="form-label" style={{ marginTop: 18 }}>
-            逐题解析
+
+             Question-by-question analysis
           </div>
           {graded.map((g, i) => (
             <div key={g.itemId}>
               <div className="form-label" style={{ margin: '12px 0 6px' }}>
-                {i + 1}. {g.item.stem ?? (g.item.kind === 'reorder' ? '排序题' : '')}
+                {i + 1}. {g.item.stem ?? (g.item.kind === 'reorder' ? "Ordering question" : '')}
               </div>
               <ExplanationCard graded={{ ...g, item: resolveItem(question, g.item) }} />
               {!g.correct && (
                 <div style={{ marginTop: 6 }}>
                   <Button variant="ghost" onClick={() => onOpenThinking(g.itemId)}>
-                    ✍️ 填写三问（我当时怎么想的 / 干扰项如何诱导我 / 正确项如何替换）
+
+                     ✍️ Fill in the three questions (What was I thinking at the time / How did the distractor lure me / How did the correct option substitute)
                   </Button>
                 </div>
               )}
@@ -110,9 +113,10 @@ export function ResultView({
       )}
 
       <div className="flex-row" style={{ marginTop: 24, justifyContent: 'center' }}>
-        <Button onClick={onBack}>返回题目列表</Button>
+        <Button onClick={onBack}> Back to question list </Button>
         <Button variant="primary" onClick={onRestart}>
-          再练一次
+
+           Practice again
         </Button>
       </div>
     </div>
@@ -136,14 +140,15 @@ function SubjectiveReview({
     <div>
       {isTranslation && question.referenceTranslation && (
         <div className="card">
-          <div className="form-label">参考译文</div>
-          <p style={{ margin: 0 }}>{question.referenceTranslation}</p>
+          <div className="form-label"> Reference Paraphrase </div>
+          <p className="study-prose" style={{ margin: 0 }}>{question.referenceTranslation}</p>
           {question.translationSteps && question.translationSteps.length > 0 && (
             <div style={{ marginTop: 12 }}>
               {question.translationSteps.map((s) => (
                 <div key={s.step} className={`step-card${openStep === s.step ? ' step-card--open' : ''}`}>
                   <div className="step-card__head" onClick={() => setOpenStep(openStep === s.step ? null : s.step)}>
-                    第 {s.step} 步：{s.step === 1 ? '切分结构' : s.step === 2 ? '调整语序' : '意译通顺'}
+
+                     No.  {s.step}   Step: {s.step === 1 ? "Segment structure" : s.step === 2 ? "Adjust word order" : "Paraphrase smoothly"}
                     <span>{openStep === s.step ? '▲' : '▼'}</span>
                   </div>
                   <div className="step-card__body">
@@ -158,11 +163,12 @@ function SubjectiveReview({
 
       {!isTranslation && question.referenceEssay && (
         <div className="card">
-          <div className="form-label">参考范文</div>
-          <div style={{ whiteSpace: 'pre-wrap', fontSize: 14 }}>{question.referenceEssay}</div>
+          <div className="form-label"> Reference essay </div>
+          <div className="study-prose study-prose--pre">{question.referenceEssay}</div>
           {question.essayPatternIds && question.essayPatternIds.length > 0 && (
             <div className="muted" style={{ marginTop: 10 }}>
-              范文使用句型（去「写作 → 句型库」查看中英对照与用法）：
+
+               Sentence patterns used in the model essay (go to &quot;Writing → Pattern Library&quot; to view English examples and explanations and usage):
               {question.essayPatternIds.join('、')}
             </div>
           )}
@@ -171,7 +177,7 @@ function SubjectiveReview({
 
       {question.tips && question.tips.length > 0 && (
         <div className="card card--flat">
-          <div className="form-label">本题提示</div>
+          <div className="form-label"> Question tips </div>
           <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13.5 }}>
             {question.tips.map((t, i) => (
               <li key={i}>{t}</li>
@@ -181,7 +187,7 @@ function SubjectiveReview({
       )}
 
       <div className="card">
-        <div className="form-label">自评得分（0-10 分）</div>
+        <div className="form-label"> Self-assessment score (0-10 points) </div>
         <div className="flex-row">
           <input
             type="range"
@@ -198,8 +204,8 @@ function SubjectiveReview({
         </div>
         <div className="muted" style={{ marginTop: 8 }}>
           {isTranslation
-            ? '对照参考译文自查：结构切分是否正确？语序是否自然？有无字面硬译？'
-            : '对照范文自查：主题提炼是否精准？论证是否多维度？句型是否丰富？'}
+            ? "Compare your paraphrase with the reference: Are all key ideas preserved? Is the sentence structure clear? Is the wording natural?"
+            : "Check against the model essay: Is the theme extraction accurate? Is the argument multi-dimensional? Are the sentence patterns rich?"}
         </div>
       </div>
     </div>

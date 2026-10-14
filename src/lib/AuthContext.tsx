@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const stopSync = installAutoSync()
     let active = true
     let authRevision = 0
-    // 初始 session
+    // Initial session
     supabase!.auth.getSession().then(({ data }) => {
       if (!active) return
       if (authRevision === 0) {
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     }).catch(() => { if (active) setLoading(false) })
 
-    // 监听认证状态变化
+    // Listen for authentication state changes
     const { data: sub } = supabase!.auth.onAuthStateChange((_event, newSession) => {
       authRevision++
       setStorageUser(newSession?.user.id ?? null)
@@ -60,14 +60,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signUp = async (email: string, password: string) => {
-    if (!supabase) return { error: 'Supabase 未配置' }
+    if (!supabase) return { error: "Supabase not configured" }
     const { error } = await supabase.auth.signUp({ email, password })
     if (error) return { error: error.message }
     return {}
   }
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: 'Supabase 未配置' }
+    if (!supabase) return { error: "Supabase not configured" }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) return { error: error.message }
     return {}

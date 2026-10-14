@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import type { Question } from '../types'
 import { getQuestionsByType } from '../utils/questions'
 import { PracticeSession } from '../components/practice/PracticeSession'
 import { PatternLibrary } from '../components/writing/PatternLibrary'
-import { Tag } from '../components/ui/Tag'
+import { StudyCollection } from '../components/ui/StudyCollection'
 import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 
@@ -18,40 +17,27 @@ export default function Writing() {
   }
 
   return (
-    <div>
-      <h1 className="page-title">写作</h1>
-      <p className="page-sub">图画作文（目标 23-24 分）：拒绝模板，练论证深度与句式丰富度</p>
+    <div className="study-page">
+      <h1 className="page-title"> Writing </h1>
+      <p className="page-sub">Picture-based writing practice with model essays, argument development, and functional sentence patterns.</p>
 
       <div className="toolbar">
-        <button className="btn" onClick={() => setShowLibrary(!showLibrary)}>
-          📚 {showLibrary ? '收起' : '展开'}句型库（8 类功能句型，写作时速查）
+        <button className="btn" type="button" aria-expanded={showLibrary} onClick={() => setShowLibrary(!showLibrary)}>
+          {showLibrary ? 'Hide' : 'Show'} sentence pattern library
         </button>
         <span className="toolbar__spacer" />
-        <span className="muted">小作文 8 分 + 大作文 15-16 分</span>
+        <span className="muted"> Short essay 8 points + long essay 15-16 points </span>
       </div>
 
       {showLibrary && <PatternLibrary compact />}
 
-      <h3 style={{ marginTop: 24 }}>图画作文练习</h3>
+      <h2 className="study-section-title">Writing exercises</h2>
       {questions.length === 0 ? (
         <Card>
-          <EmptyState icon="📝" title="暂无写作题目">去「真题导入」粘贴真题作文题</EmptyState>
+          <EmptyState icon="📝" title="No writing questions yet"> Go to &quot;Real Exam Import&quot; and paste the real exam essay prompt </EmptyState>
         </Card>
       ) : (
-        <div className="item-list">
-          {questions.map((q: Question) => (
-            <div key={q.id} className="item-row" role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}>
-              <div className="item-row__main">
-                <div className="item-row__title">{q.title}</div>
-                <div className="item-row__meta">
-                  {q.source === 'imported' ? <Tag variant="warning">导入</Tag> : <Tag variant="plain">模拟题</Tag>}
-                  {' '}写作 → 对照范文（标注所用句型）
-                </div>
-              </div>
-              <span className="muted">开始练习 →</span>
-            </div>
-          ))}
-        </div>
+        <StudyCollection questions={questions} onOpen={setActiveId} />
       )}
     </div>
   )

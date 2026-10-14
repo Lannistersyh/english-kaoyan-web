@@ -11,10 +11,10 @@ interface Props {
 
 export function Card({ title, extra, flat, className = '', style, children }: Props) {
   return (
-    <div className={`card${flat ? ' card--flat' : ''}${className ? ` ${className}` : ''}`} style={style}>
+    <div className={`card${title || extra ? ' card--section' : ''}${flat ? ' card--flat' : ''}${className ? ` ${className}` : ''}`} style={style}>
       {(title || extra) && (
-        <div className="flex-row" style={{ marginBottom: 12, justifyContent: 'space-between' }}>
-          <h3 style={{ margin: 0, fontSize: 16 }}>{title}</h3>
+        <div className="flex-row card__header">
+          {title && <h2 className="card__title">{title}</h2>}
           {extra}
         </div>
       )}

@@ -1,11 +1,9 @@
 import type { AnswerRecord, SubQuestion } from '../types'
 
-/**
- * 客观题判分：
- * - choice/gapfill：答案 id 与 correctIds 比对
- * - reorder：数组全等比较
- * - freeform：不判对错，由用户自评（correct 恒 false）
- */
+/* * Objective question scoring:
+ * - choice/gapfill: compare answer id with correctIds
+ * - reorder: compare arrays for full equality
+ * - freeform: no right/wrong judgment, user self-assesses (correct is always false) */
 export function judgeAnswer(item: SubQuestion, answer: string[]): boolean {
   if (item.kind === 'freeform' || item.correctIds.length === 0 || answer.length === 0 || answer.some(id => !id)) return false
   if (item.kind === 'reorder') {
@@ -23,7 +21,7 @@ export interface GradedAnswer extends AnswerRecord {
   item: SubQuestion
 }
 
-/** 对一次作答进行判分，返回逐题判定结果与得分 */
+/* Score a single attempt, returning per-question judgment results and the score */
 export function gradeAnswers(
   items: SubQuestion[],
   rawAnswers: Record<string, string[]>,

@@ -18,6 +18,8 @@ import { Tag } from '../ui/Tag'
 import { QuestionView } from './QuestionView'
 import { ResultView } from './ResultView'
 import { ThinkingForm } from './ThinkingForm'
+import { Card } from '../ui/Card'
+import { QUESTION_TYPE_LABELS } from '../../data'
 
 interface Props {
   question: Question
@@ -28,9 +30,7 @@ interface Props {
 
 type Phase = 'setup' | 'answering' | 'graded'
 
-/**
- * 练习状态机：setup → answering（计时）→ graded（判分/解析/错题入档/三问）
- */
+/* * Practice state machine: setup → answering (timed) → graded (scoring/analysis/wrong questions archived/three questions) */
 export function PracticeSession({ question, isReview = false, onExit, onGraded }: Props) {
   const [phase, setPhase] = useState<Phase>('setup')
   const [answers, setAnswers] = useState<Record<string, string[]>>({})
@@ -48,6 +48,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   const timer = useTimer(phase === 'answering')
   const startedAtRef = useRef(0)
   const isSubjective = question.type === 'translation' || question.type === 'writing'
+  const hasSubjectiveAnswer = Boolean((answers[question.id] ?? [''])[0]?.trim())
 
   const start = () => {
     startedAtRef.current = Date.now()
@@ -98,10 +99,11 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   }
 
   const submit = () => {
+    if (isSubjective && !hasSubjectiveAnswer) return
     timer.setPaused(true)
     const now = Date.now()
     if (isSubjective) {
-      // 主观题：不判分，进自评
+      // Subjective question: no scoring, proceed to self-assessment
       setGraded([])
       setSessions([
         ...sessions,
@@ -158,7 +160,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
     setPhase('graded')
     onGraded?.(result.graded, result.score, result.total)
 
-    // 设置开启时自动弹出第一道错题的三问表单
+    // When the setting is enabled, automatically pop up the three-question form for the first wrong question
     const settings = load<Settings>(STORAGE_KEYS.settings, { promptThinkingOnWrong: true })
     if (!isReview && settings.promptThinkingOnWrong) {
       const firstWrong = result.graded.find((g) => !g.correct)
@@ -206,20 +208,42 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
     : undefined
 
   if (phase === 'setup') {
+    if (question.type !== 'reading') {
+      return (
+        <div className="study-page">
+          <div className="docsum__cit">{question.sourceLabel} · {QUESTION_TYPE_LABELS[question.type]}</div>
+          <h1 className="page-title">{question.title}</h1>
+          <p className="page-sub">
+            {question.items.length ? `${question.items.length} questions` : 'Self-assessment with reference material'}
+            {question.suggestedMinutes ? ` · Suggested time: ${question.suggestedMinutes} minutes` : ''}
+            {isReview ? ' · Review exercise' : ''}
+          </p>
+          {question.tips?.length ? (
+            <Card title="Exercise guidance">
+              <ul className="advice-list">{question.tips.map((tip, i) => <li key={i}>{tip}</li>)}</ul>
+            </Card>
+          ) : null}
+          <div className="flex-row">
+            <Button onClick={onExit}>Back</Button>
+            <Button variant="primary" onClick={start}>Start answering</Button>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="card" style={{ textAlign: 'center', padding: 40 }}>
         <div className="flex-row" style={{ justifyContent: 'center', gap: 8, marginBottom: 12 }}>
           <Tag variant="plain">{question.sourceLabel}</Tag>
           <Tag>{question.title}</Tag>
-          {isReview && <Tag variant="warning">错题回顾</Tag>}
+          {isReview && <Tag variant="warning"> Wrong-question review </Tag>}
         </div>
         <p className="muted">
-          {question.items.length > 0 ? `共 ${question.items.length} 题` : '主观题 · 对照自评'}
-          {question.suggestedMinutes ? `　建议用时 ${question.suggestedMinutes} 分钟` : ''}
+          {question.items.length > 0 ? ` Total ${question.items.length} Question ` : "Subjective question · Self-assessment by comparison"}
+          {question.suggestedMinutes ? `　Suggested time ${question.suggestedMinutes} minutes ` : ''}
         </p>
         {question.tips && question.tips.length > 0 && (
           <div style={{ textAlign: 'left', margin: '12px auto', maxWidth: 520 }}>
-            <div className="form-label">做题提示</div>
+            <div className="form-label"> Question tips </div>
             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13.5 }}>
               {question.tips.map((t, i) => (
                 <li key={i}>{t}</li>
@@ -228,9 +252,10 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           </div>
         )}
         <div className="flex-row" style={{ justifyContent: 'center', marginTop: 18 }}>
-          <Button onClick={onExit}>返回</Button>
+          <Button onClick={onExit}> Back </Button>
           <Button variant="primary" onClick={start}>
-            开始作答
+
+             Start answering
           </Button>
         </div>
       </div>
@@ -239,12 +264,13 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
 
   if (phase === 'graded' && graded) {
     return (
-      <div>
+      <div className={question.type === 'reading' ? undefined : 'study-page'}>
         <div className="flex-row" style={{ marginBottom: 12 }}>
           <Button variant="ghost" onClick={onExit}>
-            ← 返回
+
+             ← Back
           </Button>
-          <span className="muted">用时 {formatTime(timer.seconds)}</span>
+          <span className="muted"> Time used  {formatTime(timer.seconds)}</span>
         </div>
         <ResultView
           question={question}
@@ -287,25 +313,31 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
 
   // answering
   return (
-    <div>
-      {/* PubMed 式文章顶部动作栏 */}
-      <div className="action-bar" style={{ marginBottom: 20, marginLeft: -20, marginRight: -20, marginTop: -24 }}>
+    <div className={question.type === 'reading' ? undefined : 'study-page'}>
+      {/* Reading session actions */}
+      <div className={`action-bar${question.type === 'reading' ? '' : ' action-bar--study'}`} style={question.type === 'reading' ? { marginBottom: 20, marginLeft: -20, marginRight: -20, marginTop: -24 } : undefined}>
         <div className="action-bar__inner">
           <Button variant="ghost" onClick={onExit}>
-            ← 返回检索
+
+             ← Back to search
           </Button>
           <span className="muted small">{question.sourceLabel}</span>
           <span className="action-bar__actions" style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
             <span className="muted">
               ⏱ {formatTime(timer.seconds)}
-              {question.suggestedMinutes ? ` / ${question.suggestedMinutes} 分钟建议` : ''}
+              {question.suggestedMinutes ? ` / ${question.suggestedMinutes} minutes suggested ` : ''}
             </span>
-            <Button variant="primary" onClick={submit}>
-              交卷
+            <Button variant="primary" onClick={submit} disabled={isSubjective && !hasSubjectiveAnswer}>
+
+               Submit
             </Button>
           </span>
         </div>
       </div>
+      {question.type !== 'reading' && <header className="study-session-heading">
+        <h1 className="page-title">{question.title}</h1>
+        <p className="page-sub">{QUESTION_TYPE_LABELS[question.type]} · {question.sourceLabel}</p>
+      </header>}
       <QuestionView
         question={question}
         answers={answers}
@@ -315,12 +347,14 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
       />
       <div className="flex-row" style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--c-divider)' }}>
         <span className="muted">
-          已完成 {Object.keys(answers).filter((k) => (answers[k] ?? []).length > 0).length} /{' '}
-          {question.items.length > 0 ? question.items.length : '—'} 题
+
+           Completed  {Object.keys(answers).filter((k) => (answers[k] ?? []).length > 0).length} /{' '}
+          {question.items.length > 0 ? question.items.length : '—'}   Question
         </span>
         <span className="toolbar__spacer" />
-        <Button variant="primary" onClick={submit}>
-          交卷
+        <Button variant="primary" onClick={submit} disabled={isSubjective && !hasSubjectiveAnswer}>
+
+           Submit
         </Button>
       </div>
     </div>

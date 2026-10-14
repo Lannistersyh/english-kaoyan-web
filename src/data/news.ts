@@ -1,9 +1,7 @@
 import type { Question } from '../types'
 
-/**
- * 外刊精读文章（6 篇，BBC / The Economist / CNN 风格）
- * 每篇 200-400 词，配词汇注释 + 阅读理解题 + 逻辑标注
- */
+/* * Foreign magazine intensive reading articles (6 articles, BBC / The Economist / CNN style)
+ * Each 200-400 words, with vocabulary notes + reading comprehension questions + logic annotations */
 export const newsArticles: Question[] = [
   // ──── 1 ────
   {
@@ -23,10 +21,10 @@ However, researchers have found effective countermeasures. The "five-minute rule
 
 Understanding procrastination as a neurological tug-of-war rather than a character defect is liberating. You are not lazy; you are human. And with the right strategies, you can gently coax your prefrontal cortex back into the driver's seat.`,
     passageAnnotations: [
-      { id: 'n1-a1', type: 'claim', text: 'procrastination is fundamentally an emotional regulation problem', note: '核心论点：拖延是情绪调节问题，非时间管理问题' },
-      { id: 'n1-a2', type: 'evidence', text: 'Psychologists at the University of California have identified', note: '学术研究支撑论点' },
-      { id: 'n1-a3', type: 'attitude', text: 'You are not lazy; you are human', note: '作者态度：去道德化，共情读者' },
-      { id: 'n1-a4', type: 'keyword', text: 'present bias', note: '关键概念：即时偏误 — 高估当下回报' },
+      { id: 'n1-a1', type: 'claim', text: 'procrastination is fundamentally an emotional regulation problem', note: "Core argument: procrastination is an emotional regulation problem, not a time management problem" },
+      { id: 'n1-a2', type: 'evidence', text: 'Psychologists at the University of California have identified', note: "Academic research supports the argument" },
+      { id: 'n1-a3', type: 'attitude', text: 'You are not lazy; you are human', note: "Author's attitude: de-moralizing, empathizing with readers" },
+      { id: 'n1-a4', type: 'keyword', text: 'present bias', note: "Key concept: present bias — overvaluing immediate rewards" },
     ],
     items: [
       {
@@ -38,12 +36,12 @@ Understanding procrastination as a neurological tug-of-war rather than a charact
           { id: 'D', text: 'excessive dopamine from social media' },
         ],
         correctIds: ['B'],
-        analysis: '第二段首句明确指出 "procrastination is fundamentally an emotional regulation problem, not a time management issue"，对应选项 B。A 是文章明确否定的传统观点。',
+        analysis: "The first sentence of the second paragraph clearly states \"procrastination is fundamentally an emotional regulation problem, not a time management issue,\" corresponding to option B. A is the traditional view that the article explicitly rejects.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '文章明确否定了这是时间管理问题，这恰恰是传统误解' },
-          { optionId: 'D', type: '无中生有', why: '文章提到 dopamine 是为了解释即时偏误，未说它是主要原因' },
+          { optionId: 'A', type: "Concept substitution", why: "The article explicitly denies that this is a time management problem; that is precisely the traditional misunderstanding." },
+          { optionId: 'D', type: "Unsupported claim", why: "The article mentions dopamine to explain present bias, not to say it is the main cause." },
         ],
-        vocabNotes: ['ritual n. 例行公事，习惯性行为', 'limbic system 边缘系统（大脑情绪中枢）'],
+        vocabNotes: ["ritual n. a routine, a habitual action", "limbic system (the brain's emotional center)"],
         score: 2,
       },
       {
@@ -55,12 +53,12 @@ Understanding procrastination as a neurological tug-of-war rather than a charact
           { id: 'D', text: 'it forces the prefrontal cortex to override emotions' },
         ],
         correctIds: ['B'],
-        analysis: '第四段 "the commitment feels trivial...the amygdala\'s resistance" 直接对应 B。',
+        analysis: "The fourth paragraph, \"the commitment feels trivial...the amygdala's resistance,\" directly corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '过度推断', why: '文章未说五分钟足够完成大多数任务' },
-          { optionId: 'D', type: '偷换概念', why: '不是"强制"override，而是"绕过"bypass' },
+          { optionId: 'A', type: "Over-inference", why: "The article does not say five minutes is enough to complete most tasks." },
+          { optionId: 'D', type: "Concept substitution", why: "It is not a \"forced\" override, but a \"bypass.\"" },
         ],
-        vocabNotes: ['bypass v. 绕过，避开', 'trivial adj. 微不足道的'],
+        vocabNotes: ["bypass v. to go around, to avoid", "trivial adj. insignificant"],
         score: 2,
       },
       {
@@ -72,16 +70,16 @@ Understanding procrastination as a neurological tug-of-war rather than a charact
           { id: 'D', text: 'humorous and sarcastic' },
         ],
         correctIds: ['C'],
-        analysis: '最后段 "You are not lazy; you are human...liberating" 表明作者态度是理解和安慰的。',
+        analysis: "The final paragraph, \"You are not lazy; you are human...liberating,\" shows that the author's attitude is understanding and comforting.",
         distractors: [
-          { optionId: 'B', type: '局部正确', why: '科普风格看似中性，但结尾情绪色彩强烈' },
+          { optionId: 'B', type: "Partially true", why: "The popular science style seems neutral, but the ending has a strong emotional tone." },
         ],
-        vocabNotes: ['liberating adj. 令人解脱的', 'coax v. 耐心地引导'],
+        vocabNotes: ["liberating adj. freeing, emancipating", "coax v. to guide patiently"],
         score: 2,
       },
     ],
-    tips: ['先看结构标注（claim/evidence/attitude），再逐题作答', '注意 "present bias" 和 "temporal discounting" 这两个关键概念'],
-    vocabNotes: ['procrastination n. 拖延', 'amygdala n. 杏仁核（大脑恐惧中枢）', 'prefrontal cortex 前额叶皮层（负责计划决策）', 'insidious adj. 潜伏的，暗中为害的', 'temporal discounting 时间折扣效应'],
+    tips: ["First look at the structural annotations (claim/evidence/attitude), then answer the questions one by one.", "Pay attention to the two key concepts \"present bias\" and \"temporal discounting\"."],
+    vocabNotes: ["procrastination n. procrastination", "amygdala n. amygdala (the brain's fear center)", "prefrontal cortex prefrontal cortex (responsible for planning and decision-making)", "insidious adj. insidious, harmfully stealthy", "temporal discounting temporal discounting effect"],
   },
 
   // ──── 2 ────
@@ -102,10 +100,10 @@ Perhaps most striking is what scientists call "swarm intelligence" in plants. A 
 
 None of this requires a brain or neurons. Plants use electrical signalling, chemical messengers, and hydraulic pressure changes to achieve what animals achieve with nervous systems. This has led some researchers to propose the concept of "plant neurobiology" — a term that remains controversial but signals a paradigm shift in how we understand cognition itself.`,
     passageAnnotations: [
-      { id: 'n2-a1', type: 'claim', text: 'a quiet revolution in botanical science is forcing us to reconsider what intelligence actually means', note: '中心论点：植物研究正在颠覆我们对"智能"的定义' },
-      { id: 'n2-a2', type: 'evidence', text: 'trees can send chemical warning signals to neighbours', note: '证据 1：化学信号传递' },
-      { id: 'n2-a3', type: 'evidence', text: 'The Venus flytrap counts the number of times its trigger hairs are touched', note: '证据 2：捕蝇草计数能力 = 记忆' },
-      { id: 'n2-a4', type: 'attitude', text: 'a paradigm shift in how we understand cognition', note: '作者态度：这是一个范式转变' },
+      { id: 'n2-a1', type: 'claim', text: 'a quiet revolution in botanical science is forcing us to reconsider what intelligence actually means', note: "Central argument: plant research is overturning our definition of \"intelligence\"." },
+      { id: 'n2-a2', type: 'evidence', text: 'trees can send chemical warning signals to neighbours', note: "Evidence 1: chemical signaling" },
+      { id: 'n2-a3', type: 'evidence', text: 'The Venus flytrap counts the number of times its trigger hairs are touched', note: "Evidence 2: the Venus flytrap's counting ability = memory" },
+      { id: 'n2-a4', type: 'attitude', text: 'a paradigm shift in how we understand cognition', note: "Author's attitude: this is a paradigm shift." },
     ],
     items: [
       {
@@ -117,12 +115,12 @@ None of this requires a brain or neurons. Plants use electrical signalling, chem
           { id: 'D', text: 'the root system of a single tree' },
         ],
         correctIds: ['B'],
-        analysis: '第二段直接定义 "vast underground fungal networks — colloquially dubbed the Wood Wide Web"，对应 B。',
+        analysis: "The second paragraph directly defines \"vast underground fungal networks — colloquially dubbed the Wood Wide Web\", which corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '是 fungal network 不是 internet' },
-          { optionId: 'D', type: '局部正确', why: '不是单棵树，而是树与树之间的连接网络' },
+          { optionId: 'A', type: "Concept substitution", why: "It is a fungal network, not the internet." },
+          { optionId: 'D', type: "Partially true", why: "It is not a single tree, but a connection network between trees." },
         ],
-        vocabNotes: ['colloquially adv. 通俗地称为', 'mycorrhizal adj. 菌根的'],
+        vocabNotes: ["colloquially adv. colloquially known as", "mycorrhizal adj. mycorrhizal"],
         score: 2,
       },
       {
@@ -134,12 +132,12 @@ None of this requires a brain or neurons. Plants use electrical signalling, chem
           { id: 'D', text: 'compete for resources' },
         ],
         correctIds: ['B'],
-        analysis: '第三段首句 "Plants also exhibit a form of memory" 后立即用捕蝇草举例，说明植物具有记忆能力。',
+        analysis: "The first sentence of the third paragraph, \"Plants also exhibit a form of memory\", is immediately followed by the Venus flytrap example, showing that plants have memory capacity.",
         distractors: [
-          { optionId: 'A', type: '张冠李戴', why: '识别亲属是第二段母树的例子，非捕蝇草' },
-          { optionId: 'C', type: '局部正确', why: '电信号在末段提及，但不是捕蝇草例子的要点' },
+          { optionId: 'A', type: "Misattribution", why: "Recognizing kin is the example of the mother tree in the second paragraph, not the Venus flytrap." },
+          { optionId: 'C', type: "Partially true", why: "Electrical signals are mentioned in the last paragraph, but they are not the key point of the Venus flytrap example." },
         ],
-        vocabNotes: ['trigger hairs 触发毛（捕蝇草的感应结构）', 'habituation n. 习惯化'],
+        vocabNotes: ["trigger hairs trigger hairs (the sensory structures of the Venus flytrap)", "habituation n. habituation"],
         score: 2,
       },
       {
@@ -151,16 +149,16 @@ None of this requires a brain or neurons. Plants use electrical signalling, chem
           { id: 'D', text: 'It is purely metaphorical with no scientific basis' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "remains controversial but signals a paradigm shift" 直接对应 C。',
+        analysis: "The last paragraph's \"remains controversial but signals a paradigm shift\" directly corresponds to C.",
         distractors: [
-          { optionId: 'D', type: '过度推断', why: '文章强调有科学依据（电信号、化学信使等），非纯隐喻' },
+          { optionId: 'D', type: "Over-inference", why: "The article emphasizes that there is scientific evidence (electrical signals, chemical messengers, etc.), not pure metaphor." },
         ],
-        vocabNotes: ['paradigm shift 范式转变', 'cognition n. 认知'],
+        vocabNotes: ["paradigm shift paradigm shift", "cognition n. cognition"],
         score: 2,
       },
     ],
-    tips: ['注意作者引用多个实验证据来支撑中心论点的论证结构', '关注末段对争议性术语的态度 — 常设为作者态度题'],
-    vocabNotes: ['botanical adj. 植物学的', 'subterranean adj. 地下的', 'kin n. 亲属，同类', 'emergent adj. 涌现的', 'hydraulic adj. 液压的'],
+    tips: ["Note the argumentative structure in which the author cites multiple pieces of experimental evidence to support the central argument.", "Pay attention to the attitude toward controversial terms in the last paragraph — this is often set as an author's attitude question."],
+    vocabNotes: ["botanical adj. botanical", "subterranean adj. subterranean", "kin n. kin, same kind", "emergent adj. emergent", "hydraulic adj. hydraulic"],
   },
 
   // ──── 3 ────
@@ -179,10 +177,10 @@ The ubiquity of plastic in modern life makes avoidance nearly impossible. Bottle
 
 Scientists stress that panic is not warranted, but precaution is sensible. Filtering tap water, choosing natural fibres over synthetics, and reducing single-use plastics are practical steps. The longer-term solution, researchers argue, lies not in individual behaviour but in redesigning materials at the chemical level to ensure biodegradability without sacrificing functionality.`,
     passageAnnotations: [
-      { id: 'n3-a1', type: 'claim', text: 'the first study to directly link their presence to severe cardiovascular outcomes', note: '核心新发现：微塑与心血管疾病的首个直接因果关联' },
-      { id: 'n3-a2', type: 'evidence', text: '4.5 times more likely to suffer a heart attack, stroke, or death', note: '数据支撑：4.5 倍风险' },
-      { id: 'n3-a3', type: 'keyword', text: 'ubiquity', note: '关键概念：塑料的无处不在使回避几乎不可能' },
-      { id: 'n3-a4', type: 'attitude', text: 'panic is not warranted, but precaution is sensible', note: '作者态度：理性克制，不制造恐慌' },
+      { id: 'n3-a1', type: 'claim', text: 'the first study to directly link their presence to severe cardiovascular outcomes', note: "Core new finding: the first direct causal link between microplastics and cardiovascular disease" },
+      { id: 'n3-a2', type: 'evidence', text: '4.5 times more likely to suffer a heart attack, stroke, or death', note: "Data support: 4.5-fold risk" },
+      { id: 'n3-a3', type: 'keyword', text: 'ubiquity', note: "Key concept: the ubiquity of plastic makes avoidance almost impossible." },
+      { id: 'n3-a4', type: 'attitude', text: 'panic is not warranted, but precaution is sensible', note: "Author's attitude: rational and restrained, not fear-mongering" },
     ],
     items: [
       {
@@ -194,12 +192,12 @@ Scientists stress that panic is not warranted, but precaution is sensible. Filte
           { id: 'D', text: 'It found microplastics in bottled water' },
         ],
         correctIds: ['B'],
-        analysis: '第一段末尾加第二段首句 — 之前已有检出，但这是 "the first study to directly link their presence to severe cardiovascular outcomes"。',
+        analysis: "The end of the first paragraph plus the first sentence of the second paragraph — it had been detected before, but this is \"the first study to directly link their presence to severe cardiovascular outcomes\".",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '不是首次检出（之前肺、母乳、胎盘中已发现），而是首次建立因果关联' },
-          { optionId: 'C', type: '无中生有', why: '文章从未提及癌症' },
+          { optionId: 'A', type: "Concept substitution", why: "It is not the first detection (they had already been found in lungs, breast milk, and the placenta), but the first establishment of a causal link." },
+          { optionId: 'C', type: "Unsupported claim", why: "The article never mentions cancer." },
         ],
-        vocabNotes: ['landmark adj. 里程碑式的', 'carotid artery 颈动脉', 'placental adj. 胎盘的'],
+        vocabNotes: ["landmark adj. landmark", "carotid artery carotid artery", "placental adj. placental"],
         score: 2,
       },
       {
@@ -211,11 +209,11 @@ Scientists stress that panic is not warranted, but precaution is sensible. Filte
           { id: 'D', text: 'receiving blood transfusions' },
         ],
         correctIds: ['D'],
-        analysis: '第二段列出三大途径：ingestion（食入）、inhalation（吸入）、dermal absorption（皮肤吸收）。输血未提及。',
+        analysis: "The second paragraph lists three major pathways: ingestion, inhalation, and dermal absorption. Blood transfusion is not mentioned.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: 'A 对应 ingestion（food and water）' },
+          { optionId: 'A', type: "Concept substitution", why: "A corresponds to ingestion (food and water)." },
         ],
-        vocabNotes: ['ingestion n. 摄入', 'inhalation n. 吸入', 'dermal adj. 皮肤的'],
+        vocabNotes: ["ingestion n. ingestion", "inhalation n. inhalation", "dermal adj. dermal"],
         score: 2,
       },
       {
@@ -227,16 +225,16 @@ Scientists stress that panic is not warranted, but precaution is sensible. Filte
           { id: 'D', text: 'better water filtration technology' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "redesigning materials at the chemical level to ensure biodegradability" 直接对应 C。',
+        analysis: "The last paragraph's \"redesigning materials at the chemical level to ensure biodegradability\" directly corresponds to C.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '文章说 individual behaviour 是 practical steps 但非 longer-term solution' },
+          { optionId: 'A', type: "Concept substitution", why: "The article says individual behaviour is a practical step but not a longer-term solution." },
         ],
-        vocabNotes: ['biodegradability n. 可生物降解性', 'warrant v. 使…有必要'],
+        vocabNotes: ["biodegradability n. biodegradability", "warrant v. to make ... necessary"],
         score: 2,
       },
     ],
-    tips: ['多重否定题（NOT mentioned）逐一回原文验证选项', '注意区分短期措施（individual）与长期方案（material redesign）'],
-    vocabNotes: ['microplastics n. 微塑料', 'plaque n. （动脉）斑块', 'ubiquity n. 无处不在', 'polypropylene n. 聚丙烯', 'precaution n. 预防措施'],
+    tips: ["For multiple negation questions (NOT mentioned), verify each option against the original text one by one.", "Note the distinction between short-term measures (individual) and long-term solutions (material redesign)."],
+    vocabNotes: ["microplastics n. microplastics", "plaque n. (arterial) plaque", "ubiquity n. ubiquity", "polypropylene n. polypropylene", "precaution n. precaution"],
   },
 
   // ──── 4 ────
@@ -257,10 +255,10 @@ Yet the modern digital environment is engineered precisely to prevent this. Infi
 
 The prescription is not a Luddite rejection of technology but a deliberate cultivation of "boredom hygiene": scheduling device-free intervals, embracing single-tasking, and resisting the urge to fill every silence with input. The blank page, the empty room, the quiet walk — these are not voids to be filled but spaces to be inhabited.`,
     passageAnnotations: [
-      { id: 'n4-a1', type: 'claim', text: 'this war on boredom may be costing us our creativity', note: '核心论点：消灭无聊可能正在扼杀创造力' },
-      { id: 'n4-a2', type: 'evidence', text: 'participants who were assigned a deliberately boring task...generated significantly more creative ideas', note: '实验证据：无聊任务后创造力显著提升' },
-      { id: 'n4-a3', type: 'keyword', text: 'default mode network', note: '关键概念：默认模式网络 — 大脑休息时的自发思维' },
-      { id: 'n4-a4', type: 'attitude', text: 'not a Luddite rejection of technology but a deliberate cultivation', note: '作者态度：不是反技术，而是有意识地培养' },
+      { id: 'n4-a1', type: 'claim', text: 'this war on boredom may be costing us our creativity', note: "Central argument: eliminating boredom may be killing creativity." },
+      { id: 'n4-a2', type: 'evidence', text: 'participants who were assigned a deliberately boring task...generated significantly more creative ideas', note: "Experimental evidence: creativity increases significantly after boring tasks." },
+      { id: 'n4-a3', type: 'keyword', text: 'default mode network', note: "Key concept: the default mode network — spontaneous thinking when the brain is at rest" },
+      { id: 'n4-a4', type: 'attitude', text: 'not a Luddite rejection of technology but a deliberate cultivation', note: "Author's attitude: not anti-technology, but conscious cultivation" },
     ],
     items: [
       {
@@ -272,12 +270,12 @@ The prescription is not a Luddite rejection of technology but a deliberate culti
           { id: 'D', text: 'reduce anxiety about performance' },
         ],
         correctIds: ['B'],
-        analysis: '第二段明确说明 "boredom triggers the brain\'s default mode network"，对应 B。',
+        analysis: "The second paragraph clearly states that \"boredom triggers the brain's default mode network\", which corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '文中未提及"更努力工作"' },
-          { optionId: 'C', type: '张冠李戴', why: 'dopamine 未在本文出现，是另一篇文章的概念' },
+          { optionId: 'A', type: "Unsupported claim", why: "The text does not mention \"working harder\"." },
+          { optionId: 'C', type: "Misattribution", why: "dopamine does not appear in this article; it is a concept from another article." },
         ],
-        vocabNotes: ['divergent thinking 发散性思维', 'hypothesise v. （英式拼写）假设'],
+        vocabNotes: ["divergent thinking divergent thinking", "hypothesise v. (British spelling) hypothesize"],
         score: 2,
       },
       {
@@ -289,11 +287,11 @@ The prescription is not a Luddite rejection of technology but a deliberate culti
           { id: 'D', text: 'show that famous people also experience boredom' },
         ],
         correctIds: ['C'],
-        analysis: '第三段用 Wordsworth 和 Jobs 作为例证支撑 "where novel connections...are forged" 这一观点。',
+        analysis: "The third paragraph uses Wordsworth and Jobs as examples to support the idea that \"where novel connections...are forged\".",
         distractors: [
-          { optionId: 'D', type: '局部正确', why: '两位名人确实体验过无聊，但引用的目的是说明无聊与创造力的关系，而非仅仅证明名人也无聊' },
+          { optionId: 'D', type: "Partially true", why: "The two famous figures did indeed experience boredom, but the purpose of the citation is to illustrate the relationship between boredom and creativity, not merely to prove that famous people also get bored." },
         ],
-        vocabNotes: ['unbidden adj. 未经要求的，自发的', 'recollection n. 回忆', 'tranquillity n. 宁静'],
+        vocabNotes: ["unbidden adj. unbidden, spontaneous", "recollection n. recollection", "tranquillity n. tranquillity"],
         score: 2,
       },
       {
@@ -305,16 +303,16 @@ The prescription is not a Luddite rejection of technology but a deliberate culti
           { id: 'D', text: 'periods of digital detox' },
         ],
         correctIds: ['B'],
-        analysis: '从上下文 "waiting for a bus, standing in a queue, sitting alone with a coffee" 可知是结构化活动之间的碎片间隙。',
+        analysis: "From the context \"waiting for a bus, standing in a queue, sitting alone with a coffee\", it can be seen that these are fragmentary gaps between structured activities.",
         distractors: [
-          { optionId: 'D', type: '偷换概念', why: 'digital detox 是刻意行为，interstitial moments 是自然出现的间隙' },
+          { optionId: 'D', type: "Concept substitution", why: "A digital detox is a deliberate act, while interstitial moments are gaps that arise naturally." },
         ],
-        vocabNotes: ['interstitial adj. 间隙的', 'vanishingly adv. 几乎消失地'],
+        vocabNotes: ["interstitial adj. interstitial", "vanishingly adv. almost vanishingly"],
         score: 2,
       },
     ],
-    tips: ['词汇推断题：利用破折号后的具体例子（waiting for a bus...）反推抽象词义', '注意区分作者主张（cultivation of boredom hygiene）与极端立场（Luddite rejection）'],
-    vocabNotes: ['eradicate v. 根除', 'incubation n. 酝酿', 'Luddite n. 反对技术进步的人', 'cultivation n. 培养', 'void n. 空虚'],
+    tips: ["Vocabulary inference question: use the concrete examples after the dash (waiting for a bus...) to infer the meaning of the abstract word.", "Note the distinction between the author's claim (cultivation of boredom hygiene) and extreme positions (Luddite rejection)."],
+    vocabNotes: ["eradicate v. eradicate", "incubation n. incubation", "Luddite n. one who opposes technological progress", "cultivation n. cultivation", "void n. emptiness"],
   },
 
   // ──── 5 ────
@@ -333,10 +331,10 @@ This approach is particularly promising for complex diseases that involve not a 
 
 The road to the clinic remains long. Delivery — getting the editor into the right cells at the right dose — is still the major bottleneck. There are also unresolved questions about the durability and specificity of epigenetic marks: some marks can spread to neighbouring genes or fade over time. But the field is accelerating. Several biotech startups have raised hundreds of millions of dollars to develop epigenetic therapies for everything from neurodegenerative diseases to ageing itself, betting that the next chapter of genetic medicine will be written not in the language of cutting but in the language of tuning.`,
     passageAnnotations: [
-      { id: 'n5-a1', type: 'claim', text: 'a quieter but potentially more profound revolution is underway: epigenetic editing', note: '核心论点：表观遗传编辑可能是比 CRISPR 更深刻的变革' },
-      { id: 'n5-a2', type: 'evidence', text: 'reduced cholesterol levels by over 50% for at least six months', note: '数据证据：单次注射降低胆固醇 50%+ 持续六个月' },
-      { id: 'n5-a3', type: 'keyword', text: 'reversibility', note: '关键优势：可逆性 — 不改变 DNA 序列' },
-      { id: 'n5-a4', type: 'attitude', text: 'the next chapter of genetic medicine will be written not in the language of cutting but in the language of tuning', note: '作者展望：基因医学的下一个时代是"调谐"而非"剪切"' },
+      { id: 'n5-a1', type: 'claim', text: 'a quieter but potentially more profound revolution is underway: epigenetic editing', note: "Central argument: epigenetic editing may be a more profound change than CRISPR." },
+      { id: 'n5-a2', type: 'evidence', text: 'reduced cholesterol levels by over 50% for at least six months', note: "Data evidence: a single injection lowers cholesterol by 50%+ for six months." },
+      { id: 'n5-a3', type: 'keyword', text: 'reversibility', note: "Key advantage: reversibility — it does not change the DNA sequence." },
+      { id: 'n5-a4', type: 'attitude', text: 'the next chapter of genetic medicine will be written not in the language of cutting but in the language of tuning', note: "Author's outlook: the next era of genetic medicine is \"tuning\" rather than \"cutting\"." },
     ],
     items: [
       {
@@ -348,12 +346,12 @@ The road to the clinic remains long. Delivery — getting the editor into the ri
           { id: 'D', text: 'it has already been approved for clinical use' },
         ],
         correctIds: ['B'],
-        analysis: '第二段明确指出 "the underlying DNA sequence remains intact, the edits can...be reversed"。',
+        analysis: "The second paragraph clearly states that \"the underlying DNA sequence remains intact, the edits can...be reversed\".",
         distractors: [
-          { optionId: 'C', type: '过度推断', why: '文章只说对复杂疾病有前景，未说可治愈所有遗传病' },
-          { optionId: 'D', type: '偷换概念', why: '文章明确说 "road to the clinic remains long"' },
+          { optionId: 'C', type: "Over-inference", why: "The article only says it is promising for complex diseases; it does not say it can cure all genetic diseases." },
+          { optionId: 'D', type: "Concept substitution", why: "The article clearly says \"road to the clinic remains long\"." },
         ],
-        vocabNotes: ['nucleotide n. 核苷酸（DNA 基本单位）', 'methyl group 甲基'],
+        vocabNotes: ["nucleotide n. nucleotide (the basic unit of DNA)", "methyl group methyl group"],
         score: 2,
       },
       {
@@ -365,12 +363,12 @@ The road to the clinic remains long. Delivery — getting the editor into the ri
           { id: 'D', text: 'show that mice are ideal subjects for CRISPR research' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 MIT 研究作为具体案例支撑 "particularly promising for complex diseases" 的观点。',
+        analysis: "The third paragraph uses the MIT study as a concrete case to support the view that it is \"particularly promising for complex diseases\".",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '研究在老鼠身上进行，非人类安全性试验' },
-          { optionId: 'C', type: '过度推断', why: '是降低 50% 持续六个月，不是永久消除' },
+          { optionId: 'A', type: "Concept substitution", why: "The study was conducted in mice, not a human safety trial." },
+          { optionId: 'C', type: "Over-inference", why: "It lowers it by 50% for six months, not permanently eliminates it." },
         ],
-        vocabNotes: ['silence v. （基因）沉默 = 使其不表达', 'repressive adj. 抑制性的'],
+        vocabNotes: ["silence v. (gene) silencing = preventing it from being expressed", "repressive adj. repressive"],
         score: 2,
       },
       {
@@ -382,17 +380,17 @@ The road to the clinic remains long. Delivery — getting the editor into the ri
           { id: 'D', text: 'the high cost of synthesising CRISPR proteins' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "Delivery...is still the major bottleneck" 直接对应 C。',
+        analysis: "The last paragraph's \"Delivery...is still the major bottleneck\" directly corresponds to C.",
         distractors: [
-          { optionId: 'A', type: '无中生有', why: '末段明确说 biotech startups 已融资数亿美元' },
-          { optionId: 'B', type: '张冠李戴', why: '伦理问题是传统 CRISPR 的主要关注点，本文未将伦理列为表观遗传编辑的主要障碍' },
+          { optionId: 'A', type: "Unsupported claim", why: "The last paragraph clearly says biotech startups have already raised hundreds of millions of dollars." },
+          { optionId: 'B', type: "Misattribution", why: "Ethical issues are the main concern of traditional CRISPR; this article does not list ethics as a major obstacle to epigenetic editing." },
         ],
-        vocabNotes: ['bottleneck n. 瓶颈', 'durability n. 持久性'],
+        vocabNotes: ["bottleneck n. bottleneck", "durability n. durability"],
         score: 2,
       },
     ],
-    tips: ['注意对比结构：全文贯穿传统 CRISPR（剪切、不可逆）vs 表观遗传编辑（调谐、可逆）', '理解比喻：Post-it notes（便利贴）类比甲基标记的可移除性'],
-    vocabNotes: ['epigenome n. 表观基因组', 'CRISPR n. 基因编辑技术', 'methylation n. 甲基化', 'dysregulated adj. 失调的', 'neurodegenerative adj. 神经退行性的'],
+    tips: ["Note the contrast structure: throughout the text, traditional CRISPR (cutting, irreversible) vs. epigenetic editing (tuning, reversible).", "Understand the metaphor: Post-it notes analogize the removability of methyl marks."],
+    vocabNotes: ["epigenome n. epigenome", "CRISPR n. gene-editing technology", "methylation n. methylation", "dysregulated adj. dysregulated", "neurodegenerative adj. neurodegenerative"],
   },
 
   // ──── 6 ────
@@ -411,10 +409,10 @@ Stories also serve an evolutionary function. The psychologist Jonathan Haidt des
 
 In the age of artificial intelligence, the uniquely human relationship with narrative takes on new significance. Large language models can generate grammatically perfect stories, but they do not experience the tension of an unresolved plot or the catharsis of a satisfying ending. They are storytellers without a self — narrators who have never been characters in their own drama. This distinction may prove to be one of the enduring boundaries between human and machine cognition: not the ability to tell a story, but the need to.`,
     passageAnnotations: [
-      { id: 'n6-a1', type: 'claim', text: 'narrative is not a cultural luxury but a fundamental operating system of the human mind', note: '核心论点：叙事不是文化奢侈品，而是人类心智的基础操作系统' },
-      { id: 'n6-a2', type: 'evidence', text: 'subjects spontaneously narrated stories about the dots', note: '实验证据：大脑自动将混沌强加叙事结构' },
-      { id: 'n6-a3', type: 'keyword', text: 'shared narratives', note: '关键概念：共享叙事 — 让陌生人协调行为的机制' },
-      { id: 'n6-a4', type: 'attitude', text: 'the need to tell a story...may prove to be one of the enduring boundaries', note: '作者态度：叙事需求可能是人机认知的终极界限' },
+      { id: 'n6-a1', type: 'claim', text: 'narrative is not a cultural luxury but a fundamental operating system of the human mind', note: "Central argument: narrative is not a cultural luxury, but the fundamental operating system of the human mind." },
+      { id: 'n6-a2', type: 'evidence', text: 'subjects spontaneously narrated stories about the dots', note: "Experimental evidence: The brain automatically imposes narrative structure on chaos" },
+      { id: 'n6-a3', type: 'keyword', text: 'shared narratives', note: "Key concept: Shared narratives — the mechanism that enables strangers to coordinate behavior" },
+      { id: 'n6-a4', type: 'attitude', text: 'the need to tell a story...may prove to be one of the enduring boundaries', note: "Author's attitude: The need for narrative may be the ultimate boundary of human-machine cognition" },
     ],
     items: [
       {
@@ -426,11 +424,11 @@ In the age of artificial intelligence, the uniquely human relationship with narr
           { id: 'D', text: 'storytelling is a learned cultural behaviour' },
         ],
         correctIds: ['B'],
-        analysis: '第二段 "The brain imposes narrative structure on chaos automatically" 直接对应 B。',
+        analysis: "The second paragraph \"The brain imposes narrative structure on chaos automatically\" directly corresponds to B.",
         distractors: [
-          { optionId: 'D', type: '偷换概念', why: '实验显示叙事是自动的（automatic）而非习得的（learned）' },
+          { optionId: 'D', type: "Concept substitution", why: "Experiments show that narrative is automatic rather than learned" },
         ],
-        vocabNotes: ['spontaneously adv. 自发地', 'neuroimaging n. 神经影像学'],
+        vocabNotes: ["spontaneously adv. spontaneously", "neuroimaging n. neuroimaging"],
         score: 2,
       },
       {
@@ -442,11 +440,11 @@ In the age of artificial intelligence, the uniquely human relationship with narr
           { id: 'D', text: 'communicate with artificial intelligence' },
         ],
         correctIds: ['B'],
-        analysis: '第三段 "Stories are what bridge the gap" + "enable millions of strangers to coordinate" 对应 B。',
+        analysis: "The third paragraph \"Stories are what bridge the gap\" + \"enable millions of strangers to coordinate\" corresponds to B.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: 'Haidt 的比喻是 90% 黑猩猩 + 10% 蜜蜂，故事帮助我们超越黑猩猩的自利部分' },
+          { optionId: 'A', type: "Concept substitution", why: "Haidt's metaphor is 90% chimpanzee + 10% bee; stories help us transcend the selfish part of the chimpanzee" },
         ],
-        vocabNotes: ['coordinated action 协同行动', 'constitution n. 宪法'],
+        vocabNotes: ["coordinated action coordinated action", "constitution n. constitution"],
         score: 2,
       },
       {
@@ -458,15 +456,15 @@ In the age of artificial intelligence, the uniquely human relationship with narr
           { id: 'D', text: 'AI can write stories in more languages than humans' },
         ],
         correctIds: ['C'],
-        analysis: '末段 "not the ability to tell a story, but the need to" — 关键区别不是能力而是需求。',
+        analysis: "The final paragraph \"not the ability to tell a story, but the need to\" — the key distinction is not ability but need.",
         distractors: [
-          { optionId: 'A', type: '偷换概念', why: '末段明确说 LLMs "generate grammatically perfect stories"' },
+          { optionId: 'A', type: "Concept substitution", why: "The final paragraph explicitly says LLMs \"generate grammatically perfect stories\"" },
         ],
-        vocabNotes: ['catharsis n. 情感宣泄，净化', 'enduring adj. 持久的'],
+        vocabNotes: ["catharsis n. emotional release, purification", "enduring adj. lasting"],
         score: 2,
       },
     ],
-    tips: ['注意末段 AI 对比 — 常设作者观点/态度题', '理解 Haidt 的"90%黑猩猩+10%蜜蜂"比喻：个体自私 vs 集体协作'],
-    vocabNotes: ['cognitive adj. 认知的', 'evolutionary adj. 进化的', 'catharsis n. 情感宣泄', 'enduring adj. 持久的'],
+    tips: ["Note the AI contrast in the final paragraph — often used for author's view/attitude questions", "Understand Haidt's \"90% chimpanzee + 10% bee\" metaphor: individual selfishness vs. collective cooperation"],
+    vocabNotes: ["cognitive adj. cognitive", "evolutionary adj. evolutionary", "catharsis n. emotional release", "enduring adj. lasting"],
   },
 ]

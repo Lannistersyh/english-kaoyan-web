@@ -10,7 +10,7 @@ function subscribe(listener: () => void) {
     window.removeEventListener('storage', listener)
   }
 }
-/** 所有组件读取同一份快照；写入同步完成后通知订阅者。 */
+/* All components read the same snapshot; after the write sync completes, notify subscribers. */
 export function useLocalStorage<T>(key: StorageKey, fallback: T) {
   const fallbackRef = useRef(fallback)
   const cache = useRef<{ raw: string | null; user: string | null; value: T }>()

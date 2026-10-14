@@ -10,6 +10,7 @@ import { Tag } from '../components/ui/Tag'
 import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Modal } from '../components/ui/Modal'
+import { StudyCollection } from '../components/ui/StudyCollection'
 
 type Tab = 'practice' | 'history'
 
@@ -18,30 +19,32 @@ function formatDate(ts: number): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-/** 密钥仅保存在评分服务端。 */
+/* API keys remain on the scoring server. */
 async function aiScoreTranslation(englishText: string, chineseTranslation: string, referenceTranslation?: string): Promise<{ score: number; comment: string }> {
   const session = supabase ? (await supabase.auth.getSession()).data.session : null
-  const res = await fetch(import.meta.env.VITE_AI_API_URL || '/api/deepseek-score', {
+  const local = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+  const endpoint = local ? '/api/deepseek-score' : import.meta.env.VITE_AI_API_URL || '/api/deepseek-score'
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
     body: JSON.stringify({ englishText, chineseTranslation, referenceTranslation }),
     signal: AbortSignal.timeout(25000),
   })
   let data
-  try { data = await res.json() } catch { throw new Error('评分服务未连接，请检查服务配置') }
-  if (!res.ok) throw new Error(data.error || 'AI 评分失败，请稍后重试')
-  if (!Number.isFinite(data.score) || typeof data.comment !== 'string') throw new Error('评分结果格式异常')
-  return { score: Math.max(0, Math.min(10, Math.round(data.score))), comment: data.comment.slice(0, 100) }
+  try { data = await res.json() } catch { throw new Error("Scoring service is not connected. Please check the service configuration.") }
+  if (!res.ok) throw new Error(data.error || "AI scoring failed. Please try again later.")
+  if (!Number.isFinite(data.score) || typeof data.comment !== 'string') throw new Error("Scoring result format is abnormal")
+  return { score: Math.max(0, Math.min(10, Math.round(data.score))), comment: data.comment.trim().slice(0, 1000) }
 }
 export default function Translation() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [tab, setTab] = useState<Tab>('practice')
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  // 文章级折叠：展开的 questionId 集合
+  // Expanded question groups
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
-  // 确认删除
+  // Delete confirmation
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
-  // AI 评分状态
+  // AI scoring state
   const [aiScoringId, setAiScoringId] = useState<string | null>(null)
   const [aiError, setAiError] = useState('')
 
@@ -54,7 +57,7 @@ export default function Translation() {
 
   const [sessions, setSessions] = useLocalStorage<Session[]>(STORAGE_KEYS.sessions, [])
 
-  // 按 questionId 分组
+  // Group by question ID
   const groupedSessions = useMemo(() => {
     const groups = new Map<string, Session[]>()
     for (const s of sessions) {
@@ -63,11 +66,11 @@ export default function Translation() {
       arr.push(s)
       groups.set(s.questionId, arr)
     }
-    // 每组内部按时间倒序
+    // Newest records first within each group
     for (const arr of groups.values()) {
       arr.sort((a, b) => b.startedAt - a.startedAt)
     }
-    // 组间按最新一次练习时间倒序
+    // Sort groups by their latest attempt
     return [...groups.entries()].sort((a, b) => {
       return b[1][0].startedAt - a[1][0].startedAt
     })
@@ -102,7 +105,7 @@ export default function Translation() {
         ...s, answers: s.answers.map(a => a.itemId === s.questionId ? { ...a, selfScore: result.score, aiComment: result.comment } : a),
       }))
     } catch (err) {
-      setAiError(err instanceof Error ? err.message : 'AI 评分失败，请稍后重试')
+      setAiError(err instanceof Error ? err.message : "AI scoring failed. Please try again later.")
     } finally { setAiScoringId(null) }
   }
 
@@ -113,63 +116,52 @@ export default function Translation() {
   }
 
   return (
-    <div>
-      <h1 className="page-title">翻译</h1>
+    <div className="study-page">
+      <h1 className="page-title"> Paraphrasing </h1>
 
       {/* Tab bar */}
-      <div className="toolbar" style={{ marginBottom: 18 }}>
+      <div className="toolbar study-tabs" aria-label="Paraphrasing views">
         <button className={`btn${tab === 'practice' ? ' btn--primary' : ''}`} onClick={() => setTab('practice')}>
-          🈯 练习
+          Practice
         </button>
         <button className={`btn${tab === 'history' ? ' btn--primary' : ''}`} onClick={() => setTab('history')}>
-          📜 历史记录（{sessions.filter((s) => allQuestions.has(s.questionId)).length}）
+
+          History ({sessions.filter((s) => allQuestions.has(s.questionId)).length})
         </button>
       </div>
 
-      {/* ══════ 练习 Tab ══════ */}
+      {/* Practice tab */}
       {tab === 'practice' && (
         <>
           <p className="page-sub">
-            英译汉 · 三步翻译法（切分结构 → 调整语序 → 意译通顺）。先自己译，再展开逐步对照
+
+             English paraphrasing: identify the sentence structure, restate it clearly, and compare your version with the reference.
           </p>
 
           {questions.length === 0 ? (
             <Card>
-              <EmptyState icon="🈯" title="暂无翻译题目">去「真题导入」粘贴真题翻译</EmptyState>
+              <EmptyState icon="📖" title="No paraphrasing questions yet"> Go to &quot;Import&quot; and add an English paraphrasing question </EmptyState>
             </Card>
           ) : (
-            <div className="item-list">
-              {questions.map((q: Question) => (
-                <div key={q.id} className="item-row" role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}>
-                  <div className="item-row__main">
-                    <div className="item-row__title">{q.title}</div>
-                    <div className="item-row__meta">
-                      {q.source === 'imported' ? <Tag variant="warning">导入</Tag> : <Tag variant="plain">模拟题</Tag>}
-                      {' '}目标 7-7.5 分（共 10 分，允许扣 2.5-3 分）
-                    </div>
-                  </div>
-                  <span className="muted">开始练习 →</span>
-                </div>
-              ))}
-            </div>
+            <StudyCollection questions={questions} onOpen={setActiveId} />
           )}
 
-          <div className="card" style={{ marginTop: 20, background: 'var(--c-primary-light)' }}>
-            <b>三步翻译法口诀：</b>
-            <ol style={{ margin: '6px 0 0', paddingLeft: 20, fontSize: 14 }}>
-              <li><b>切分</b>：先找主谓宾主干，再找从句、分词、插入语——把长句拆成短块；</li>
-              <li><b>重组</b>：按中文习惯调整语序（定语前置、状语提前、被动转主动）；</li>
-              <li><b>意译</b>：把抽象名词转为动词/形容词，避免字面硬译，让译文像中文。</li>
+          <Card title="Three-step paraphrasing method" className="study-section">
+            <ol className="advice-list">
+              <li><b> Segment </b> : First find the subject-verb-object main structure, then find clauses, participles, and parentheticals — split long sentences into short chunks; </li>
+              <li><b> Reorganize </b> : Use clear English word order, resolve pronoun references, and split long clauses when helpful; </li>
+              <li><b> Paraphrase </b> : Choose precise vocabulary and natural English phrasing while preserving the original meaning. </li>
             </ol>
-          </div>
+          </Card>
         </>
       )}
 
-      {/* ══════ 历史记录 Tab ══════ */}
+      {/* History tab */}
       {tab === 'history' && (
         <>
           <p className="page-sub">
-            按文章分组折叠 · AI 评分 · 自评对比 · 追踪进步轨迹
+
+             Grouped and collapsed by article · AI scoring · Self-assessment comparison · Track progress
           </p>
 
           {aiError && (
@@ -180,7 +172,7 @@ export default function Translation() {
 
           {groupedSessions.length === 0 ? (
             <Card>
-              <EmptyState icon="📜" title="暂无翻译记录">去「练习」页完成一次翻译后自动出现在这里</EmptyState>
+              <EmptyState icon="📜" title="No paraphrasing records yet"> Go to the &quot;Practice&quot; page and complete a paraphrasing exercise; it will automatically appear here. </EmptyState>
             </Card>
           ) : (
             <div>
@@ -190,28 +182,28 @@ export default function Translation() {
                 const totalInGroup = groupSessions.length
 
                 return (
-                  <div key={qid} className="card" style={{ marginBottom: 12 }}>
-                    {/* 组标题：可折叠 */}
+                  <div key={qid} className="study-group">
+                    {/* Collapsible group heading */}
                     <div
                       className="flex-row"
                       style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
                       onClick={() => toggleGroup(qid)}
                     >
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 2 }}>
-                          {q?.title ?? '(题目已删除)'}
+                        <div className="study-group__title">
+                          {q?.title ?? "(Question deleted)"}
                         </div>
                         <div className="muted small">
-                          {totalInGroup} 次练习记录
-                          {' · '}最近 {formatDate(groupSessions[0].startedAt)}
+                          {totalInGroup}   practice records
+                          {' · '} Recent  {formatDate(groupSessions[0].startedAt)}
                         </div>
                       </div>
                       <span className="muted" style={{ fontSize: 13, marginRight: 8 }}>
-                        {isGroupOpen ? '收起 ↑' : `展开 ${totalInGroup} 条 ↓`}
+                        {isGroupOpen ? "Collapse ↑" : ` Expand ${totalInGroup} items ↓`}
                       </span>
                     </div>
 
-                    {/* 展开的每条记录 */}
+                    {/* Expanded records */}
                     {isGroupOpen && (
                       <div style={{ marginTop: 10, borderTop: '1px solid var(--c-border)' }}>
                         {groupSessions.map((s, idx) => {
@@ -226,7 +218,7 @@ export default function Translation() {
                               borderBottom: idx < groupSessions.length - 1 ? '1px solid var(--c-border)' : 'none',
                               padding: '10px 0',
                             }}>
-                              {/* 摘要行 */}
+                              {/* Summary */}
                               <div
                                 className="flex-row"
                                 style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
@@ -234,13 +226,13 @@ export default function Translation() {
                               >
                                 <div style={{ flex: 1 }}>
                                   <div style={{ fontSize: 13, color: 'var(--c-text-secondary)' }}>
-                                    {s.isReview && <Tag variant="warning">回顾</Tag>}
-                                    {' '}{formatDate(s.startedAt)} · 用时 {Math.floor(durSec / 60)} 分 {durSec % 60} 秒
+                                    {s.isReview && <Tag variant="warning"> Review </Tag>}
+                                    {' '}{formatDate(s.startedAt)}   · Time spent  {Math.floor(durSec / 60)} minutes  {durSec % 60}   seconds
                                   </div>
                                   <div className="flex-row" style={{ gap: 8, marginTop: 2 }}>
                                     {selfScore !== undefined && (
                                       <Tag variant={selfScore >= 7 ? 'success' : selfScore >= 5 ? 'warning' : 'danger'}>
-                                        {aiComment ? '🤖 AI' : '⭐ 自评'} {selfScore}/10
+                                        {aiComment ? '🤖 AI' : "⭐ Self-assessment"} {selfScore}/10
                                       </Tag>
                                     )}
                                     {aiComment && (
@@ -251,7 +243,7 @@ export default function Translation() {
                                   </div>
                                 </div>
                                 <div className="flex-row" style={{ gap: 4 }}>
-                                  {/* AI 评分按钮 */}
+                                  {/* AI scoring action */}
                                   <Button
                                     variant="ghost"
                                     style={{ padding: '3px 8px', fontSize: 11 }}
@@ -261,9 +253,9 @@ export default function Translation() {
                                       handleAiScore(s)
                                     }}
                                   >
-                                    {aiScoringId === s.id ? '🤖 评分中…' : '🤖 AI 评分'}
+                                    {aiScoringId === s.id ? "🤖 Scoring…" : "🤖 AI scoring"}
                                   </Button>
-                                  {/* 删除按钮 */}
+                                  {/* Delete action */}
                                   <Button
                                     variant="ghost"
                                     style={{ padding: '3px 8px', fontSize: 11, color: 'var(--c-danger)' }}
@@ -275,44 +267,44 @@ export default function Translation() {
                                     🗑
                                   </Button>
                                   <span className="muted" style={{ fontSize: 12 }}>
-                                    {isExpanded ? '收起 ↑' : '展开 ↓'}
+                                    {isExpanded ? "Collapse ↑" : "Expand ↓"}
                                   </span>
                                 </div>
                               </div>
 
-                              {/* 展开区 */}
+                              {/* Expanded details */}
                               {isExpanded && (
                                 <div style={{ marginTop: 10, paddingLeft: 4 }}>
-                                  {/* 原文 */}
+                                  {/* Original sentence */}
                                   <div className="card card--flat" style={{ background: '#f8fafc', marginBottom: 8 }}>
-                                    <div className="form-label">📖 原文</div>
-                                    <p style={{ fontSize: 14.5, lineHeight: 1.9, margin: 0, fontStyle: 'italic' }}>
-                                      {q?.passage ?? '（原文已删除）'}
+                                    <div className="form-label"> 📖 Original text </div>
+                                    <p className="study-prose" style={{ margin: 0 }}>
+                                      {q?.passage ?? "(Original text deleted)"}
                                     </p>
                                   </div>
 
-                                  {/* 我的译文 */}
+                                  {/* My paraphrase */}
                                   <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-primary)' }}>
-                                    <div className="form-label">✏️ 我的译文</div>
-                                    <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0, whiteSpace: 'pre-wrap' }}>
-                                      {userText.trim() || <span className="muted">（未填写）</span>}
+                                    <div className="form-label"> ✏️ My paraphrase </div>
+                                    <p className="study-prose study-prose--pre" style={{ margin: 0 }}>
+                                      {userText.trim() || <span className="muted"> (Not filled in) </span>}
                                     </p>
                                   </div>
 
-                                  {/* 参考译文 */}
+                                  {/* Reference paraphrase */}
                                   {q?.referenceTranslation && (
                                     <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-success)' }}>
-                                      <div className="form-label">🎯 参考译文</div>
-                                      <p style={{ fontSize: 14, lineHeight: 1.9, margin: 0 }}>
+                                      <div className="form-label"> 🎯 Reference paraphrase </div>
+                                      <p className="study-prose" style={{ margin: 0 }}>
                                         {q.referenceTranslation}
                                       </p>
                                     </div>
                                   )}
 
-                                  {/* 三步拆解 */}
+                                  {/* Three-step explanation */}
                                   {q?.translationSteps && q.translationSteps.length > 0 && (
                                     <div className="card card--flat" style={{ marginBottom: 8, background: '#fffcf0' }}>
-                                      <div className="form-label">🔍 三步拆解对照</div>
+                                      <div className="form-label"> 🔍 Three-step breakdown comparison </div>
                                       <ol style={{ margin: '6px 0 0', paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>
                                         {q.translationSteps.map((step) => (
                                           <li key={step.step}>
@@ -323,9 +315,9 @@ export default function Translation() {
                                     </div>
                                   )}
 
-                                  {/* 自评 */}
+                                  {/* Self-assessment */}
                                   <div className="flex-row" style={{ gap: 10, marginBottom: 8 }}>
-                                    <span className="muted small">⭐ 自评（0-10）：</span>
+                                    <span className="muted small"> ⭐ Self-assessment (0-10): </span>
                                     {[2, 4, 5, 6, 7, 8, 9, 10].map((v) => (
                                       <Button
                                         key={v}
@@ -348,14 +340,15 @@ export default function Translation() {
                                     ))}
                                   </div>
 
-                                  {/* 再练一次 */}
+                                  {/* Practice again */}
                                   {q && (
                                     <Button
                                       variant="primary"
                                       style={{ padding: '5px 14px' }}
                                       role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}
                                     >
-                                      再练一次
+
+                                       Practice again
                                     </Button>
                                   )}
                                 </div>
@@ -373,19 +366,19 @@ export default function Translation() {
         </>
       )}
 
-      {/* 删除确认 Modal */}
+      {/* Delete confirmation dialog */}
       {deleteTarget && (
         <Modal
-          title="确认删除"
+          title="Confirm deletion"
           onClose={() => setDeleteTarget(null)}
           footer={
             <>
-              <Button onClick={() => setDeleteTarget(null)}>取消</Button>
-              <Button variant="danger" onClick={() => doDelete(deleteTarget)}>确认删除</Button>
+              <Button onClick={() => setDeleteTarget(null)}> Cancel </Button>
+              <Button variant="danger" onClick={() => doDelete(deleteTarget)}> Confirm deletion </Button>
             </>
           }
         >
-          <p>删除后不可恢复，确定要删除这条翻译记录吗？</p>
+          <p> This cannot be undone after deletion. Are you sure you want to delete this paraphrasing record? </p>
         </Modal>
       )}
     </div>

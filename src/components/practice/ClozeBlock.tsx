@@ -19,17 +19,17 @@ function GapSelect({
   if (options.length === 0) {
     return (
       <span className="gap-slot">
-        <span className="gap-select gap-select--empty">（无选项）</span>
+        <span className="gap-select gap-select--empty"> (No options) </span>
       </span>
     )
   }
 
-  // 用 radio 按钮替代下拉框，选项一目了然
+  // Use radio buttons instead of a dropdown so the options are clear at a glance
   return (
     <span className="gap-slot" style={{ display: 'inline-block', verticalAlign: 'middle', margin: '2px 4px' }}>
       <span
         role="radiogroup"
-        aria-label={`完形第 ${index} 题`}
+        aria-label={` Cloze question ${index} Question `}
         style={{
         display: 'inline-flex',
         gap: 3,
@@ -105,7 +105,7 @@ function GapSelect({
   )
 }
 
-/** 完形填空：正文 {{n}} 占位替换为行内单选按钮 */
+/* Replace numbered cloze blanks with inline options. */
 export function ClozeBlock({ question, answers, onAnswer }: BlockProps) {
   const items = question.items
   if (!question.passage) return null
@@ -116,7 +116,7 @@ export function ClozeBlock({ question, answers, onAnswer }: BlockProps) {
         text={question.passage}
         renderGap={(n) => {
           const item = items[n - 1]
-          if (!item) return <span className="muted">（缺题 {n}）</span>
+          if (!item) return <span className="muted"> (Missing question  {n}）</span>
           return (
             <GapSelect
               item={item}
@@ -128,7 +128,8 @@ export function ClozeBlock({ question, answers, onAnswer }: BlockProps) {
         }}
       />
       <div className="muted" style={{ marginTop: 14 }}>
-        💡 点击文中蓝色标签直接选择答案（A/B/C/D），选中后变蓝底白字。完形每题 0.5 分，错 3 题以内才能拿到目标 8 分。
+
+         💡 Click the blue tags in the text to select an answer directly (A/B/C/D); once selected, they turn blue with white text. Each cloze question is worth 0.5 points; you can only reach the target of 8 points if you get no more than 3 wrong.
       </div>
     </div>
   )

@@ -11,9 +11,9 @@ function ReorderBody({ item, answer, onAnswer }: { item: SubQuestion; answer: st
 
   return (
     <div>
-      <div className="form-label">已排顺序（点击可移除{item.fixedFirstId ? '；首段已固定' : ''}）</div>
+      <div className="form-label"> Ordered (click to remove {item.fixedFirstId ? "; the first paragraph is fixed" : ''}）</div>
       <div className="reorder-answer" style={{ marginBottom: 14 }}>
-        {ordered.length === 0 && <span className="muted">从下方段落中依次点击，按你认为的正确顺序排列</span>}
+        {ordered.length === 0 && <span className="muted"> Click the paragraphs below in order to arrange them as you think correct </span>}
         {ordered.map((key) => (
           <button
             type="button"
@@ -21,14 +21,14 @@ function ReorderBody({ item, answer, onAnswer }: { item: SubQuestion; answer: st
             key={key}
             className="reorder-chip"
             onClick={() => onAnswer(ordered.filter((k) => k !== key))}
-            title="点击移除"
+            title="Click to remove"
           >
             {LETTERS[parseInt(key, 10)]}
-            <span className="small">{key === item.fixedFirstId ? '固定' : '×'}</span>
+            <span className="small">{key === item.fixedFirstId ? "Fixed" : '×'}</span>
           </button>
         ))}
       </div>
-      <div className="form-label">待选段落（点击加入顺序）</div>
+      <div className="form-label"> Paragraphs to choose from (click to add to the order) </div>
       <div className="reorder-pool">
         {items.map((t, idx) => {
           const key = String(idx)
@@ -52,7 +52,7 @@ function ReorderBody({ item, answer, onAnswer }: { item: SubQuestion; answer: st
   )
 }
 
-/** 新题型：7选5（gapfill）/ 排序（reorder）/ 小标题（choice） */
+/* Gap-fill, reorder, and heading matching questions. */
 export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncertain }: BlockProps) {
   const items = question.items
   const pool = question.optionPools?.[items[0]?.optionPoolId ?? ''] ?? []
@@ -70,11 +70,11 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
                 <select
                   className="gap-select"
                   value={(answers[item.id] ?? [''])[0] ?? ''}
-                  aria-label={`第 ${n} 空`}
+                  aria-label={` No. ${n} blank `}
                   onChange={(e) => onAnswer(item.id, e.target.value ? [e.target.value] : [])}
                   style={{ minWidth: 80, maxWidth: '100%' }}
                 >
-                  <option value="">请选择…</option>
+                  <option value=""> Please select… </option>
                   {pool.map((o, i) => (
                     <option key={o.id} value={o.id} disabled={items.some(other => other.id !== item.id && (answers[other.id] ?? []).includes(o.id))}>
                       {LETTERS[i]}
@@ -86,7 +86,7 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
           }}
         />
         <div style={{ marginTop: 14 }}>
-          <div className="form-label">选项池（每句只能用一次）</div>
+          <div className="form-label"> Option pool (each sentence can be used only once) </div>
           <div className="reorder-pool">
             {pool.map((o, i) => (
               <div key={o.id} className="reorder-item" style={{ cursor: 'default' }}>
@@ -112,13 +112,14 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
           />
         ))}
         <div className="muted" style={{ marginTop: 10 }}>
-          排序题逻辑链：留意每段首尾的代词指代与逻辑连接词（yet, what matters most, in the end…）。
+
+           Logic chain for ordering questions: pay attention to pronoun references and logical connectives at the beginning and end of each paragraph (yet, what matters most, in the end…).
         </div>
       </div>
     )
   }
 
-  // 小标题（choice）
+  // Heading matching
   return (
     <div>
       {items.map((item, idx) => {
@@ -144,7 +145,8 @@ export function MatchingBlock({ question, answers, onAnswer, uncertain, onUncert
             ))}
             <label className="small muted" style={{ display: 'inline-flex', gap: 6, marginTop: 6 }}>
               <input type="checkbox" checked={uncertain[item.id] ?? false} onChange={(e) => onUncertain(item.id, e.target.checked)} />
-              不确定
+
+               Unsure
             </label>
           </div>
         )

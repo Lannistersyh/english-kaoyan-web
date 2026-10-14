@@ -5,14 +5,14 @@ import { TranslationBlock } from './TranslationBlock'
 import { WritingBlock } from './WritingBlock'
 import type { BlockProps } from './types'
 
-/** 按题型分发作答组件 */
+/* Dispatch answering components by question type */
 export function QuestionView(props: BlockProps) {
   const { question } = props
   switch (question.type) {
     case 'cloze':
       return <ClozeBlock {...props} />
     case 'reading':
-      // 阅读理解：PubMed 文章页形式（引文→标题→作者→Abstract→小题小节+右侧工具栏）
+      // Reading comprehension: PubMed article page format (citation → title → authors → Abstract → question subsections + right-side toolbar)
       return <PubMedReadingView {...props} />
     case 'matching':
       return <MatchingBlock {...props} />

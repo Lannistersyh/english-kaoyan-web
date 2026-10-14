@@ -5,12 +5,12 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn(
-    'Supabase 未配置：请在项目根目录创建 .env 文件，设置 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。\n' +
-    '当前将以离线模式运行（数据仅存本地 localStorage）。',
+    "Supabase not configured: please create a .env file in the project root directory and set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY." +
+    "It will currently run in offline mode (data is stored only in local localStorage).",
   )
 }
 
-/** Supabase 客户端（未配置时返回 null，调用方需检查） */
+/* Supabase client (returns null when not configured; callers must check) */
 export const supabase =
   supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey, {
@@ -18,5 +18,5 @@ export const supabase =
       })
     : null
 
-/** 是否已配置 Supabase */
+/* Whether Supabase is configured */
 export const isCloudEnabled = () => supabase !== null

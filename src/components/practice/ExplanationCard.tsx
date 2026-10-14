@@ -8,7 +8,7 @@ function optionLetter(optionId: string, options: { id: string }[] | undefined): 
   return idx === -1 ? '?' : LETTERS[idx]
 }
 
-/** 单题解析卡：答案对照 + 同义替换 + 干扰项类型分析 + 熟词僻义 */
+/* Single-question explanation card: answer comparison + synonym substitution + distractor type analysis + familiar word with uncommon meaning */
 export function ExplanationCard({ graded }: { graded: GradedAnswer }) {
   const { item, answer, correct, uncertain } = graded
   const options = item.options ?? []
@@ -18,49 +18,53 @@ export function ExplanationCard({ graded }: { graded: GradedAnswer }) {
   return (
     <div className={`explanation${correct ? ' explanation--correct' : ' explanation--wrong'}`}>
       <div className="flex-row" style={{ marginBottom: 6, gap: 8 }}>
-        {correct ? <Tag variant="success">✓ 答对</Tag> : <Tag variant="danger">✗ 答错</Tag>}
-        {uncertain && <Tag variant="warning">⚠ 不确定</Tag>}
-        {isReorder && <Tag variant="plain">排序</Tag>}
+        {correct ? <Tag variant="success"> ✓ Correct </Tag> : <Tag variant="danger"> ✗ Incorrect </Tag>}
+        {uncertain && <Tag variant="warning"> ⚠ Unsure </Tag>}
+        {isReorder && <Tag variant="plain"> Reorder </Tag>}
       </div>
 
       {isChoice && (
         <div style={{ marginBottom: 6 }}>
           <span className="small">
-            你的答案：
+
+             Your answer:
             {answer.length === 0 ? (
-              <span className="muted">（未作答）</span>
+              <span className="muted"> (Not answered) </span>
             ) : (
               answer.map((a) => optionLetter(a, options)).join(', ')
             )}
-            　正确：
+            　
+            　 Correct:
             {item.correctIds.map((c) => optionLetter(c, options)).join(', ')}
           </span>
         </div>
       )}
       {isReorder && (
         <div className="small" style={{ marginBottom: 6 }}>
-          你的顺序：{answer.length === 0 ? '（未作答）' : answer.map(k => LETTERS[Number(k)]).join(' → ')}
-          　正确：{item.correctIds.map(k => LETTERS[Number(k)]).join(' → ')}
+
+           Your order: {answer.length === 0 ? "(Not answered)" : answer.map(k => LETTERS[Number(k)]).join(' → ')}
+          　
+          　 Correct: {item.correctIds.map(k => LETTERS[Number(k)]).join(' → ')}
         </div>
       )}
 
       {item.analysis && (
         <div style={{ marginTop: 6 }}>
-          <b className="small">解题思路：</b>
+          <b className="small"> Solution approach: </b>
           <div>{item.analysis}</div>
         </div>
       )}
 
       {item.distractors && item.distractors.length > 0 && (
         <div style={{ marginTop: 8 }}>
-          <b className="small">干扰项分析：</b>
+          <b className="small"> Distractor analysis: </b>
           {item.distractors.map((d) => (
             <div key={d.optionId} className="distractor">
               <span className="distractor__tag">
                 <Tag variant="danger">{d.type}</Tag>
               </span>
               <span>
-                {optionLetter(d.optionId, options)} 项 —— {d.why}
+                {optionLetter(d.optionId, options)}   item —  {d.why}
               </span>
             </div>
           ))}
@@ -69,7 +73,7 @@ export function ExplanationCard({ graded }: { graded: GradedAnswer }) {
 
       {item.vocabNotes && item.vocabNotes.length > 0 && (
         <div style={{ marginTop: 8 }} className="small">
-          <b>熟词僻义：</b>
+          <b> Familiar word with uncommon meaning: </b>
           <ul style={{ margin: '4px 0 0', paddingLeft: 18 }}>
             {item.vocabNotes.map((n, i) => (
               <li key={i}>{n}</li>

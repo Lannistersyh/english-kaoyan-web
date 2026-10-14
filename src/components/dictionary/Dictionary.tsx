@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { STORAGE_KEYS } from '../../types'
+import { lookupEnglishWord, type DictEntry } from '../../utils/dictionary'
 
 interface WordRecord {
   count: number
@@ -10,70 +11,6 @@ interface WordRecord {
 
 interface DictHistory {
   [word: string]: WordRecord
-}
-
-interface DictEntry {
-  word: string
-  phonetic: string
-  definitions: string[]
-  chineseDef: string
-  pos: string // part of speech
-}
-
-async function fetchDefinition(word: string): Promise<DictEntry | null> {
-  // Use MyMemory API - works from China
-  try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 8000)
-
-    const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-CN`,
-      { signal: controller.signal }
-    )
-    clearTimeout(timeout)
-
-    if (!res.ok) return null
-    const data = await res.json()
-    if (data.responseStatus !== 200) return null
-
-    const mainTranslation = data.responseData?.translatedText || ''
-    const matches = data.matches || []
-
-    // Extract detailed translations
-    const detailedTrans: string[] = []
-    let pos = ''
-    for (const m of matches) {
-      const trans = m.translation || ''
-      // Filter out low quality or identical matches
-      if (trans && trans !== word && trans.length > 1) {
-        if (trans.includes('.') && !detailedTrans.some(d => d === trans)) {
-          // This has part of speech标记
-          const posMatch = trans.match(/^([a-z]+\.)\s*/)
-          if (posMatch && !pos) pos = posMatch[1]
-          detailedTrans.push(trans)
-        } else if (!detailedTrans.includes(trans) && detailedTrans.length < 5) {
-          detailedTrans.push(trans)
-        }
-      }
-    }
-
-    // If we got no detailed translations, use the main one
-    const allTranslations = detailedTrans.length > 0 ? detailedTrans :
-      (mainTranslation && mainTranslation !== word ? [mainTranslation] : [])
-
-    if (allTranslations.length === 0) return null
-
-    return {
-      word,
-      phonetic: '',
-      definitions: allTranslations,
-      chineseDef: allTranslations[0] || mainTranslation,
-      pos,
-    }
-  } catch (e) {
-    console.error('Dictionary fetch error:', e)
-    return null
-  }
 }
 
 export default function Dictionary() {
@@ -86,14 +23,38 @@ export default function Dictionary() {
   const [showResult, setShowResult] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const requestId = useRef(0)
+
+  useEffect(() => {
+    const open = () => setIsOpen(true)
+    window.addEventListener('ekw:dictionary-open', open)
+    return () => { window.removeEventListener('ekw:dictionary-open', open); requestId.current++ }
+  }, [])
 
   useEffect(() => { if (isOpen) inputRef.current?.focus() }, [isOpen])
 
   const handleInput = useCallback((val: string) => {
+    requestId.current++
+    setLoading(false)
     setInput(val)
     setShowResult(false)
     setEntry(null)
     setError('')
+  }, [])
+
+  const showWord = useCallback(async (word: string, unlocked: boolean) => {
+    const id = ++requestId.current
+    setCurrentWord(word)
+    setEntry(null)
+    setError('')
+    setShowResult(true)
+    setLoading(unlocked)
+    if (!unlocked) return
+    const result = await lookupEnglishWord(word)
+    if (id !== requestId.current) return
+    if (result) setEntry(result)
+    else setError('No definition found. Check the spelling or try again.')
+    setLoading(false)
   }, [])
 
   const handleSubmit = useCallback(async () => {
@@ -106,29 +67,13 @@ export default function Dictionary() {
 
     const updated = { ...history, [word]: { count: newCount, unlocked, timestamp: Date.now() } }
     setHistory(updated)
-    setCurrentWord(word)
     setInput('')
-    setError('')
-
-    if (unlocked) {
-      setLoading(true)
-      setShowResult(true)
-      const result = await fetchDefinition(word)
-      if (result) {
-        setEntry(result)
-      } else {
-        setError('未找到释义，请检查拼写')
-      }
-      setLoading(false)
-    } else {
-      setShowResult(true)
-      setEntry(null)
-    }
-  }, [input, history])
+    await showWord(word, unlocked)
+  }, [input, history, setHistory, showWord])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSubmit()
-    if (e.key === 'Escape') { setInput(''); setShowResult(false); setEntry(null); setError('') }
+    if (e.key === 'Escape') handleInput('')
   }
 
   // Recent words list
@@ -142,12 +87,11 @@ export default function Dictionary() {
     <>
       {/* Toggle button - fixed on right */}
       <button
+        className="dictionary-toggle"
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: 'fixed',
           right: isOpen ? 'min(330px, calc(100vw - 46px))' : 16,
-          top: '50%',
-          transform: 'translateY(-50%)',
           zIndex: 1001,
           width: 44,
           height: 44,
@@ -163,7 +107,7 @@ export default function Dictionary() {
           transition: 'none',
           color: isOpen ? 'var(--c-primary)' : 'var(--c-text-secondary)',
         }}
-        title={isOpen ? '关闭词典' : '打开词典'}
+        title={isOpen ? "Close dictionary" : "Open dictionary"}
       >
         📖
       </button>
@@ -200,7 +144,7 @@ export default function Dictionary() {
             alignItems: 'center',
             gap: 6,
           }}>
-            <span style={{ fontSize: 16 }}>📖</span> 汉英小词典
+            <span style={{ fontSize: 16 }}>📖</span>   English mini dictionary
           </div>
 
           {/* Search input */}
@@ -211,14 +155,14 @@ export default function Dictionary() {
               value={input}
               onChange={(e) => handleInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="输入单词，敲三遍解锁释义..."
+              placeholder="Enter a word, type it three times to unlock the definition..."
               style={{
                 width: '100%',
                 padding: '9px 52px 9px 12px',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 borderRadius: 8,
                 fontSize: 14,
-                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
+                fontFamily: 'var(--font-stack)',
                 color: '#1d1d1f',
                 background: 'rgba(0, 0, 0, 0.03)',
                 outline: 'none',
@@ -249,10 +193,11 @@ export default function Dictionary() {
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: 'pointer',
-                  fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+                  fontFamily: 'var(--font-stack)',
                 }}
               >
-                查
+
+                 Look up
               </button>
             )}
           </div>
@@ -282,9 +227,9 @@ export default function Dictionary() {
                 })}
               </div>
               <span>
-                {getCount(input.trim().toLowerCase()) >= 3 ? '✨ 可以查了！按 Enter' :
-                 getCount(input.trim().toLowerCase()) === 0 ? '输入 3 遍解锁释义' :
-                 `已输入 ${getCount(input.trim().toLowerCase())}/3 遍`}
+                {getCount(input.trim().toLowerCase()) >= 3 ? "✨ Ready to look up! Press Enter" :
+                 getCount(input.trim().toLowerCase()) === 0 ? "Type 3 times to unlock the definition" :
+                 ` Entered ${getCount(input.trim().toLowerCase())}/3 times `}
               </span>
             </div>
           )}
@@ -345,13 +290,14 @@ export default function Dictionary() {
                       borderRadius: '50%',
                       animation: 'spin 0.8s linear infinite',
                     }} />
-                    查询中...
+
+                     Looking up...
                   </div>
                 )}
 
                 {entry && (
                   <div style={{ marginTop: 10 }}>
-                    {/* Main translation - highlighted */}
+                    {/* Primary definition */}
                     <div style={{
                       fontSize: 16,
                       fontWeight: 600,
@@ -366,7 +312,7 @@ export default function Dictionary() {
                       {entry.definitions[0]}
                     </div>
 
-                    {/* Other translations */}
+                    {/* Other definitions */}
                     {entry.definitions.length > 1 && (
                       <div style={{ marginBottom: 10 }}>
                         <div style={{
@@ -377,7 +323,8 @@ export default function Dictionary() {
                           letterSpacing: 0.5,
                           marginBottom: 6,
                         }}>
-                          其他释义
+
+                           Other definitions
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                           {entry.definitions.slice(1).map((def, i) => (
@@ -408,7 +355,8 @@ export default function Dictionary() {
                       fontSize: 12,
                       color: '#34c759',
                     }}>
-                      ✅ 已输入 3 遍，释义已解锁
+
+                       ✅ Entered 3 times, definition unlocked
                     </div>
                   </div>
                 )}
@@ -440,27 +388,14 @@ export default function Dictionary() {
                 letterSpacing: 0.5,
                 marginBottom: 10,
               }}>
-                最近查词
+
+                 Recent lookups
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {recentWords.map(([word, record]) => (
                   <button
                     key={word}
-                    onClick={() => {
-                      setCurrentWord(word)
-                      setShowResult(true)
-                      setError('')
-                      if (record.unlocked) {
-                        setLoading(true)
-                        fetchDefinition(word).then(r => {
-                          if (r) setEntry(r)
-                          else setError('未找到释义')
-                          setLoading(false)
-                        })
-                      } else {
-                        setEntry(null)
-                      }
-                    }}
+                    onClick={() => showWord(word, record.unlocked)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -471,7 +406,7 @@ export default function Dictionary() {
                       background: record.unlocked ? 'rgba(0, 113, 227, 0.06)' : 'rgba(0, 0, 0, 0.02)',
                       cursor: 'pointer',
                       textAlign: 'left',
-                      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+                      fontFamily: 'var(--font-stack)',
                       transition: 'background 0.15s',
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.background = record.unlocked ? 'rgba(0, 113, 227, 0.12)' : 'rgba(0, 0, 0, 0.04)'}
@@ -502,12 +437,15 @@ export default function Dictionary() {
             }}>
               <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.5 }}>📖</div>
               <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>
-                Mac 风格汉英词典
+
+                 English dictionary
               </div>
               <div style={{ fontSize: 13, lineHeight: 1.8, maxWidth: 200, margin: '0 auto' }}>
-                输入英文单词<br />
-                <b>敲写 3 遍</b>解锁中文释义<br />
-                深度记忆每一个生词
+
+                 Enter an English word <br />
+                <b> Type it 3 times </b> Unlock the English definition <br />
+
+                 Deeply memorize every new word
               </div>
             </div>
           )}
@@ -522,7 +460,7 @@ export default function Dictionary() {
           textAlign: 'center',
           background: 'rgba(255, 255, 255, 0.7)',
         }}>
-          MyMemory Translation API
+          Datamuse · Local study vocabulary
         </div>
       </div>}
 
