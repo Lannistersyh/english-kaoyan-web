@@ -18,14 +18,7 @@ function findMarks(text: string, annotations: PassageAnnotation[]): Mark[] {
     }
   }
   marks.sort((a, b) => a.start - b.start)
-  // Merge overlaps (keep the one that appears first)
-  const merged: Mark[] = []
-  for (const m of marks) {
-    const last = merged[merged.length - 1]
-    if (last && m.start < last.end) continue
-    merged.push(m)
-  }
-  return merged
+  return marks
 }
 
 interface Props {
@@ -37,10 +30,11 @@ interface Props {
 /* Body text rendering: paragraphing + annotation highlighting + {{n}} placeholder replacement */
 export function PassageRenderer({ text, annotations = [], renderGap }: Props) {
   const paragraphs = text.split(/\n\s*\n/)
+  const anchored = new Set<string>()
   return (
     <div className="passage">
       {paragraphs.map((p, i) => (
-        <p key={i}>{renderSegments(p, annotations, renderGap)}</p>
+        <p key={i}>{renderSegments(p, annotations, renderGap, anchored)}</p>
       ))}
     </div>
   )
@@ -49,51 +43,33 @@ export function PassageRenderer({ text, annotations = [], renderGap }: Props) {
 function renderSegments(
   text: string,
   annotations: PassageAnnotation[],
-  renderGap?: (n: number) => ReactNode,
+  renderGap: Props['renderGap'],
+  anchored: Set<string>,
 ): ReactNode[] {
   const marks = findMarks(text, annotations)
+  const gaps = renderGap ? [...text.matchAll(/\{\{(\d+)\}\}/g)].map(match => ({
+    start: match.index!, end: match.index! + match[0].length, number: Number(match[1]),
+  })) : []
+  const points = [...new Set([0, text.length, ...marks.flatMap(mark => [mark.start, mark.end]), ...gaps.flatMap(gap => [gap.start, gap.end])])].sort((a, b) => a - b)
   const out: ReactNode[] = []
-  let pos = 0
-  let markIdx = 0
-  let key = 0
+  let cursor = 0
 
-  while (pos < text.length) {
-    // Next mark
-    let nextMark = markIdx < marks.length && marks[markIdx].start >= pos ? marks[markIdx] : undefined
-
-    // Next {{n}} placeholder (search the entire text, not limited to the beginning)
-    let gapPos = -1
-    let gapNum = 0
-    if (renderGap) {
-      const m = /\{\{(\d+)\}\}/.exec(text.slice(pos))
-      if (m) {
-        gapPos = pos + m.index
-        gapNum = parseInt(m[1], 10)
-      }
+  for (let i = 0; i < points.length - 1; i++) {
+    const start = points[i]
+    if (start < cursor) continue
+    const gap = gaps.find(gap => gap.start === start)
+    const end = gap?.end ?? points[i + 1]
+    let node: ReactNode = gap ? <span className="gap-slot">{renderGap!(gap.number)}</span> : text.slice(start, end)
+    const active = marks.filter(mark => mark.start < end && mark.end > start)
+    // Preserve every overlapping annotation and give each note a unique jump target.
+    for (const mark of [...active].reverse()) {
+      const id = `ann-${mark.ann.id}`
+      const first = !anchored.has(id)
+      anchored.add(id)
+      node = <mark id={first ? id : undefined} className={`hl-${mark.ann.type}`}>{node}</mark>
     }
-
-    // No more marks and no more gaps → output the remaining text and end
-    if (!nextMark && gapPos === -1) {
-      out.push(text.slice(pos))
-      break
-    }
-
-    // mark comes before gap → handle mark first
-    if (nextMark && (gapPos === -1 || nextMark.start < gapPos)) {
-      if (nextMark.start > pos) out.push(text.slice(pos, nextMark.start))
-      out.push(
-        <mark key={key++} id={`ann-${nextMark.ann.id}`} className={`hl-${nextMark.ann.type}`}>
-          {text.slice(nextMark.start, nextMark.end)}
-        </mark>,
-      )
-      pos = nextMark.end
-      markIdx++
-    } else {
-      // Render numbered gap placeholders.
-      if (gapPos > pos) out.push(text.slice(pos, gapPos))
-      out.push(<span key={key++} className="gap-slot">{renderGap!(gapNum)}</span>)
-      pos = gapPos + `{{${gapNum}}}`.length
-    }
+    out.push(<span key={start}>{node}</span>)
+    cursor = end
   }
   return out
 }

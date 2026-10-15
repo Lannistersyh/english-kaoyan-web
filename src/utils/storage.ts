@@ -1,4 +1,5 @@
 import { STORAGE_KEYS, STORAGE_VERSION, type StorageKey } from '../types'
+import { validStoredData } from './validation'
 
 export const STORAGE_EVENT = 'ekw:storage-change'
 let storageUser: string | null = null
@@ -22,9 +23,9 @@ export function load<T>(key: StorageKey, fallback: T): T {
     const raw = readRaw(key)
     if (!raw) return fallback
     const parsed = JSON.parse(raw)
-    if (parsed && parsed.v === STORAGE_VERSION && 'data' in parsed) return parsed.data as T
+    if (parsed && parsed.v === STORAGE_VERSION && validStoredData(key, parsed.data)) return parsed.data as T
     // Keep legacy offline lookup history without a version wrapper.
-    if (key === STORAGE_KEYS.dictHistory && parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed as T
+    if (key === STORAGE_KEYS.dictHistory && validStoredData(key, parsed)) return parsed as T
     return fallback
   } catch { return fallback }
 }
@@ -59,20 +60,19 @@ export function exportAll(userId = storageUser): string {
   return JSON.stringify(out, null, 2)
 }
 /* Validate the complete backup before writing; roll back failed writes. */
-export function importAll(json: string): string[] {
+export function importAll(json: string, { local = true } = {}): string[] {
   let data: Record<string, unknown>
   try {
     data = JSON.parse(json)
     if (!data || typeof data !== 'object' || Array.isArray(data)) return ["Backup must be a JSON object"]
   } catch { return ["Backup file is not valid JSON"] }
   const entries: [StorageKey, string][] = []
-  const arrays: StorageKey[] = [STORAGE_KEYS.questions, STORAGE_KEYS.sessions, STORAGE_KEYS.wrongRecords, STORAGE_KEYS.vocab, STORAGE_KEYS.patterns]
   for (const key of Object.values(STORAGE_KEYS)) {
     if (!(key in data)) continue
     const wrapped = data[key] as { v?: unknown; data?: unknown } | null
-    if (!wrapped || wrapped.v !== STORAGE_VERSION || !('data' in wrapped)) return [` Backup version or format is incorrect:${key}`]
+    if (!wrapped || typeof wrapped !== 'object' || wrapped.v !== STORAGE_VERSION || !('data' in wrapped)) return [` Backup version or format is incorrect:${key}`]
     const value = wrapped.data
-    if (arrays.includes(key) ? !Array.isArray(value) : !value || typeof value !== 'object' || Array.isArray(value)) return [` Data type is incorrect:${key}`]
+    if (!validStoredData(key, value)) return [`Invalid study records: ${key}`]
     entries.push([key, JSON.stringify(wrapped)])
   }
   if (!entries.length) return ["File does not contain study data"]
@@ -85,6 +85,6 @@ export function importAll(json: string): string[] {
     }
     return ["Browser storage write failed; attempted to restore original data"]
   }
-  notify(false)
+  notify(local)
   return []
 }

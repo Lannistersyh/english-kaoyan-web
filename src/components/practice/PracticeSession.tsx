@@ -41,12 +41,13 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   const [selfScores, setSelfScores] = useState<Record<string, number>>({})
   const [thinkingItemId, setThinkingItemId] = useState<string | null>(null)
 
-  const [sessions, setSessions] = useLocalStorage<Session[]>(STORAGE_KEYS.sessions, [])
+  const [, setSessions] = useLocalStorage<Session[]>(STORAGE_KEYS.sessions, [])
   const [wrongRecords, setWrongRecords] = useLocalStorage<WrongRecord[]>(STORAGE_KEYS.wrongRecords, [])
-  const [progress, setProgress] = useLocalStorage<Progress>(STORAGE_KEYS.progress, {})
+  const [, setProgress] = useLocalStorage<Progress>(STORAGE_KEYS.progress, {})
 
   const timer = useTimer(phase === 'answering')
   const startedAtRef = useRef(0)
+  const sessionIdRef = useRef<string | null>(null)
   const isSubjective = question.type === 'translation' || question.type === 'writing'
   const hasSubjectiveAnswer = Boolean((answers[question.id] ?? [''])[0]?.trim())
 
@@ -84,31 +85,34 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   }
 
   const updateProgress = (s: number, t: number) => {
-    const prev = progress[question.id] ?? { attempts: 0, bestScore: 0, total: t, lastAt: 0, completed: false }
-    const next: Progress = {
-      ...progress,
-      [question.id]: {
-        attempts: prev.attempts + 1,
-        bestScore: Math.max(prev.bestScore, s),
-        total: t,
-        lastAt: Date.now(),
-        completed: true,
-      },
-    }
-    setProgress(next)
+    setProgress(current => {
+      const prev = current[question.id] ?? { attempts: 0, bestScore: 0, total: t, lastAt: 0, completed: false }
+      return {
+        ...current,
+        [question.id]: {
+          attempts: prev.attempts + 1,
+          bestScore: Math.max(prev.bestScore, s),
+          total: t,
+          lastAt: Date.now(),
+          completed: true,
+        },
+      }
+    })
   }
 
   const submit = () => {
     if (isSubjective && !hasSubjectiveAnswer) return
     timer.setPaused(true)
     const now = Date.now()
+    const sessionId = uid('s')
+    sessionIdRef.current = sessionId
     if (isSubjective) {
       // Subjective question: no scoring, proceed to self-assessment
       setGraded([])
-      setSessions([
-        ...sessions,
+      setSessions(current => [
+        ...current,
         {
-          id: uid('s'),
+          id: sessionId,
           questionId: question.id,
           startedAt: startedAtRef.current,
           finishedAt: now,
@@ -129,18 +133,18 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
     setTotal(result.total)
 
     if (!isReview) {
-      const newWrong = [...wrongRecords]
-      for (const g of result.graded) {
-        if (!g.correct) upsertWrong(newWrong, g)
-      }
-      setWrongRecords(newWrong)
+      setWrongRecords(current => {
+        const next = current.map(record => ({ ...record }))
+        for (const g of result.graded) if (!g.correct) upsertWrong(next, g)
+        return next
+      })
       updateProgress(result.score, result.total)
     }
 
-    setSessions([
-      ...sessions,
+    setSessions(current => [
+      ...current,
       {
-        id: uid('s'),
+        id: sessionId,
         questionId: question.id,
         startedAt: startedAtRef.current,
         finishedAt: now,
@@ -171,9 +175,11 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
   const addToWrongBook = (itemId: string) => {
     const g = graded?.find((x) => x.itemId === itemId)
     if (!g) return
-    const newWrong = [...wrongRecords]
-    upsertWrong(newWrong, g)
-    setWrongRecords(newWrong)
+    setWrongRecords(current => {
+      const next = current.map(record => ({ ...record }))
+      upsertWrong(next, g)
+      return next
+    })
   }
 
   const saveThinking = (myThought: string, distractorTrap: string, correctMapping: string) => {
@@ -191,9 +197,9 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
 
   const handleSelfScore = (qid: string, v: number) => {
     setSelfScores({ ...selfScores, [qid]: v })
-    setSessions(
-      sessions.map((s, i) =>
-        i === sessions.length - 1 && s.questionId === question.id
+    setSessions(current =>
+      current.map(s =>
+        s.id === sessionIdRef.current && s.questionId === question.id
           ? {
               ...s,
               answers: s.answers.map((a) => (a.itemId === qid ? { ...a, selfScore: v } : a)),
@@ -279,6 +285,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           total={total}
           timeSpent={timer.seconds}
           selfScores={selfScores}
+          submittedText={(answers[question.id] ?? [''])[0]}
           onSelfScore={handleSelfScore}
           onAddToWrongBook={addToWrongBook}
           onOpenThinking={setThinkingItemId}

@@ -61,7 +61,7 @@ export default function Dictionary() {
     const word = input.trim().toLowerCase()
     if (!word) return
 
-    const prev = history[word] || { count: 0, unlocked: false, timestamp: 0 }
+    const prev = Object.prototype.hasOwnProperty.call(history, word) ? history[word] : { count: 0, unlocked: false, timestamp: 0 }
     const newCount = prev.count + 1
     const unlocked = newCount >= 3
 
@@ -81,7 +81,7 @@ export default function Dictionary() {
     .sort(([, a], [, b]) => b.timestamp - a.timestamp)
     .slice(0, 8)
 
-  const getCount = (w: string) => history[w]?.count || 0
+  const getCount = (w: string) => Object.prototype.hasOwnProperty.call(history, w) ? history[w].count : 0
 
   return (
     <>

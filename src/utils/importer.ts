@@ -98,6 +98,7 @@ export function parseImport(text: string): ImportResult {
       optionPoolId: it.kind === 'gapfill' ? poolId ?? undefined : undefined,
       reorderItems: it.reorderItems,
       correctIds,
+      score: q.type === 'cloze' ? 0.5 : undefined,
       analysis: it.analysis,
       distractors: it.distractors.map((d) => {
         const idx = LETTERS.indexOf(d.letter.toUpperCase())
@@ -155,6 +156,16 @@ export function parseImport(text: string): ImportResult {
       if (!q.items.length || invalid.length) {
         pushError(0, `「${q.title}" is missing valid sub-questions or standard answers, not saved. Please complete and re-import `)
         return
+      }
+      if (q.type === 'cloze' || q.items.some(it => it.kind === 'gapfill')) {
+        const blanks = [...q.passage.matchAll(/\{\{(\d+)\}\}/g)].map(match => Number(match[1]))
+        const numbers = new Set(blanks)
+        const validBlanks = numbers.size === q.items.length && q.items.every((_, index) => numbers.has(index + 1))
+        const gapAnswers = q.items.filter(it => it.kind === 'gapfill').map(it => it.correctIds[0])
+        if (!validBlanks || new Set(gapAnswers).size !== gapAnswers.length) {
+          pushError(0, `"${q.title}" has missing or inconsistent blanks, or repeats an answer in a single-use option pool; not saved`)
+          return
+        }
       }
     }
     questions.push(q)
@@ -282,7 +293,7 @@ export function parseImport(text: string): ImportResult {
     }
     const secMatch = /^\[(Picture|Prompt|Reference Essay)\]\s*(.*)$/.exec(line)
     if (secMatch) {
-      const key = secMatch[1] === "Picture description" ? 'figure' : secMatch[1] === "Writing requirements" ? 'prompt' : 'essay'
+      const key = secMatch[1] === 'Picture' ? 'figure' : secMatch[1] === 'Prompt' ? 'prompt' : 'essay'
       writingSection = key
       if (secMatch[2].trim()) {
         if (key === 'figure') q.figureDescription = (q.figureDescription ?? '') + secMatch[2].trim()

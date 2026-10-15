@@ -27,7 +27,7 @@ The philosopher Alfred Korzybski coined the phrase "the map is not the territory
       { id: 'sp1-a1', type: 'claim', text: 'a perfect map is not merely useless but dangerous', note: "Core argument: a perfect map is not only useless but dangerous" },
       { id: 'sp1-a2', type: 'evidence', text: 'The 2008 financial crisis was, in part, a crisis of mistaken cartography', note: "Historical evidence: the 2008 financial crisis was a consequence of mistaking the map for the territory" },
       { id: 'sp1-a3', type: 'keyword', text: 'the map is not the territory', note: "Key concept: Korzybski's famous saying — the map is not the territory" },
-      { id: 'sp1-a4', type: 'attitude', text: 'The most dangerous map is the one we forget is a map', note: "Author's attitude: the most dangerous map is the one we forget is a map" },
+      { id: 'sp1-a4', type: 'attitude', text: "the most dangerous map is the one we forget is a map", note: "Author's attitude: the most dangerous map is the one we forget is a map" },
     ],
     items: [
       {
@@ -103,8 +103,8 @@ This framework transformed engineering. Servomechanisms, autopilots, and industr
 The irony is that cybernetics, the science of control, ultimately revealed the limits of control. Complex systems — ecosystems, economies, human minds — do not behave like thermostats. They adapt, resist, and occasionally collapse in ways no feedback loop can predict. Wiener died in 1964, but his warning has only grown more urgent in the age of algorithmic governance, where the temptation to treat society as a controllable machine remains as powerful — and as dangerous — as ever.`,
     passageAnnotations: [
       { id: 'sp2-a1', type: 'claim', text: 'control is not about power but about information', note: "Core argument: The essence of control is information, not power." },
-      { id: 'sp2-a2', type: 'evidence', text: 'a steam engine governor does not "know" physics; it merely senses', note: "Evidence: The thermostat analogy — control does not require \"understanding\", only feedback." },
-      { id: 'sp2-a3', type: 'attitude', text: 'the science of control ultimately revealed the limits of control', note: "Author's attitude: Cybernetics ultimately revealed the limits of control." },
+      { id: 'sp2-a2', type: 'evidence', text: "A steam engine governor does not \"know\" physics; it merely senses", note: "Evidence: The thermostat analogy — control does not require \"understanding\", only feedback." },
+      { id: 'sp2-a3', type: 'attitude', text: "the science of control, ultimately revealed the limits of control", note: "Author's attitude: Cybernetics ultimately revealed the limits of control." },
       { id: 'sp2-a4', type: 'keyword', text: 'feedback', note: "Key concept: Feedback — the core mechanism of cybernetics." },
     ],
     items: [
@@ -182,7 +182,7 @@ This has unsettling implications. If entropy always increases, the universe is h
 
 Yet there is a profound puzzle here. If the fundamental laws are time-symmetric, why did the universe begin in a state of extraordinarily low entropy? This is the "Past Hypothesis" — the observation that the Big Bang was a moment of almost miraculous order. No one knows why. The arrow of time, it seems, is not written into the laws of physics but into the initial conditions of the universe.`,
     passageAnnotations: [
-      { id: 'sp3-a1', type: 'claim', text: 'time has a direction because of entropy, not because the laws of physics are asymmetric', note: "Core argument: The direction of time comes from entropy, not from an asymmetry in physical laws." },
+      { id: 'sp3-a1', type: 'claim', text: "The answer, physicists tell us, is entropy.", note: "Core argument: The direction of time comes from entropy, not from an asymmetry in physical laws." },
       { id: 'sp3-a2', type: 'evidence', text: 'Newton\'s mechanics, Maxwell\'s electromagnetism — are perfectly time-symmetric', note: "Evidence: The laws of classical physics themselves are time-symmetric." },
       { id: 'sp3-a3', type: 'keyword', text: 'Past Hypothesis', note: "Key concept: The Past Hypothesis — why the Big Bang was a low-entropy state." },
       { id: 'sp3-a4', type: 'attitude', text: 'No one knows why', note: "Author's attitude: Frankly acknowledging unsolved mysteries." },
@@ -424,7 +424,7 @@ Yet physicists have learned to work with uncertainty rather than against it. Qua
       { id: 'sp6-a1', type: 'claim', text: 'This is not a limitation of instruments — it is a feature of reality', note: "Core argument: Uncertainty is a feature of reality, not a limitation of observation." },
       { id: 'sp6-a2', type: 'evidence', text: 'To observe an electron, you must bounce something off it', note: "Physical explanation: Observation necessarily disturbs the observed object." },
       { id: 'sp6-a3', type: 'keyword', text: 'Laplacean determinism', note: "Key concept: Laplacean determinism — the classical physical ideal of determinism." },
-      { id: 'sp6-a4', type: 'attitude', text: 'the universe is not a clock but a casino', note: "Author's attitude: The universe is not a clock but a casino." },
+      { id: 'sp6-a4', type: 'attitude', text: "The universe, it seems, is not a clock but a casino", note: "Author's attitude: The universe is not a clock but a casino." },
     ],
     items: [
       {
@@ -501,7 +501,7 @@ What makes Turing's paper remarkable is not its answer but its framing. By repla
 
 The deepest question Turing raised may be this: if a machine's behaviour is indistinguishable from thinking, does it matter whether it "really" thinks?`,
     passageAnnotations: [
-      { id: 'sp7-a1', type: 'claim', text: 'Turing replaced the metaphysical question with an operational one', note: "Core argument: Turing transformed a metaphysical question into an engineering problem." },
+      { id: 'sp7-a1', type: 'claim', text: "By replacing the metaphysical question \"what is thinking?\" with the operational question \"how would we recognise it?\", Turing shifted the discussion from philosophy to engineering.", note: "Core argument: Turing transformed a metaphysical question into an engineering problem." },
       { id: 'sp7-a2', type: 'evidence', text: 'John Searle\'s famous "Chinese Room" thought experiment', note: "Counter-evidence: Searle's Chinese Room argument" },
       { id: 'sp7-a3', type: 'keyword', text: 'imitation game', note: "Key concept: imitation game — the original name of the Turing Test" },
       { id: 'sp7-a4', type: 'attitude', text: 'the line between imitation and understanding has never been blurrier', note: "Author's attitude: the boundary between imitation and understanding has never been so blurred" },
@@ -660,10 +660,10 @@ This pattern pervades modern life. Climate negotiations are a multi-player Priso
 
 Nash won the Nobel Prize in 1994 for his work, but his personal story — marked by schizophrenia, institutionalisation, and eventual recovery — adds a poignant dimension. The man who mathematically formalised rationality spent decades unable to distinguish between reason and delusion. His equilibrium concept, meanwhile, has been applied to everything from evolutionary biology to auction design, proving that the mathematics of strategic interaction is as universal as it is counterintuitive.`,
     passageAnnotations: [
-      { id: 'sp9-a1', type: 'claim', text: 'individual rationality leads to collective disaster', note: "Core argument: individual rationality leads to collective disaster — the paradox of game theory" },
+      { id: 'sp9-a1', type: 'claim', text: "Individual rationality leads to collective disaster", note: "Core argument: individual rationality leads to collective disaster — the paradox of game theory" },
       { id: 'sp9-a2', type: 'evidence', text: 'Climate negotiations are a multi-player Prisoner\'s Dilemma', note: "Real-world evidence: climate negotiations are a multi-party prisoner's dilemma" },
       { id: 'sp9-a3', type: 'keyword', text: 'Nash equilibrium', note: "Key concept: Nash equilibrium" },
-      { id: 'sp9-a4', type: 'attitude', text: 'the man who mathematically formalised rationality spent decades unable to distinguish reason from delusion', note: "Author's attitude: the irony of Nash's personal tragedy and his theory" },
+      { id: 'sp9-a4', type: 'attitude', text: "The man who mathematically formalised rationality spent decades unable to distinguish between reason and delusion.", note: "Author's attitude: the irony of Nash's personal tragedy and his theory" },
     ],
     items: [
       {
@@ -742,8 +742,8 @@ Schrödinger also predicted that the gene must be an "aperiodic crystal" — a m
 
 "What is Life?" remains one of the most influential popular science books ever written. Its central insight — that life is a process of importing order to combat entropy — has become a cornerstone of biophysics.`,
     passageAnnotations: [
-      { id: 'sp10-a1', type: 'claim', text: 'living systems are not closed but open: they continuously import order from their environment', note: "Core argument: life counteracts entropy increase by importing ordered energy" },
-      { id: 'sp10-a2', type: 'evidence', text: 'Francis Crick explicitly credited Schrödinger with inspiring his move from physics to biology', note: "Historical evidence: Schrödinger inspired the discoverers of DNA" },
+      { id: 'sp10-a1', type: 'claim', text: "Living systems, he argued, are not closed but open: they continuously import order from their environment (food, sunlight) and export disorder (heat, waste).", note: "Core argument: life counteracts entropy increase by importing ordered energy" },
+      { id: 'sp10-a2', type: 'evidence', text: "Francis Crick, who co-discovered the structure of DNA, explicitly credited Schrödinger with inspiring his move from physics to biology.", note: "Historical evidence: Schrödinger inspired the discoverers of DNA" },
       { id: 'sp10-a3', type: 'keyword', text: 'aperiodic crystal', note: "Key concept: aperiodic crystal — Schrödinger's prediction of gene structure" },
       { id: 'sp10-a4', type: 'attitude', text: 'life is a process of importing order to combat entropy', note: "Author's attitude: life is a process of importing order to counteract entropy" },
     ],
@@ -822,9 +822,9 @@ The implications extend beyond philosophy. In medicine, randomised controlled tr
 Popper's most unsettling conclusion is that scientific knowledge is always provisional. We never prove a theory true; we merely fail to prove it false — so far. Every scientific truth carries an invisible asterisk: "pending refutation."`,
     passageAnnotations: [
       { id: 'sp11-a1', type: 'claim', text: 'A theory is scientific not if it can be confirmed but if it can be refuted', note: "Core argument: the criterion for a scientific theory is falsifiability, not verifiability" },
-      { id: 'sp11-a2', type: 'evidence', text: 'Einstein\'s general relativity...made specific, risky predictions', note: "Positive evidence: the falsifiability of Einstein's theory" },
+      { id: 'sp11-a2', type: 'evidence', text: "Einstein's general relativity was scientific because it made specific, risky predictions", note: "Positive evidence: the falsifiability of Einstein's theory" },
       { id: 'sp11-a3', type: 'keyword', text: 'falsification', note: "Key concept: falsification — Popper's core criterion" },
-      { id: 'sp11-a4', type: 'attitude', text: 'Every scientific truth carries an invisible asterisk: pending refutation', note: "Author's attitude: all scientific truths carry an invisible asterisk of \"yet to be falsified\"" },
+      { id: 'sp11-a4', type: 'attitude', text: "Every scientific truth carries an invisible asterisk: \"pending refutation", note: "Author's attitude: all scientific truths carry an invisible asterisk of \"yet to be falsified\"" },
     ],
     items: [
       {
@@ -980,8 +980,8 @@ The implications for the digital age are immediate. We carry Panopticons in our 
 Foucault's insight was that the most effective power is the kind you don't notice — the kind you enforce upon yourself.`,
     passageAnnotations: [
       { id: 'sp13-a1', type: 'claim', text: 'the Panopticon represented a fundamental shift in how power operates', note: "Core argument: the panopticon represents a fundamental shift in how power operates" },
-      { id: 'sp13-a2', type: 'evidence', text: 'The public execution gave way to the prison, where punishment became invisible, administrative, and continuous', note: "Evidence: the shift from public execution to invisible prison" },
-      { id: 'sp13-a3', type: 'keyword', text: 'disciplinary power', note: "Key concept: disciplinary power — operates through internalized surveillance" },
+      { id: 'sp13-a2', type: 'evidence', text: "The public execution — a spectacle of sovereign violence — gave way to the prison, where punishment became invisible, administrative, and continuous.", note: "Evidence: the shift from public execution to invisible prison" },
+      { id: 'sp13-a3', type: 'keyword', text: "internalised surveillance", note: "Key concept: disciplinary power — operates through internalized surveillance" },
       { id: 'sp13-a4', type: 'attitude', text: 'the most effective power is the kind you don\'t notice — the kind you enforce upon yourself', note: "Author's attitude: the most effective power is the power you exert over yourself" },
     ],
     items: [
@@ -1058,10 +1058,10 @@ Heidegger's most provocative claim is that technology is not merely a human acti
 
 Heidegger's essay remains a touchstone for philosophers of technology, who continue to debate whether his insights offer genuine alternatives or merely poetic resistance to inevitable progress.`,
     passageAnnotations: [
-      { id: 'sp14-a1', type: 'claim', text: 'Modern technology enframes the world as standing reserve — resources to be ordered, optimised, and exploited', note: "Core argument: modern technology frames the world as standing reserve" },
-      { id: 'sp14-a2', type: 'evidence', text: 'A windmill works with the wind; a hydroelectric dam transforms the Rhine into a standing reserve', note: "Comparative evidence: windmill vs hydroelectric dam" },
+      { id: 'sp14-a1', type: 'claim', text: "Modern technology, in Heidegger's analysis, enframes the world as \"standing reserve\" — resources to be ordered, optimised, and exploited.", note: "Core argument: modern technology frames the world as standing reserve" },
+      { id: 'sp14-a2', type: 'evidence', text: "A hydroelectric dam, by contrast, transforms the Rhine River into a standing reserve of energy: the river ceases to be a river and becomes a power source.", note: "Comparative evidence: windmill vs hydroelectric dam" },
       { id: 'sp14-a3', type: 'keyword', text: 'enframing', note: "Key concept: enframing — Heidegger's description of the essence of modern technology" },
-      { id: 'sp14-a4', type: 'attitude', text: 'the essence of technology is nothing technological', note: "Author's attitude: the essence of technology is not technological" },
+      { id: 'sp14-a4', type: 'attitude', text: "The essence of technology, he writes, is nothing technological.", note: "Author's attitude: the essence of technology is not technological" },
     ],
     items: [
       {
@@ -1216,10 +1216,10 @@ Benjamin saw this transformation as politically ambiguous. On one hand, the dest
 
 On the other hand, mechanical reproduction made art available for political manipulation. Fascism, Benjamin noted, aestheticised politics — turning war and violence into spectacle. Communism, he countered, should politicise art — turning aesthetic experience into a tool for social transformation. Benjamin's essay, written as fascism swept Europe, remains a warning about the political uses of mass culture.`,
     passageAnnotations: [
-      { id: 'sp16-a1', type: 'claim', text: 'Mechanical reproduction destroys the aura...What is lost is not the image itself but the ritual and authority that surrounded the original', note: "Core argument: mechanical reproduction destroys not the image, but the ritual and authority of the original" },
-      { id: 'sp16-a2', type: 'evidence', text: 'A photograph of the Mona Lisa can be reproduced millions of times...The image becomes ubiquitous', note: "Evidence: the infinite reproduction of photographs of the Mona Lisa" },
+      { id: 'sp16-a1', type: 'claim', text: "What is lost, Benjamin argued, is not the image itself but the ritual and authority that surrounded the original.", note: "Core argument: mechanical reproduction destroys not the image, but the ritual and authority of the original" },
+      { id: 'sp16-a2', type: 'evidence', text: "A photograph of the Mona Lisa can be reproduced millions of times, placed in textbooks, projected on screens, printed on coffee mugs.", note: "Evidence: the infinite reproduction of photographs of the Mona Lisa" },
       { id: 'sp16-a3', type: 'keyword', text: 'aura', note: "Key concept: aura — Benjamin's description of the uniqueness of the original" },
-      { id: 'sp16-a4', type: 'attitude', text: 'Fascism aestheticised politics...Communism should politicise art', note: "Author's attitude: fascism aestheticizes politics; communism should politicize art" },
+      { id: 'sp16-a4', type: 'attitude', text: "Fascism, Benjamin noted, aestheticised politics — turning war and violence into spectacle.", note: "Author's attitude: fascism aestheticizes politics; communism should politicize art" },
     ],
     items: [
       {
@@ -1295,8 +1295,8 @@ Western philosophers have struggled with the same puzzle. Daniel Dennett has arg
 
 Zhuangzi's genius was to present these insights not as abstract arguments but as a story — a story that, like a dream, slips through your fingers the moment you try to grasp it.`,
     passageAnnotations: [
-      { id: 'sp17-a1', type: 'claim', text: 'He didn\'t know if he was Zhuangzi who had dreamt he was a butterfly, or a butterfly dreaming he was Zhuangzi', note: "Core argument: the boundary between self and other is unstable" },
-      { id: 'sp17-a2', type: 'evidence', text: 'Descartes would ask a similar question in 1641...but Zhuangzi goes further', note: "Comparative evidence: the similarities and transcendence of Descartes and Zhuangzi" },
+      { id: 'sp17-a1', type: 'claim', text: "he didn't know if he was Zhuangzi who had dreamt he was a butterfly, or a butterfly dreaming he was Zhuangzi", note: "Core argument: the boundary between self and other is unstable" },
+      { id: 'sp17-a2', type: 'evidence', text: "Descartes would ask a similar question in 1641 — \"How do I know I am not dreaming?\" — but Zhuangzi goes further.", note: "Comparative evidence: the similarities and transcendence of Descartes and Zhuangzi" },
       { id: 'sp17-a3', type: 'keyword', text: 'personal identity', note: "Key concept: personal identity — what is the essence of the self" },
       { id: 'sp17-a4', type: 'attitude', text: 'the self is not a thing but a process — not a butterfly or a philosopher, but the dreaming itself', note: "Author's attitude: the self is not a substance, but a process" },
     ],
@@ -1377,7 +1377,7 @@ Derek Parfit, perhaps the most important philosopher of personal identity in the
       { id: 'sp18-a1', type: 'claim', text: 'Identity, Parfit concluded, is not what matters. What matters is survival — the continuation of your experiences, values, and relationships', note: "Core argument: identity does not matter; what matters is continuity" },
       { id: 'sp18-a2', type: 'evidence', text: 'nearly every cell in your body has been replaced', note: "Physical evidence: almost all human body cells are replaced" },
       { id: 'sp18-a3', type: 'keyword', text: 'Ship of Theseus', note: "Key concept: the Ship of Theseus — one of the oldest thought experiments" },
-      { id: 'sp18-a4', type: 'attitude', text: 'the question itself is confused. There is no deep fact about whether you are the same person', note: "Author's attitude: the question itself is confused; there is no deep fact about identity" },
+      { id: 'sp18-a4', type: 'attitude', text: "the question itself is confused. There is no deep fact about whether you are \"the same person", note: "Author's attitude: the question itself is confused; there is no deep fact about identity" },
     ],
     items: [
       {
@@ -1456,7 +1456,7 @@ Bayesian reasoning also explains why conspiracy theories are so persistent. When
 Bayes' theorem was largely ignored for two centuries. Today, it powers spam filters, search engines, medical diagnostics, and machine learning — a formula ahead of its time.`,
     passageAnnotations: [
       { id: 'sp19-a1', type: 'claim', text: 'Bayesian reasoning is not purely objective; it starts with a subjective estimate and revises it', note: "Core argument: Bayesian reasoning starts from subjective priors and then updates." },
-      { id: 'sp19-a2', type: 'evidence', text: 'If the disease affects only one in ten thousand people, Bayes\' theorem shows the actual probability is less than 1%', note: "Mathematical evidence: the true positive rate of a rare disease test is far lower than intuition suggests." },
+      { id: 'sp19-a2', type: 'evidence', text: "if the disease affects only one in ten thousand people, Bayes' theorem shows the actual probability is less than 1", note: "Mathematical evidence: the true positive rate of a rare disease test is far lower than intuition suggests." },
       { id: 'sp19-a3', type: 'keyword', text: 'prior', note: "Key concept: prior probability — a subjective estimate before seeing evidence." },
       { id: 'sp19-a4', type: 'attitude', text: 'the stronger your prior, the less evidence matters', note: "Author's attitude: the stronger the prior, the less important the evidence (both an advantage and a trap)." },
     ],
@@ -1537,7 +1537,7 @@ Taleb's practical advice is to build systems that are "antifragile" — not mere
 "The Black Swan" is ultimately a book about epistemic humility — the recognition that we know less than we think, and that the most important events are precisely those we cannot predict.`,
     passageAnnotations: [
       { id: 'sp20-a1', type: 'claim', text: 'history is dominated by rare, unpredictable events that we rationalise only after they occur', note: "Core argument: history is dominated by rare, unpredictable events." },
-      { id: 'sp20-a2', type: 'evidence', text: 'The fall of the Berlin Wall, the rise of the internet, the 2008 financial crisis — all were black swans', note: "Evidence: the fall of the Berlin Wall, the rise of the Internet, the 2008 financial crisis." },
+      { id: 'sp20-a2', type: 'evidence', text: "The fall of the Berlin Wall, the rise of the internet, the 2008 financial crisis — all were \"black swans", note: "Evidence: the fall of the Berlin Wall, the rise of the Internet, the 2008 financial crisis." },
       { id: 'sp20-a3', type: 'keyword', text: 'black swan', note: "Key concept: black swan — extreme, unpredictable, and rationalized after the fact." },
       { id: 'sp20-a4', type: 'attitude', text: 'the most important events are precisely those we cannot predict', note: "Author's attitude: the most important events are precisely the ones we cannot predict." },
     ],

@@ -22,7 +22,7 @@ export default function Home() {
   const [sessions] = useLocalStorage<Session[]>(STORAGE_KEYS.sessions, [])
 
   const allQuestions = getAllQuestions()
-  const completedCount = Object.values(progress).filter((p) => p.completed).length
+  const completedCount = allQuestions.filter(q => progress[q.id]?.completed).length
   const activeWrong = wrongRecords.filter((w) => w.status === 'active')
   const pendingThinking = wrongRecords.filter((w) => w.status === 'active' && !w.myThought)
   const masteredCount = wrongRecords.filter((w) => w.status === 'mastered').length

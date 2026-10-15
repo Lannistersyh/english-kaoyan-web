@@ -36,4 +36,14 @@ Hosted AI endpoints require a valid Supabase session and server-side `DEEPSEEK_A
 
 The English import format is available under **Import → Copy format template**. Category names include `Reading`, `Cloze`, `Matching`, `Reorder`, `Paraphrasing`, and `Writing`.
 
-GitHub Pages publishing is manual. The legacy site's automatic push deployment is disabled in the local workflow; local use does not require GitHub Pages.
+## GitHub Pages
+
+Live site: https://lannistersyh.github.io/english-kaoyan-web/
+
+Pushing to `main` runs the regression tests and builds the English site before deployment. The workflow can also be started manually. GitHub Pages must use **GitHub Actions** as its publishing source.
+
+The workflow uses `/english-kaoyan-web/` as the base path so scripts, fonts, and browser icons load from the repository subdirectory. Local builds default to relative asset paths.
+
+The hosted site opens without a login requirement. Progress is stored in that browser; use backup export and restore to move local study data between the local and hosted sites. Cloud sync is optional and uses the repository's `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` Actions secrets.
+
+GitHub Pages cannot run the Node.js scoring service. Set `VITE_AI_API_URL` to an independently hosted, authenticated scoring endpoint to enable hosted AI feedback. Without one, reference answers and self-assessment remain available and the unavailable AI action is disabled. Keep `DEEPSEEK_API_KEY` on that backend only.

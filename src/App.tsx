@@ -73,12 +73,14 @@ export default function App() {
   const [guideOpen, setGuideOpen] = useState(false)
 
   const saveBackup = () => {
-    const url = URL.createObjectURL(new Blob([exportAll()], { type: 'application/json' }))
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `english-study-${new Date().toISOString().slice(0, 10)}.json`
-    link.click()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    try {
+      const url = URL.createObjectURL(new Blob([exportAll()], { type: 'application/json' }))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `english-study-${new Date().toISOString().slice(0, 10)}.json`
+      link.click()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    } catch (err) { window.alert(err instanceof Error ? err.message : 'Unable to export study data.') }
   }
 
   // Loading
@@ -105,7 +107,7 @@ export default function App() {
   const cloudReady = isCloudEnabled()
 
   if (!user && cloudReady && showLogin) {
-    return <LoginPage />
+    return <LoginPage onOffline={() => setShowLogin(false)} />
   }
 
   const Page = VIEWS[view]
@@ -139,7 +141,7 @@ export default function App() {
             {user ? (
               <>
                 <span className="ncbi-user" title={user.email}>{user.email}</span>
-                <button className="ncbi-login" type="button" onClick={() => signOut()}>Log out</button>
+                <button className="ncbi-login" type="button" onClick={() => { void signOut().catch(err => window.alert(err instanceof Error ? err.message : 'Unable to log out. Please try again.')) }}>Log out</button>
               </>
             ) : (
               <>

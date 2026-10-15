@@ -117,7 +117,7 @@ export const readingQuestions: Question[] = [
       { id: 'r2-a2', type: 'claim', text: 'this hierarchy has been inverted', note: "Main argument: status symbols have reversed" },
       { id: 'r2-a3', type: 'evidence', text: 'the opportunity cost of leisure has climbed with it', note: "Evidence: economists' rational explanation" },
       { id: 'r2-a4', type: 'attitude', text: 'the explanation, though neat, is incomplete', note: "Author's attitude: partially agrees but is not satisfied with the economic explanation (mild rejection)" },
-      { id: 'r2-a5', type: 'claim', text: 'Busyness... has become a positional good', note: "Core argument: busyness is a 'positional good,' valued for what it signals" },
+      { id: 'r2-a5', type: 'claim', text: "Busyness, sociologists argue, has become a positional good", note: "Core argument: busyness is a 'positional good,' valued for what it signals" },
     ],
     items: [
       {
@@ -212,9 +212,9 @@ export const readingQuestions: Question[] = [
     ].join('\n\n'),
     passageAnnotations: [
       { id: 'r3-a1', type: 'claim', text: 'The museum world is divided between those who insist that objects come first and those who argue that a museum exists, above all, for its public.', note: "Main idea: presenting the core divide in the museum world" },
-      { id: 'r3-a2', type: 'evidence', text: 'a wave of studies has shown that traditional display methods... alienating first-time visitors', note: "Evidence: empirical research supports the 'public-facing' side" },
-      { id: 'r3-a3', type: 'attitude', text: 'the warning, though not without foundation, rests on a questionable premise', note: "Author's attitude: a critical concession to the collections camp's warning" },
-      { id: 'r3-a4', type: 'claim', text: 'it is an arena of conversation', note: "Author's position: redefining the museum as a 'space of dialogue'" },
+      { id: 'r3-a2', type: 'evidence', text: "a wave of studies has shown that traditional display methods — dense labels, chronological order, an atmosphere of hushed reverence — succeed with educated regulars while quietly alienating first-time visitors from modest backgrounds", note: "Evidence: empirical research supports the 'public-facing' side" },
+      { id: 'r3-a3', type: 'attitude', text: "The warning is not without foundation, but it rests on a questionable premise", note: "Author's attitude: a critical concession to the collections camp's warning" },
+      { id: 'r3-a4', type: 'claim', text: "an arena of conversation", note: "Author's position: redefining the museum as a 'space of dialogue'" },
     ],
     items: [
       {
@@ -309,7 +309,7 @@ export const readingQuestions: Question[] = [
     passageAnnotations: [
       { id: 'r4-a1', type: 'claim', text: 'A platform owns almost nothing of what it sells.', note: "Main premise: the fundamental difference between platforms and industrial firms" },
       { id: 'r4-a2', type: 'evidence', text: 'rules written for the dominant platform of today will fit the market of a decade hence only by accident', note: "Evidence: explaining the fundamental weakness of preventive legislation" },
-      { id: 'r4-a3', type: 'attitude', text: 'the honest conclusion is that regulators are in a state of learning', note: "Author's attitude: pragmatically acknowledging that regulators are in a learning state" },
+      { id: 'r4-a3', type: 'attitude', text: "The honest conclusion is that regulators are in a state of learning", note: "Author's attitude: pragmatically acknowledging that regulators are in a learning state" },
       { id: 'r4-a4', type: 'keyword', text: 'provisional', note: "Key point: the author's prescription—rules should be treated as provisional" },
     ],
     items: [

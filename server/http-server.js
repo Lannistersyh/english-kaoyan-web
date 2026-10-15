@@ -25,15 +25,17 @@ export function createLocalServer(staticDir) {
       catch { res.writeHead(403); res.end(); return }
     }
     for (const [key, value] of Object.entries(corsHeaders(origin, true))) res.setHeader(key, value)
-    const pathname = new URL(req.url, `http://${host}`).pathname
+    let pathname
+    try { pathname = new URL(req.url, `http://${host}`).pathname }
+    catch { res.writeHead(400); res.end('Invalid request URL'); return }
     if (req.method === 'GET' && pathname === '/__health') { res.writeHead(200, {'Content-Type': 'application/json'}); res.end(JSON.stringify({app:'english-study',mode:'local'})); return }
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return }
     if (req.method === 'POST' && pathname === '/api/deepseek-score') {
       try {
-        let body = ''; let size = 0
-        for await (const chunk of req) { size += chunk.length; if (size > 100000) { res.writeHead(413); res.end(); return }; body += chunk.toString() }
+        const chunks = []; let size = 0
+        for await (const chunk of req) { size += chunk.length; if (size > 100000) { res.writeHead(413); res.end(); return }; chunks.push(chunk) }
         let payload
-        try { payload = JSON.parse(body) } catch { res.writeHead(400); res.end(JSON.stringify({error:'Invalid JSON'})); return }
+        try { payload = JSON.parse(Buffer.concat(chunks).toString('utf8')) } catch { res.writeHead(400); res.end(JSON.stringify({error:'Invalid JSON'})); return }
         const result = await scoreTranslation(payload, req.headers.authorization, {local:true})
         res.writeHead(200, {'Content-Type':'application/json'}); res.end(JSON.stringify(result))
       } catch (err) { res.writeHead(err.status || 502, {'Content-Type':'application/json'}); res.end(JSON.stringify({error:err.status ? err.message : 'Scoring service unavailable'})) }
@@ -44,9 +46,16 @@ export function createLocalServer(staticDir) {
       try { decoded = decodeURIComponent(pathname) } catch { res.writeHead(400); res.end(); return }
       const file = path.resolve(staticDir, `.${decoded === '/' ? '/index.html' : decoded}`)
       if (!file.startsWith(path.resolve(staticDir) + path.sep)) { res.writeHead(403); res.end(); return }
-      if (!fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404); res.end('Not found'); return }
+      let info
+      try { info = fs.statSync(file) } catch { res.writeHead(404); res.end('Not found'); return }
+      if (!info.isFile()) { res.writeHead(404); res.end('Not found'); return }
       res.writeHead(200, {'Content-Type':MIME[path.extname(file)] || 'application/octet-stream','Cache-Control':pathname.includes('/assets/')?'public, max-age=86400':'no-cache'})
-      if (req.method === 'HEAD') res.end(); else fs.createReadStream(file).pipe(res)
+      if (req.method === 'HEAD') res.end()
+      else {
+        const stream = fs.createReadStream(file)
+        stream.on('error', () => { if (!res.headersSent) res.writeHead(404); res.end() })
+        stream.pipe(res)
+      }
       return
     }
     res.writeHead(404); res.end('Not found')

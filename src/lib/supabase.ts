@@ -11,12 +11,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 /* Supabase client (returns null when not configured; callers must check) */
-export const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: { persistSession: true, autoRefreshToken: true },
-      })
-    : null
+function configuredClient() {
+  if (!supabaseUrl || !supabaseAnonKey) return null
+  try {
+    return createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: true, autoRefreshToken: true },
+    })
+  } catch {
+    console.warn('Cloud configuration is invalid. The study site will remain available in offline mode.')
+    return null
+  }
+}
+export const supabase = configuredClient()
 
 /* Whether Supabase is configured */
 export const isCloudEnabled = () => supabase !== null

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase, isCloudEnabled } from './supabase'
 import { setStorageUser } from '../utils/storage'
-import { installAutoSync } from './sync'
+import { installAutoSync, pushToCloud } from './sync'
 
 interface AuthState {
   user: User | null
@@ -49,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen for authentication state changes
     const { data: sub } = supabase!.auth.onAuthStateChange((_event, newSession) => {
+      if (!active) return
       authRevision++
       setStorageUser(newSession?.user.id ?? null)
       setSession(newSession)
@@ -75,7 +76,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     if (!supabase) return
-    await supabase.auth.signOut()
+    // Flush pending study changes for either logout entry point.
+    if (user) await pushToCloud()
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
   }
 
   return (

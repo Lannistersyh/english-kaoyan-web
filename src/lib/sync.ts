@@ -74,7 +74,7 @@ export async function pullFromCloud(): Promise<SyncResult> {
       cloud[STORAGE_KEYS.patterns] = normalize(settings.extras.patterns, [])
       cloud[STORAGE_KEYS.dictHistory] = normalize(settings.extras.dictHistory, {})
     }
-    const failed = importAll(JSON.stringify(cloud))
+    const failed = importAll(JSON.stringify(cloud), { local: false })
     if (failed.length) throw new Error(failed.join('、'))
     return { ok: true, direction: 'pull', message: "Restored from the cloud; the page has been updated" }
   } catch (err) {

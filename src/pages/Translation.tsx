@@ -11,6 +11,7 @@ import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Modal } from '../components/ui/Modal'
 import { StudyCollection } from '../components/ui/StudyCollection'
+import { scoringEndpoint } from '../utils/scoringEndpoint'
 
 type Tab = 'practice' | 'history'
 
@@ -21,9 +22,9 @@ function formatDate(ts: number): string {
 
 /* API keys remain on the scoring server. */
 async function aiScoreTranslation(englishText: string, chineseTranslation: string, referenceTranslation?: string): Promise<{ score: number; comment: string }> {
+  const endpoint = scoringEndpoint(window.location.hostname, import.meta.env.VITE_AI_API_URL)
+  if (!endpoint) throw new Error('AI feedback is unavailable on this site. Compare your answer with the reference and self-assess.')
   const session = supabase ? (await supabase.auth.getSession()).data.session : null
-  const local = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
-  const endpoint = local ? '/api/deepseek-score' : import.meta.env.VITE_AI_API_URL || '/api/deepseek-score'
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
@@ -47,6 +48,7 @@ export default function Translation() {
   // AI scoring state
   const [aiScoringId, setAiScoringId] = useState<string | null>(null)
   const [aiError, setAiError] = useState('')
+  const aiAvailable = Boolean(scoringEndpoint(window.location.hostname, import.meta.env.VITE_AI_API_URL))
 
   const questions = getQuestionsByType('translation')
   const allQuestions = useMemo(() => {
@@ -163,6 +165,7 @@ export default function Translation() {
 
              Grouped and collapsed by article · AI scoring · Self-assessment comparison · Track progress
           </p>
+          {!aiAvailable && <p className="muted">AI feedback is unavailable on this site. You can compare your answer with the reference and use self-assessment.</p>}
 
           {aiError && (
             <div className="card card--flat" style={{ borderColor: 'var(--c-danger)', marginBottom: 14, color: 'var(--c-danger)' }}>
@@ -184,28 +187,28 @@ export default function Translation() {
                 return (
                   <div key={qid} className="study-group">
                     {/* Collapsible group heading */}
-                    <div
-                      className="flex-row"
-                      style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                    <button
+                      className="study-group__toggle"
+                      type="button"
+                      aria-expanded={isGroupOpen}
+                      aria-controls={`paraphrase-group-${qid}`}
                       onClick={() => toggleGroup(qid)}
                     >
-                      <div style={{ flex: 1 }}>
-                        <div className="study-group__title">
+                      <span>
+                        <span className="study-group__title">
                           {q?.title ?? "(Question deleted)"}
-                        </div>
-                        <div className="muted small">
+                        </span>
+                        <span className="study-group__metadata">
                           {totalInGroup}   practice records
                           {' · '} Recent  {formatDate(groupSessions[0].startedAt)}
-                        </div>
-                      </div>
-                      <span className="muted" style={{ fontSize: 13, marginRight: 8 }}>
-                        {isGroupOpen ? "Collapse ↑" : ` Expand ${totalInGroup} items ↓`}
+                        </span>
                       </span>
-                    </div>
+                      <span className="muted">{isGroupOpen ? 'Collapse' : 'Expand'}</span>
+                    </button>
 
                     {/* Expanded records */}
                     {isGroupOpen && (
-                      <div style={{ marginTop: 10, borderTop: '1px solid var(--c-border)' }}>
+                      <div id={`paraphrase-group-${qid}`}>
                         {groupSessions.map((s, idx) => {
                           const userText = s.answers[0]?.answer?.[0] ?? ''
                           const selfScore = s.answers[0]?.selfScore
@@ -219,56 +222,49 @@ export default function Translation() {
                               padding: '10px 0',
                             }}>
                               {/* Summary */}
-                              <div
-                                className="flex-row"
-                                style={{ justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                                onClick={() => setExpandedId(isExpanded ? null : s.id)}
-                              >
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ fontSize: 13, color: 'var(--c-text-secondary)' }}>
+                              <div className="study-record-summary">
+                                <button className="study-record-toggle" type="button" aria-expanded={isExpanded} onClick={() => setExpandedId(isExpanded ? null : s.id)}>
+                                  <span className="study-group__metadata">
                                     {s.isReview && <Tag variant="warning"> Review </Tag>}
                                     {' '}{formatDate(s.startedAt)}   · Time spent  {Math.floor(durSec / 60)} minutes  {durSec % 60}   seconds
-                                  </div>
-                                  <div className="flex-row" style={{ gap: 8, marginTop: 2 }}>
+                                  </span>
+                                  <span className="study-group__metadata">
                                     {selfScore !== undefined && (
                                       <Tag variant={selfScore >= 7 ? 'success' : selfScore >= 5 ? 'warning' : 'danger'}>
-                                        {aiComment ? '🤖 AI' : "⭐ Self-assessment"} {selfScore}/10
+                                        {aiComment ? 'AI' : 'Self-assessment'} {selfScore}/10
                                       </Tag>
                                     )}
                                     {aiComment && (
-                                      <span className="muted small" style={{ flex: 1 }}>
+                                      <span className="muted small">
                                         {aiComment}
                                       </span>
                                     )}
-                                  </div>
-                                </div>
+                                  </span>
+                                  <span className="muted">{isExpanded ? 'Collapse record' : 'Expand record'}</span>
+                                </button>
                                 <div className="flex-row" style={{ gap: 4 }}>
                                   {/* AI scoring action */}
                                   <Button
                                     variant="ghost"
-                                    style={{ padding: '3px 8px', fontSize: 11 }}
-                                    disabled={aiScoringId === s.id}
+                                    disabled={Boolean(aiScoringId) || !aiAvailable}
                                     onClick={(e) => {
                                       e.stopPropagation()
                                       handleAiScore(s)
                                     }}
                                   >
-                                    {aiScoringId === s.id ? "🤖 Scoring…" : "🤖 AI scoring"}
+                                    {aiScoringId === s.id ? 'Scoring…' : 'AI scoring'}
                                   </Button>
                                   {/* Delete action */}
                                   <Button
                                     variant="ghost"
-                                    style={{ padding: '3px 8px', fontSize: 11, color: 'var(--c-danger)' }}
+                                    style={{ color: 'var(--c-danger)' }}
                                     onClick={(e) => {
                                       e.stopPropagation()
                                       setDeleteTarget(s.id)
                                     }}
                                   >
-                                    🗑
+                                    Delete
                                   </Button>
-                                  <span className="muted" style={{ fontSize: 12 }}>
-                                    {isExpanded ? "Collapse ↑" : "Expand ↓"}
-                                  </span>
                                 </div>
                               </div>
 
@@ -276,16 +272,16 @@ export default function Translation() {
                               {isExpanded && (
                                 <div style={{ marginTop: 10, paddingLeft: 4 }}>
                                   {/* Original sentence */}
-                                  <div className="card card--flat" style={{ background: '#f8fafc', marginBottom: 8 }}>
-                                    <div className="form-label"> 📖 Original text </div>
+                                  <div className="study-review-context">
+                                    <div className="form-label">Original text</div>
                                     <p className="study-prose" style={{ margin: 0 }}>
                                       {q?.passage ?? "(Original text deleted)"}
                                     </p>
                                   </div>
 
                                   {/* My paraphrase */}
-                                  <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-primary)' }}>
-                                    <div className="form-label"> ✏️ My paraphrase </div>
+                                  <div className="study-review-context">
+                                    <div className="form-label">My paraphrase</div>
                                     <p className="study-prose study-prose--pre" style={{ margin: 0 }}>
                                       {userText.trim() || <span className="muted"> (Not filled in) </span>}
                                     </p>
@@ -293,8 +289,8 @@ export default function Translation() {
 
                                   {/* Reference paraphrase */}
                                   {q?.referenceTranslation && (
-                                    <div className="card card--flat" style={{ marginBottom: 8, borderLeft: '3px solid var(--c-success)' }}>
-                                      <div className="form-label"> 🎯 Reference paraphrase </div>
+                                    <div className="study-review-context">
+                                      <div className="form-label">Reference paraphrase</div>
                                       <p className="study-prose" style={{ margin: 0 }}>
                                         {q.referenceTranslation}
                                       </p>
@@ -303,12 +299,12 @@ export default function Translation() {
 
                                   {/* Three-step explanation */}
                                   {q?.translationSteps && q.translationSteps.length > 0 && (
-                                    <div className="card card--flat" style={{ marginBottom: 8, background: '#fffcf0' }}>
-                                      <div className="form-label"> 🔍 Three-step breakdown comparison </div>
-                                      <ol style={{ margin: '6px 0 0', paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>
+                                    <div className="study-review-explanation">
+                                      <div className="form-label">Three-step analysis</div>
+                                      <ol className="advice-list">
                                         {q.translationSteps.map((step) => (
                                           <li key={step.step}>
-                                            <b>Step {step.step}：</b>{step.zh}
+                                            <b>Step {step.step}: </b>{step.zh}
                                           </li>
                                         ))}
                                       </ol>
@@ -317,12 +313,11 @@ export default function Translation() {
 
                                   {/* Self-assessment */}
                                   <div className="flex-row" style={{ gap: 10, marginBottom: 8 }}>
-                                    <span className="muted small"> ⭐ Self-assessment (0-10): </span>
+                                    <span className="muted small">Self-assessment (0-10):</span>
                                     {[2, 4, 5, 6, 7, 8, 9, 10].map((v) => (
                                       <Button
                                         key={v}
                                         variant={selfScore === v && !aiComment ? 'primary' : 'ghost'}
-                                        style={{ padding: '3px 10px', fontSize: 12 }}
                                         onClick={() => {
                                           setSessions(sessions.map((s2) => {
                                             if (s2.id !== s.id) return s2
@@ -344,7 +339,6 @@ export default function Translation() {
                                   {q && (
                                     <Button
                                       variant="primary"
-                                      style={{ padding: '5px 14px' }}
                                       role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click() } }} onClick={() => setActiveId(q.id)}
                                     >
 

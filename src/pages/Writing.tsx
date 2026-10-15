@@ -29,7 +29,7 @@ export default function Writing() {
         <span className="muted"> Short essay 8 points + long essay 15-16 points </span>
       </div>
 
-      {showLibrary && <PatternLibrary compact />}
+      {showLibrary && <PatternLibrary />}
 
       <h2 className="study-section-title">Writing exercises</h2>
       {questions.length === 0 ? (

@@ -16,7 +16,7 @@ export function useTimer(active: boolean) {
     }
   }, [active, paused])
 
-  const reset = () => setSeconds(0)
+  const reset = () => { setSeconds(0); setPaused(false) }
 
   return { seconds, paused, setPaused, reset }
 }

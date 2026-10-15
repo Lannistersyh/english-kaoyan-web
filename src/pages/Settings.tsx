@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import type { Settings as SettingsData } from '../types'
 import { STORAGE_KEYS } from '../types'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import { estimateUsage, exportAll, importAll, remove } from '../utils/storage'
+import { estimateUsage, exportAll, importAll, remove, getStorageUser } from '../utils/storage'
 import { useAuth } from '../lib/AuthContext'
 import { isCloudEnabled } from '../lib/supabase'
 import { pushToCloud, pullFromCloud, type SyncResult } from '../lib/sync'
@@ -42,22 +42,26 @@ export default function Settings() {
   }
 
   const doExport = (offline = false) => {
-    const json = offline ? exportAll(null) : exportAll()
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    const date = new Date()
-    const stamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`
-    a.href = url
-    a.download = `ekw-backup-${stamp}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-    flash("Backup file exported. It is recommended to back up to cloud storage regularly.")
+    try {
+      const json = offline ? exportAll(null) : exportAll()
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      const date = new Date()
+      const stamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`
+      a.href = url
+      a.download = `ekw-backup-${stamp}.json`
+      a.click()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+      flash("Backup file exported. It is recommended to back up to cloud storage regularly.")
+    } catch (err) { flash(err instanceof Error ? err.message : 'Backup export failed.') }
   }
 
   const doImport = (file: File) => {
+    const owner = getStorageUser()
     const reader = new FileReader()
     reader.onload = () => {
+      if (getStorageUser() !== owner) return
       const failed = importAll(String(reader.result ?? ''))
       if (failed.length > 0) {
         flash(` Restore failed:${failed.join('、')}`)
@@ -66,6 +70,7 @@ export default function Settings() {
         flash("Restore successful. Page data has been updated.")
       }
     }
+    reader.onerror = () => flash('Unable to read the backup file. Please try again.')
     reader.readAsText(file, 'utf-8')
   }
 
@@ -86,14 +91,10 @@ export default function Settings() {
   }
 
   const handleSignOut = async () => {
-    // Upload before signing out.
-    if (cloudReady && user) {
-      setSyncing(true)
-      await pushToCloud()
-    }
-    await signOut()
-    window.sessionStorage.removeItem('ekw:offline')
-    window.location.reload()
+    setSyncing(true)
+    try { await signOut() }
+    catch (err) { flash(err instanceof Error ? err.message : 'Unable to log out. Please try again.') }
+    finally { setSyncing(false) }
   }
 
   return (
@@ -153,7 +154,7 @@ export default function Settings() {
               <div>{user.email}</div>
               <div className="muted small"> The latest data will be automatically uploaded before logging out </div>
             </span>
-            <Button variant="danger" onClick={handleSignOut}>
+            <Button variant="danger" onClick={handleSignOut} disabled={syncing}>
 
                Log out
             </Button>

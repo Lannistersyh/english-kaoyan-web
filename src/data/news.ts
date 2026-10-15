@@ -100,7 +100,7 @@ Perhaps most striking is what scientists call "swarm intelligence" in plants. A 
 
 None of this requires a brain or neurons. Plants use electrical signalling, chemical messengers, and hydraulic pressure changes to achieve what animals achieve with nervous systems. This has led some researchers to propose the concept of "plant neurobiology" — a term that remains controversial but signals a paradigm shift in how we understand cognition itself.`,
     passageAnnotations: [
-      { id: 'n2-a1', type: 'claim', text: 'a quiet revolution in botanical science is forcing us to reconsider what intelligence actually means', note: "Central argument: plant research is overturning our definition of \"intelligence\"." },
+      { id: 'n2-a1', type: 'claim', text: "a quiet revolution in botanical science is forcing us to reconsider what \"intelligence\" actually means", note: "Central argument: plant research is overturning our definition of \"intelligence\"." },
       { id: 'n2-a2', type: 'evidence', text: 'trees can send chemical warning signals to neighbours', note: "Evidence 1: chemical signaling" },
       { id: 'n2-a3', type: 'evidence', text: 'The Venus flytrap counts the number of times its trigger hairs are touched', note: "Evidence 2: the Venus flytrap's counting ability = memory" },
       { id: 'n2-a4', type: 'attitude', text: 'a paradigm shift in how we understand cognition', note: "Author's attitude: this is a paradigm shift." },
@@ -256,7 +256,7 @@ Yet the modern digital environment is engineered precisely to prevent this. Infi
 The prescription is not a Luddite rejection of technology but a deliberate cultivation of "boredom hygiene": scheduling device-free intervals, embracing single-tasking, and resisting the urge to fill every silence with input. The blank page, the empty room, the quiet walk — these are not voids to be filled but spaces to be inhabited.`,
     passageAnnotations: [
       { id: 'n4-a1', type: 'claim', text: 'this war on boredom may be costing us our creativity', note: "Central argument: eliminating boredom may be killing creativity." },
-      { id: 'n4-a2', type: 'evidence', text: 'participants who were assigned a deliberately boring task...generated significantly more creative ideas', note: "Experimental evidence: creativity increases significantly after boring tasks." },
+      { id: 'n4-a2', type: 'evidence', text: "participants who were assigned a deliberately boring task — copying numbers from a phone book — subsequently generated significantly more creative ideas", note: "Experimental evidence: creativity increases significantly after boring tasks." },
       { id: 'n4-a3', type: 'keyword', text: 'default mode network', note: "Key concept: the default mode network — spontaneous thinking when the brain is at rest" },
       { id: 'n4-a4', type: 'attitude', text: 'not a Luddite rejection of technology but a deliberate cultivation', note: "Author's attitude: not anti-technology, but conscious cultivation" },
     ],
@@ -332,7 +332,7 @@ This approach is particularly promising for complex diseases that involve not a 
 The road to the clinic remains long. Delivery — getting the editor into the right cells at the right dose — is still the major bottleneck. There are also unresolved questions about the durability and specificity of epigenetic marks: some marks can spread to neighbouring genes or fade over time. But the field is accelerating. Several biotech startups have raised hundreds of millions of dollars to develop epigenetic therapies for everything from neurodegenerative diseases to ageing itself, betting that the next chapter of genetic medicine will be written not in the language of cutting but in the language of tuning.`,
     passageAnnotations: [
       { id: 'n5-a1', type: 'claim', text: 'a quieter but potentially more profound revolution is underway: epigenetic editing', note: "Central argument: epigenetic editing may be a more profound change than CRISPR." },
-      { id: 'n5-a2', type: 'evidence', text: 'reduced cholesterol levels by over 50% for at least six months', note: "Data evidence: a single injection lowers cholesterol by 50%+ for six months." },
+      { id: 'n5-a2', type: 'evidence', text: "reducing cholesterol levels by over 50% for at least six months", note: "Data evidence: a single injection lowers cholesterol by 50%+ for six months." },
       { id: 'n5-a3', type: 'keyword', text: 'reversibility', note: "Key advantage: reversibility — it does not change the DNA sequence." },
       { id: 'n5-a4', type: 'attitude', text: 'the next chapter of genetic medicine will be written not in the language of cutting but in the language of tuning', note: "Author's outlook: the next era of genetic medicine is \"tuning\" rather than \"cutting\"." },
     ],
@@ -410,9 +410,9 @@ Stories also serve an evolutionary function. The psychologist Jonathan Haidt des
 In the age of artificial intelligence, the uniquely human relationship with narrative takes on new significance. Large language models can generate grammatically perfect stories, but they do not experience the tension of an unresolved plot or the catharsis of a satisfying ending. They are storytellers without a self — narrators who have never been characters in their own drama. This distinction may prove to be one of the enduring boundaries between human and machine cognition: not the ability to tell a story, but the need to.`,
     passageAnnotations: [
       { id: 'n6-a1', type: 'claim', text: 'narrative is not a cultural luxury but a fundamental operating system of the human mind', note: "Central argument: narrative is not a cultural luxury, but the fundamental operating system of the human mind." },
-      { id: 'n6-a2', type: 'evidence', text: 'subjects spontaneously narrated stories about the dots', note: "Experimental evidence: The brain automatically imposes narrative structure on chaos" },
+      { id: 'n6-a2', type: 'evidence', text: "subjects in a classic psychology experiment spontaneously narrated stories about the dots", note: "Experimental evidence: The brain automatically imposes narrative structure on chaos" },
       { id: 'n6-a3', type: 'keyword', text: 'shared narratives', note: "Key concept: Shared narratives — the mechanism that enables strangers to coordinate behavior" },
-      { id: 'n6-a4', type: 'attitude', text: 'the need to tell a story...may prove to be one of the enduring boundaries', note: "Author's attitude: The need for narrative may be the ultimate boundary of human-machine cognition" },
+      { id: 'n6-a4', type: 'attitude', text: "This distinction may prove to be one of the enduring boundaries between human and machine cognition: not the ability to tell a story, but the need to.", note: "Author's attitude: The need for narrative may be the ultimate boundary of human-machine cognition" },
     ],
     items: [
       {

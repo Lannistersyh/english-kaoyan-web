@@ -4,6 +4,8 @@ import { STORAGE_KEYS } from '../types'
 import { QUESTION_TYPE_LABELS } from '../data'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { getQuestion, resolveItem } from '../utils/questions'
+import { updateReviewRecords } from '../utils/review'
+import type { GradedAnswer } from '../utils/scoring'
 import { PracticeSession } from '../components/practice/PracticeSession'
 import { ThinkingForm } from '../components/practice/ThinkingForm'
 import { Button } from '../components/ui/Button'
@@ -180,20 +182,9 @@ export default function WrongBook() {
     })
   }, [shown])
 
-  const handleGraded = (graded: { itemId: string; correct: boolean }[]) => {
+  const handleGraded = (graded: GradedAnswer[]) => {
     if (!reviewing) return
-    const now = Date.now()
-    setRecords(
-      records.map((r) => {
-        const g = graded.find((x) => x.itemId === r.itemId)
-        if (!g) return r
-        if (g.correct) {
-          const reviewCount = r.reviewCount + 1
-          return { ...r, reviewCount, lastReviewAt: now, status: reviewCount >= 2 ? 'mastered' : r.status }
-        }
-        return { ...r, wrongCount: r.wrongCount + 1, lastWrongAt: now, status: 'active' }
-      }),
-    )
+    setRecords(current => updateReviewRecords(current, reviewing.question.id, graded))
   }
 
   const toggleMastered = (r: WrongRecord) => {
@@ -207,7 +198,7 @@ export default function WrongBook() {
       <PracticeSession
         question={reviewing.question}
         isReview
-        onGraded={(graded) => handleGraded(graded.map((g) => ({ itemId: g.itemId, correct: g.correct })))}
+        onGraded={handleGraded}
         onExit={() => setReviewing(null)}
       />
     )
@@ -220,7 +211,7 @@ export default function WrongBook() {
       <h1 className="page-title"> Review Book </h1>
       <p className="page-sub">
 
-         The three questions for wrong answers are the core training for an 80: ① What was I thinking at the time ② How did the distractor mislead me ③ How does the correct option paraphrase. After answering correctly twice in review, it is automatically marked as &quot;Mastered&quot;
+         The three questions for wrong answers are the core training for an 80: ① What was I thinking at the time ② How did the distractor mislead me ③ How does the correct option paraphrase. Two consecutive correct reviews without an &quot;Unsure&quot; mark automatically count as &quot;Mastered&quot;.
       </p>
 
       <div className="toolbar study-tabs">

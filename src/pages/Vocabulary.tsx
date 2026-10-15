@@ -23,7 +23,7 @@ export default function Vocabulary() {
   const [custom, setCustom] = useLocalStorage<VocabItem[]>(STORAGE_KEYS.vocab, [])
   const [vprogress, setVprogress] = useLocalStorage<VocabProgress>(STORAGE_KEYS.vocabProgress, {})
   const [mode, setMode] = useState<'review' | 'manage'>('review')
-  const [index, setIndex] = useState(0)
+  const [currentId, setCurrentId] = useState<string | null>(null)
   const [flipped, setFlipped] = useState(false)
   const [editing, setEditing] = useState<VocabItem | null>(null)
 
@@ -37,20 +37,24 @@ export default function Vocabulary() {
     })
   }, [all, vprogress])
 
-  const current = sorted[index % sorted.length]
+  const index = Math.max(0, sorted.findIndex(item => item.id === currentId))
+  const current = sorted[index]
 
   const mark = (status: VocabStatus) => {
-    setVprogress({ ...vprogress, [current.id]: status })
+    if (!current) return
+    const next = sorted[(index + 1) % sorted.length]
+    setVprogress(previous => ({ ...previous, [current.id]: status }))
     setFlipped(false)
-    setIndex((i) => i + 1)
+    setCurrentId(next.id)
   }
 
   const saveItem = () => {
     if (!editing) return
+    const entry = { ...editing, word: editing.word.trim(), meanings: editing.meanings.map(meaning => meaning.trim()).filter(Boolean) }
     if (custom.some((v) => v.id === editing.id)) {
-      setCustom(custom.map((v) => (v.id === editing.id ? editing : v)))
+      setCustom(custom.map((v) => (v.id === editing.id ? entry : v)))
     } else {
-      setCustom([...custom, editing])
+      setCustom([...custom, entry])
     }
     setEditing(null)
   }
@@ -73,7 +77,7 @@ export default function Vocabulary() {
       <p className="page-sub">Review familiar words with uncommon meanings, definitions, and English examples. Add your own entries to the collection.</p>
 
       <div className="toolbar study-tabs">
-        <button className={`btn${mode === 'review' ? ' btn--primary' : ''}`} onClick={() => { setMode('review'); setIndex(0); setFlipped(false) }}>
+        <button className={`btn${mode === 'review' ? ' btn--primary' : ''}`} onClick={() => { setMode('review'); setCurrentId(null); setFlipped(false) }}>
 
           Word review
         </button>
@@ -184,7 +188,7 @@ export default function Vocabulary() {
             <textarea
               className="textarea"
               value={editing.meanings.join('\n')}
-              onChange={(e) => setEditing({ ...editing, meanings: e.target.value.split('\n').filter(Boolean) })}
+              onChange={(e) => setEditing({ ...editing, meanings: e.target.value.split('\n') })}
             />
           </div>
           <div className="form-row">

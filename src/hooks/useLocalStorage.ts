@@ -12,21 +12,25 @@ function subscribe(listener: () => void) {
 }
 /* All components read the same snapshot; after the write sync completes, notify subscribers. */
 export function useLocalStorage<T>(key: StorageKey, fallback: T) {
+  const owner = getStorageUser()
   const fallbackRef = useRef(fallback)
-  const cache = useRef<{ raw: string | null; user: string | null; value: T }>()
+  fallbackRef.current = fallback
+  const cache = useRef<{ key: StorageKey; raw: string | null; user: string | null; value: T }>()
   const snapshot = useCallback(() => {
     const raw = readRaw(key)
     const user = getStorageUser()
-    if (!cache.current || cache.current.raw !== raw || cache.current.user !== user) {
-      cache.current = { raw, user, value: load(key, fallbackRef.current) }
+    if (!cache.current || cache.current.key !== key || cache.current.raw !== raw || cache.current.user !== user) {
+      cache.current = { key, raw, user, value: load(key, fallbackRef.current) }
     }
     return cache.current.value
   }, [key])
   const value = useSyncExternalStore(subscribe, snapshot)
   const setValue: Dispatch<SetStateAction<T>> = useCallback((update: SetStateAction<T>) => {
+    // An async action from an unmounted account must not write into the new account.
+    if (getStorageUser() !== owner) return
     const next = typeof update === 'function'
       ? (update as (previous: T) => T)(load(key, fallbackRef.current)) : update
     save(key, next)
-  }, [key])
+  }, [key, owner])
   return [value, setValue] as const
 }

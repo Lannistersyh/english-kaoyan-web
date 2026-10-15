@@ -14,6 +14,7 @@ interface Props {
   total: number
   timeSpent: number
   selfScores: Record<string, number>
+  submittedText?: string
   onSelfScore: (questionId: string, v: number) => void
   onAddToWrongBook: (itemId: string) => void
   onOpenThinking: (itemId: string) => void
@@ -29,6 +30,7 @@ export function ResultView({
   total,
   timeSpent,
   selfScores,
+  submittedText,
   onSelfScore,
   onAddToWrongBook,
   onOpenThinking,
@@ -55,11 +57,17 @@ export function ResultView({
       </div>
 
       {isSubjective ? (
-        <SubjectiveReview
-          question={question}
-          selfScores={selfScores}
-          onSelfScore={onSelfScore}
-        />
+        <>
+          <div className="card">
+            <div className="form-label">{question.type === 'writing' ? 'Your essay' : 'Your English paraphrase'}</div>
+            <p className="study-prose study-prose--pre">{submittedText}</p>
+          </div>
+          <SubjectiveReview
+            question={question}
+            selfScores={selfScores}
+            onSelfScore={onSelfScore}
+          />
+        </>
       ) : (
         <>
           {uncertainRight.length > 0 && (

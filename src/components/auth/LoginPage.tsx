@@ -4,7 +4,7 @@ import { isCloudEnabled } from '../../lib/supabase'
 import { pullFromCloud } from '../../lib/sync'
 import { Button } from '../ui/Button'
 
-export function LoginPage() {
+export function LoginPage({ onOffline }: { onOffline: () => void }) {
   const { signIn, signUp } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,26 +33,30 @@ export function LoginPage() {
       }
     }
 
-    const fn = isSignUp ? signUp : signIn
-    const result = await fn(email, password)
+    try {
+      const fn = isSignUp ? signUp : signIn
+      const result = await fn(email.trim(), password)
 
-    if (result.error) {
-      setError(result.error)
+      if (result.error) {
+        setError(result.error)
+        setLoading(false)
+        return
+      }
+
+      if (isSignUp) {
+        setInfo("Registration successful! Please check your email for the confirmation link (some Supabase projects have email confirmation enabled), then log in.")
+        setLoading(false)
+        return
+      }
+
+      // Automatically fetch cloud data after successful login
+      setInfo("Login successful, syncing data...")
+      const syncResult = await pullFromCloud()
+      setInfo(syncResult.message)
       setLoading(false)
-      return
-    }
-
-    if (isSignUp) {
-      setInfo("Registration successful! Please check your email for the confirmation link (some Supabase projects have email confirmation enabled), then log in.")
-      setLoading(false)
-      return
-    }
-
-    // Automatically fetch cloud data after successful login
-    setInfo("Login successful, syncing data...")
-    const syncResult = await pullFromCloud()
-    setInfo(syncResult.message)
-    setLoading(false)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to connect. Please try again.')
+    } finally { setLoading(false) }
   }
 
   const cloudReady = isCloudEnabled()
@@ -180,12 +184,7 @@ export function LoginPage() {
         {/* Offline mode: enter directly */}
         {(
           <div style={{ textAlign: 'center', marginTop: 16 }}>
-            <Button onClick={() => {
-              // Offline mode: do nothing; AuthContext's user is null but loading has finished
-              // Set a flag to skip login
-              window.sessionStorage.setItem('ekw:offline', '1')
-              window.location.reload()
-            }}>
+            <Button onClick={onOffline}>
 
                Use offline (data is stored only on this device)
             </Button>
