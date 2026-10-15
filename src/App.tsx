@@ -62,7 +62,7 @@ const VIEWS: Record<ViewName, (props: PageProps) => JSX.Element> = {
 }
 
 export default function App() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, continueOffline, signOut } = useAuth()
   const [view, setView] = useState<ViewName>('practice')
   const [showLogin, setShowLogin] = useState(false)
 
@@ -97,7 +97,9 @@ export default function App() {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
-          <p> Loading... </p>
+          <p>Restoring your session...</p>
+          <p>You can start studying while cloud login is unavailable.</p>
+          <button className="btn" type="button" onClick={continueOffline}>Continue offline</button>
         </div>
       </div>
     )
@@ -107,7 +109,7 @@ export default function App() {
   const cloudReady = isCloudEnabled()
 
   if (!user && cloudReady && showLogin) {
-    return <LoginPage onOffline={() => setShowLogin(false)} />
+    return <LoginPage onOffline={() => { continueOffline(); setShowLogin(false) }} />
   }
 
   const Page = VIEWS[view]
