@@ -101,7 +101,7 @@ test('Valid records and the legacy dictionary format survive backup and restore'
   app.save('ekw:settings',{promptThinkingOnWrong:true})
   const backup=app.exportAll();values.clear()
   assert.deepEqual(app.importAll(backup),[])
-  assert.equal(app.load('ekw:questions',[]).length,48)
+  assert.equal(app.load('ekw:questions',[]).length,app.builtinQuestions.length)
   assert.deepEqual(app.load('ekw:dictHistory',{}).constructor,lookup)
 })
 
@@ -112,7 +112,7 @@ test('Imports reject unreachable blanks and repeated single-use answers',()=>{
   assert.equal(app.parseImport(template('A B').replace('{{2}}','{{3}}')).questions.length,0)
 })
 
-test('All 121 passage annotations preserve the article text and expose unique jump targets, including overlaps',()=>{
+test('All passage annotations preserve the article text and expose unique jump targets, including overlaps',()=>{
   const ids=node=>{
     if(Array.isArray(node))return node.flatMap(ids)
     if(!node||typeof node!=='object')return []
@@ -133,7 +133,7 @@ test('All 121 passage annotations preserve the article text and expose unique ju
       checked++
     }
   }
-  assert.equal(checked,121)
+  assert.equal(checked,153)
   const tree=app.PassageRenderer({text:'An alpha {{01}} omega.',annotations:[
     {id:'outer',type:'claim',text:'alpha {{01}} omega',note:''},{id:'inner',type:'keyword',text:'alpha',note:''},
   ],renderGap:number=>`[${number}]`})

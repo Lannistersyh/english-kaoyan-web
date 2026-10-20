@@ -12,6 +12,8 @@ Recreate the desktop shortcut with `npm run create-shortcut`. Start without open
 
 ## Features
 
+The October 2026 update adds 8 sourced past exam writing tasks and 16 original mock exercises. The bank contains 72 sets and 296 objective subquestions. See [the collection notes and sources](docs/question-bank-2026-10.md). In **Practice**, search **October 2026** for the new objective sets; past exam emails and notices are under **Writing**.
+
 - Cloze, reading, heading matching, gap-fill, and paragraph reordering with answer explanations.
 - English paraphrasing with reference answers, structural guidance, and optional AI feedback.
 - Writing practice, sentence patterns, news reading, science and philosophy reading, vocabulary cards, and a review book.

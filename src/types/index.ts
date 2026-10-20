@@ -1,5 +1,6 @@
 /* * All data models and localStorage key conventions (system contract layer)
- * When modifying the structure, please also bump STORAGE_VERSION and write a migration function */
+ * Breaking storage changes require a STORAGE_VERSION bump and migration.
+ * Optional catalog fields keep legacy records valid without a migration. */
 
 // ========== Question types ==========
 
@@ -76,6 +77,16 @@ export interface Question {
   source: QuestionSource
   sourceLabel: string // 'Mock exam' / '2024 real exam Text2'
   title: string
+  // Optional catalog metadata; legacy backups remain valid without a migration.
+  provenance?: {
+    kind: 'past-exam' | 'original-mock'
+    year?: number
+    paper?: 'English I' | 'English II'
+    section?: string
+    sourceName?: string
+    sourceUrl?: string
+    note: string
+  }
   suggestedMinutes?: number
   passage?: string // Passage/text (cloze blanks {{n}}, 7-choose-5 blanks {{n}})
   passageAnnotations?: PassageAnnotation[]
@@ -87,6 +98,7 @@ export interface Question {
   // ---- Writing questions ----
   figureDescription?: string // Picture description text
   writingPrompt?: string // Writing requirements
+  targetWords?: number // Approximate length for short writing tasks
   referenceEssay?: string
   essayPatternIds?: string[] // IDs of sentence patterns used in the model essay
   // ---- General ----

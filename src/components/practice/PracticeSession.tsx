@@ -20,6 +20,7 @@ import { ResultView } from './ResultView'
 import { ThinkingForm } from './ThinkingForm'
 import { Card } from '../ui/Card'
 import { QUESTION_TYPE_LABELS } from '../../data'
+import { QuestionProvenance } from './QuestionProvenance'
 
 interface Props {
   question: Question
@@ -219,6 +220,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
         <div className="study-page">
           <div className="docsum__cit">{question.sourceLabel} · {QUESTION_TYPE_LABELS[question.type]}</div>
           <h1 className="page-title">{question.title}</h1>
+          <QuestionProvenance question={question} />
           <p className="page-sub">
             {question.items.length ? `${question.items.length} questions` : 'Self-assessment with reference material'}
             {question.suggestedMinutes ? ` · Suggested time: ${question.suggestedMinutes} minutes` : ''}
@@ -247,6 +249,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           {question.items.length > 0 ? ` Total ${question.items.length} Question ` : "Subjective question · Self-assessment by comparison"}
           {question.suggestedMinutes ? `　Suggested time ${question.suggestedMinutes} minutes ` : ''}
         </p>
+        <QuestionProvenance question={question} />
         {question.tips && question.tips.length > 0 && (
           <div style={{ textAlign: 'left', margin: '12px auto', maxWidth: 520 }}>
             <div className="form-label"> Question tips </div>
@@ -278,6 +281,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
           </Button>
           <span className="muted"> Time used  {formatTime(timer.seconds)}</span>
         </div>
+        <QuestionProvenance question={question} />
         <ResultView
           question={question}
           graded={graded}
@@ -344,6 +348,7 @@ export function PracticeSession({ question, isReview = false, onExit, onGraded }
       {question.type !== 'reading' && <header className="study-session-heading">
         <h1 className="page-title">{question.title}</h1>
         <p className="page-sub">{QUESTION_TYPE_LABELS[question.type]} · {question.sourceLabel}</p>
+        <QuestionProvenance question={question} />
       </header>}
       <QuestionView
         question={question}

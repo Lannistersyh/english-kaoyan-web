@@ -1,6 +1,7 @@
 import type { Question, SubQuestion } from '../../types'
 import { PassageRenderer } from './PassageRenderer'
 import type { BlockProps } from './types'
+import { QuestionProvenance } from './QuestionProvenance'
 
 const ANNOTATION_LABELS = {
   claim: "Claim",
@@ -43,6 +44,7 @@ export function PubMedReadingView({ question, answers, onAnswer, uncertain, onUn
         <div className="pm-authors" title="Illustrative author names for the practice layout">
           <b>{metadata.authors}.</b>
         </div>
+        <QuestionProvenance question={question} />
 
         {/* Reading passage */}
         <div className="pm-section" id="reading-passage">

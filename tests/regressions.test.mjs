@@ -72,8 +72,8 @@ test('The template shown on the Import page parses every advertised category', (
   assert.ok(result.questions.find(q => q.type === 'cloze').items.every(item => item.score === 0.5))
 })
 test('Built-in content remains complete and contains no Chinese characters', () => {
-  assert.equal(data.builtinQuestions.length, 48)
-  assert.equal(data.builtinQuestions.reduce((n, q) => n + q.items.length, 0), 185)
+  assert.equal(data.builtinQuestions.length, 72)
+  assert.equal(data.builtinQuestions.reduce((n, q) => n + q.items.length, 0), 296)
   assert.equal(/\p{Script=Han}/u.test(JSON.stringify(data.builtinQuestions)), false)
 })
 test('Dictionary lookup works offline for study words and uses exact English definitions online', async () => {

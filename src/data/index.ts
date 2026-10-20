@@ -6,6 +6,7 @@ import { translationQuestions } from './translation'
 import { writingQuestions } from './writing'
 import { newsArticles } from './news'
 import { sciencePhilosophyArticles } from './science-philosophy'
+import { october2026Questions } from './bank-202610'
 
 export { builtinVocabulary } from './vocabulary'
 export { builtinPatterns } from './patterns'
@@ -21,6 +22,7 @@ export const builtinQuestions: Question[] = [
   ...writingQuestions,
   ...newsArticles,
   ...sciencePhilosophyArticles,
+  ...october2026Questions,
 ]
 
 export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {

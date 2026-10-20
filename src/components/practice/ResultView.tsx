@@ -213,7 +213,9 @@ function SubjectiveReview({
         <div className="muted" style={{ marginTop: 8 }}>
           {isTranslation
             ? "Compare your paraphrase with the reference: Are all key ideas preserved? Is the sentence structure clear? Is the wording natural?"
-            : "Check against the model essay: Is the theme extraction accurate? Is the argument multi-dimensional? Are the sentence patterns rich?"}
+            : question.targetWords
+              ? `Check the purpose, recipient, required points, format, and tone. Aim for about ${question.targetWords} words and use clear, accurate English.`
+              : "Check against the model essay: Is the theme extraction accurate? Is the argument multi-dimensional? Are the sentence patterns rich?"}
         </div>
       </div>
     </div>

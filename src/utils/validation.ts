@@ -1,4 +1,5 @@
 import { STORAGE_KEYS, type StorageKey } from '../types'
+import { safeSourceUrl } from './questionSource'
 
 type RecordValue = Record<string, unknown>
 const object = (value: unknown): value is RecordValue => value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -23,6 +24,12 @@ const subQuestion = (row: RecordValue): boolean => id(row.id) && oneOf(row.kind,
 const question = (row: RecordValue): boolean => id(row.id) && text(row.title) && text(row.sourceLabel)
   && oneOf(row.type, ['cloze', 'reading', 'matching', 'translation', 'writing']) && oneOf(row.source, ['builtin', 'imported'])
   && list(row.items, subQuestion) && optional(row, 'suggestedMinutes', number)
+  && optional(row, 'targetWords', value => Number.isInteger(value) && number(value) && (value as number) > 0)
+  && optional(row, 'provenance', value => object(value) && oneOf(value.kind, ['past-exam', 'original-mock']) && text(value.note)
+    && optional(value, 'year', year => Number.isInteger(year) && number(year) && (year as number) >= 2000 && (year as number) <= 2100)
+    && optional(value, 'paper', paper => oneOf(paper, ['English I', 'English II']))
+    && ['section', 'sourceName'].every(key => optional(value, key, text))
+    && optional(value, 'sourceUrl', url => safeSourceUrl(url) !== undefined))
   && ['passage', 'referenceTranslation', 'figureDescription', 'writingPrompt', 'referenceEssay'].every(key => optional(row, key, text))
   && ['tips', 'vocabNotes', 'essayPatternIds'].every(key => optional(row, key, strings))
   && optional(row, 'optionPools', value => records(value, pool => list(pool, option)))

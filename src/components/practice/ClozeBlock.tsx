@@ -129,7 +129,7 @@ export function ClozeBlock({ question, answers, onAnswer }: BlockProps) {
       />
       <div className="muted" style={{ marginTop: 14 }}>
 
-         💡 Click the blue tags in the text to select an answer directly (A/B/C/D); once selected, they turn blue with white text. Each cloze question is worth 0.5 points; you can only reach the target of 8 points if you get no more than 3 wrong.
+        Select an option for each numbered blank. This exercise has {items.length} blanks and is worth {items.reduce((sum, item) => sum + (item.score ?? 1), 0)} points in total.
       </div>
     </div>
   )

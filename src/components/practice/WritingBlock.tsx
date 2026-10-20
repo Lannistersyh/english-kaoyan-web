@@ -5,10 +5,10 @@ export function WritingBlock({ question, answers, onAnswer }: BlockProps) {
   const text = (answers[question.id] ?? [''])[0] ?? ''
   return (
     <div>
-      <section className="study-review-context">
-        <div className="form-label"> Picture description </div>
+      {question.figureDescription && <section className="study-review-context">
+        <div className="form-label">{question.targetWords ? 'Task context' : 'Picture description'}</div>
         <p className="study-prose" style={{ margin: 0 }}>{question.figureDescription}</p>
-      </section>
+      </section>}
       <div className="card card--flat">
         <div className="form-label"> Writing requirements </div>
         <p className="study-prose" style={{ margin: 0 }}>
@@ -26,7 +26,7 @@ export function WritingBlock({ question, answers, onAnswer }: BlockProps) {
         </div>
       )}
       <div style={{ marginTop: 14 }}>
-        <label className="form-label" htmlFor="writing-answer">Your essay (160-200 words)</label>
+        <label className="form-label" htmlFor="writing-answer">{question.targetWords ? `Your response (about ${question.targetWords} words)` : 'Your essay (160-200 words)'}</label>
         <textarea
           id="writing-answer"
           className="textarea study-editor"

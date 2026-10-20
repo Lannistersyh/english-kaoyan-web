@@ -19,14 +19,14 @@ export default function Writing() {
   return (
     <div className="study-page">
       <h1 className="page-title"> Writing </h1>
-      <p className="page-sub">Picture-based writing practice with model essays, argument development, and functional sentence patterns.</p>
+      <p className="page-sub">Past exam emails and notices, picture-based essays, original reference responses, and functional sentence patterns.</p>
 
       <div className="toolbar">
         <button className="btn" type="button" aria-expanded={showLibrary} onClick={() => setShowLibrary(!showLibrary)}>
           {showLibrary ? 'Hide' : 'Show'} sentence pattern library
         </button>
         <span className="toolbar__spacer" />
-        <span className="muted"> Short essay 8 points + long essay 15-16 points </span>
+        <span className="muted">Follow the length and format specified in each task.</span>
       </div>
 
       {showLibrary && <PatternLibrary />}

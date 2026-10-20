@@ -13,7 +13,7 @@ const TABS: (QuestionType | 'all')[] = ['all', 'cloze', 'reading', 'matching']
 
 /* Assemble searchable text: title + article + question stem */
 function searchableText(q: Question): string {
-  return [q.title, q.passage, ...(q.items ?? []).map((i) => i.stem ?? '')].join(' ').toLowerCase()
+  return [q.title, q.sourceLabel, q.passage, ...(q.items ?? []).map((i) => i.stem ?? '')].join(' ').toLowerCase()
 }
 
 /* Summary line: take the first two sentences of the article */
@@ -127,8 +127,7 @@ export default function Practice({ search = '' }: PageProps) {
                       {q.source === 'imported' ? "Import" : "Mock question"} · {q.items.length > 0 ? `${q.items.length} sub-questions ` : "Subjective question"}
                     </div>
                     <div className="docsum__cit">
-
-                       Postgraduate entrance exam English close reading training.  {q.suggestedMinutes ? ` Suggestions ${q.suggestedMinutes} minutes. ` : ''}
+                      {q.sourceLabel}. {q.suggestedMinutes ? `Suggested time: ${q.suggestedMinutes} minutes. ` : ''}
                       {p ? ` Completed ${p.attempts} times · Best ${p.bestScore}/${p.total}.` : 'Free full text'}
                     </div>
                     <div className="docsum__snippet">{snippet(q)}</div>
